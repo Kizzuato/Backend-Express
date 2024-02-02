@@ -11,17 +11,29 @@ const {
 const router = express.Router();
 
 // Router untuk mengedit task
-router.put("/edit", async (req, res) => {
+router.put("/edit/:id", async (req, res) => {
+  const taskId = req.params.id;
+
   const {
     task_type,
     task_title,
     priority,
-    Status,
+    iteration,
     start_date,
     due_date,
     description,
     pic,
     spv,
+    approved_at,
+    approved_by,
+    finished_at,
+    finished_by,
+    status,
+    progress,
+    file_attachment,
+    created_at,
+    edited_at,
+    deleted_at,
   } = req.body;
 
   try {
@@ -29,15 +41,25 @@ router.put("/edit", async (req, res) => {
       task_type,
       task_title,
       priority,
-      Status,
+      iteration,
       start_date,
       due_date,
       description,
       pic,
       spv,
+      approved_at,
+      approved_by,
+      finished_at,
+      finished_by,
+      status,
+      progress,
+      file_attachment,
+      created_at,
+      edited_at,
+      deleted_at,
     };
 
-    const response = await updateTaskServ(data);
+    const response = await updateTaskServ(taskId, data);
 
     return res.status(200).json(response);
   } catch (error) {
@@ -52,7 +74,7 @@ router.post("/new", async (req, res) => {
     task_type,
     task_title,
     priority,
-    Status,
+    status,
     start_date,
     due_date,
     description,
@@ -65,7 +87,7 @@ router.post("/new", async (req, res) => {
       task_type,
       task_title,
       priority,
-      Status,
+      status,
       start_date,
       due_date,
       description,

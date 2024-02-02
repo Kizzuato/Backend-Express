@@ -1,11 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-// Repo untuk mengedit task
-const updateTaskRepo = async (data) => {
+// repo untuk mengedit data
+const updateTaskRepo = async (id, data) => {
   return await prisma.task.update({
     where: {
-        id
+      id,
     },
     data,
   });
@@ -47,7 +47,7 @@ const getAllDeletedTaskRepo = async () => {
       deleted_at: {
         not: null,
       },
-    }
+    },
   });
 };
 
