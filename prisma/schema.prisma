@@ -39,7 +39,14 @@ model task {
   description     String?
   pic             String?
   spv             String?
+  approved_at     DateTime? 
+  approved_by     String? 
+  finished_at     DateTime? 
+  finished_by     String? 
   status          String? @default("Wait-app")
   progress        Int?
   file_attachment String?
+  created_at      DateTime? 
+  edited_at       DateTime? 
+  deleted_at      DateTime? 
 }

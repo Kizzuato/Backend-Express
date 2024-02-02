@@ -94,7 +94,7 @@ router.get("/all", async (req, res) => {
 });
 
 //  Router untuk mengambil semua task yang belum di acc di database
-router.get("/all/waited", async (req, res) => {
+router.get("/waited", async (req, res) => {
   try {
     const response = await getAllWaitedTaskServ();
     return res.status(200).json(response);
@@ -105,7 +105,7 @@ router.get("/all/waited", async (req, res) => {
 });
 
 //  Service untuk mengambil semua histori task yang sudah dihapus
-router.get("/all/deleted", async (req, res) => {
+router.get("/deleted", async (req, res) => {
   try {
     const response = await getAllDeletedTaskServ();
     return res.status(200).json(response);

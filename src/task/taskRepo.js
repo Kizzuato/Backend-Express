@@ -25,6 +25,7 @@ const getAllTaskRepo = async () => {
       NOT: {
         status: "wait-app",
       },
+      deleted_at: null,
     },
   });
 };
@@ -34,6 +35,7 @@ const getAllWaitedTaskRepo = async () => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
+      deleted_at: null,
     },
   });
 };
@@ -43,9 +45,9 @@ const getAllDeletedTaskRepo = async () => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {
-        NOT: null,
+        not: null,
       },
-    },
+    }
   });
 };
 
