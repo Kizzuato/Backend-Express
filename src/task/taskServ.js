@@ -3,6 +3,9 @@ const {
   createTaskRepo,
   getAllTaskRepo,
   getAllWaitedTaskRepo,
+  getAllWaitedDirectorTaskRepo,
+  getAllWaitedManagerTaskRepo,
+  getAllWaitedSupervisorTaskRepo,
   getAllDeletedTaskRepo,
   getTaskByIdRepo,
 } = require("./taskRepo");
@@ -17,6 +20,7 @@ const updateTaskServ = async (id, data) => {
     start_date:data.start_date,
     due_date:data.due_date,
     description:data.description,
+    pic_title:data.pic_title,
     pic:data.pic,
     spv:data.spv,
     approved_at:data.approved_at,
@@ -35,7 +39,7 @@ const updateTaskServ = async (id, data) => {
 };
 
 // Service untuk membuat task baru
-const createTaskServ = async (data) => {
+const createTaskServ = async (data, files) => {
   const dataRest = {
     task_type: data.task_type,
     task_title: data.task_title,
@@ -44,16 +48,32 @@ const createTaskServ = async (data) => {
     start_date: data.start_date,
     due_date: data.due_date,
     description: data.description,
+    pic_title: data.pic_title,
     pic: data.pic,
     spv: data.spv,
   };
 
-  return await createTaskRepo(dataRest);
+  return await createTaskRepo(dataRest, files);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
 const getAllTaskServ = async () => {
   return await getAllTaskRepo();
+};
+
+//  Service untuk mengambil semua task yang belum di acc
+const getAllWaitedDirectorTaskServ = async () => {
+  return await getAllWaitedDirectorTaskRepo();
+};
+
+//  Service untuk mengambil semua task yang belum di acc
+const getAllWaitedManagerTaskServ = async () => {
+  return await getAllWaitedManagerTaskRepo();
+};
+
+//  Service untuk mengambil semua task yang belum di acc
+const getAllWaitedSupervisorTaskServ = async () => {
+  return await getAllWaitedSupervisorTaskRepo();
 };
 
 //  Service untuk mengambil semua task yang belum di acc
@@ -76,6 +96,9 @@ module.exports = {
   createTaskServ,
   getAllTaskServ,
   getAllWaitedTaskServ,
+  getAllWaitedDirectorTaskServ,
+  getAllWaitedManagerTaskServ,
+  getAllWaitedSupervisorTaskServ,
   getAllDeletedTaskServ,
   getTaskByIdServ,
 };
