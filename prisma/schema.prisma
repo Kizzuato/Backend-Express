@@ -37,6 +37,7 @@ model task {
   start_date      DateTime?
   due_date        DateTime?
   description     String?
+  pic_title       String?
   pic             String?
   spv             String?
   approved_at     DateTime? 
@@ -44,9 +45,11 @@ model task {
   finished_at     DateTime? 
   finished_by     String? 
   status          String? @default("Wait-app")
-  progress        Int?
-  file_attachment String?
-  created_at      DateTime? 
-  edited_at       DateTime? 
+  progress        Int?    @default(0)
+  fileName        String?
+  filePath        String?
+  fileSize        String?
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @updatedAt
   deleted_at      DateTime? 
 }

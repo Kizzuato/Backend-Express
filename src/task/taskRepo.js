@@ -30,6 +30,39 @@ const getAllTaskRepo = async () => {
   });
 };
 
+//  Repo untuk memperlihatkan task yang belum di acc (Untuk director)
+const getAllWaitedDirectorTaskRepo = async () => {
+  return await prisma.task.findMany({
+    where: {
+      status: "wait-app",
+      deleted_at: null,
+      pic_title: "manager"
+    },
+  });
+};
+
+//  Repo untuk memperlihatkan task yang belum di acc (Untuk manager)
+const getAllWaitedManagerTaskRepo = async () => {
+  return await prisma.task.findMany({
+    where: {
+      status: "wait-app",
+      deleted_at: null,
+      pic_title: "supervisor"
+    },
+  });
+};
+
+//  Repo untuk memperlihatkan task yang belum di acc (Untuk spv)
+const getAllWaitedSupervisorTaskRepo = async () => {
+  return await prisma.task.findMany({
+    where: {
+      status: "wait-app",
+      deleted_at: null,
+      pic_title: "operator"
+    },
+  });
+};
+
 //  Repo untuk memperlihatkan task yang belum di acc
 const getAllWaitedTaskRepo = async () => {
   return await prisma.task.findMany({
@@ -64,6 +97,9 @@ module.exports = {
   updateTaskRepo,
   createTaskRepo,
   getAllTaskRepo,
+  getAllWaitedDirectorTaskRepo,
+  getAllWaitedManagerTaskRepo,
+  getAllWaitedSupervisorTaskRepo,
   getAllWaitedTaskRepo,
   getAllDeletedTaskRepo,
   getTaskByIdRepo,

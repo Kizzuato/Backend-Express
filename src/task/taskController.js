@@ -1,9 +1,15 @@
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+
 const {
   updateTaskServ,
   createTaskServ,
   getAllTaskServ,
   getAllWaitedTaskServ,
+  getAllWaitedDirectorTaskServ,
+  getAllWaitedManagerTaskServ,
+  getAllWaitedSupervisorTaskServ,
   getAllDeletedTaskServ,
   getTaskByIdServ,
 } = require("./taskServ");
@@ -22,6 +28,7 @@ router.put("/edit/:id", async (req, res) => {
     start_date,
     due_date,
     description,
+    pic_title,
     pic,
     spv,
     approved_at,
@@ -45,6 +52,7 @@ router.put("/edit/:id", async (req, res) => {
       start_date,
       due_date,
       description,
+      pic_title,
       pic,
       spv,
       approved_at,
@@ -68,21 +76,40 @@ router.put("/edit/:id", async (req, res) => {
   }
 });
 
-// Router untuk membuat task baru
-router.post("/new", async (req, res) => {
-  const {
-    task_type,
-    task_title,
-    priority,
-    status,
-    start_date,
-    due_date,
-    description,
-    pic,
-    spv,
-  } = req.body;
+// Set up storage for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Save files to the 'uploads' folder
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
 
+// Declare 'upload' after setting up storage
+const upload = multer({ storage: storage });
+
+router.post("/new", upload.array("files[]", 5), async (req, res) => {
   try {
+    const {
+      task_type,
+      task_title,
+      priority,
+      status,
+      start_date,
+      due_date,
+      description,
+      pic_title,
+      pic,
+      spv,
+    } = req.body;
+    const files = req.files;
+
+    // Process the data and files as needed
     const data = {
       task_type,
       task_title,
@@ -91,8 +118,10 @@ router.post("/new", async (req, res) => {
       start_date,
       due_date,
       description,
+      pic_title,
       pic,
       spv,
+      files,
     };
 
     const response = await createTaskServ(data);
@@ -108,6 +137,39 @@ router.post("/new", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const response = await getAllTaskServ();
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+//  Router untuk mengambil semua task yang belum di acc di database
+router.get("/director", async (req, res) => {
+  try {
+    const response = await getAllWaitedDirectorTaskServ();
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+//  Router untuk mengambil semua task yang belum di acc di database
+router.get("/manager", async (req, res) => {
+  try {
+    const response = await getAllWaitedManagerTaskServ();
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+//  Router untuk mengambil semua task yang belum di acc di database
+router.get("/supervisor", async (req, res) => {
+  try {
+    const response = await getAllWaitedSupervisorTaskServ();
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
