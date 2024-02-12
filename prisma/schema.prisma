@@ -24,24 +24,30 @@ model m_user {
   u_address       String?
   u_province_id   String?
   u_city_id       String?
+  u_rate          Int?
+  total_task      Int?
   created_at      DateTime? @default(now())
   updated_at      DateTime? @updatedAt
 }
 
 model task {
   id              String    @id @default(cuid())
+  pic_id          String    
+  spv_id          String    
   task_type       String?
   task_title      String?
   priority        String?
   iteration       String?
   start_date      DateTime?
   due_date        DateTime?
-  description     String?
+  description     String? @db.Text
   pic_title       String?
   pic             String?
   spv             String?
   approved_at     DateTime? 
   approved_by     String? 
+  started_at     DateTime? 
+  started_by     String? 
   finished_at     DateTime? 
   finished_by     String? 
   status          String? @default("Wait-app")
@@ -50,6 +56,7 @@ model task {
   filePath        String?
   fileSize        String?
   created_at      DateTime? @default(now())
+  created_by      String?
   updated_at      DateTime? @updatedAt
   deleted_at      DateTime? 
 }
