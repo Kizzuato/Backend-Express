@@ -26,9 +26,19 @@ const deleteUserRepo = async (id) => {
         }
     })
 }
+
+const getUserByIdRepo = async (id) => {
+  return await prisma.m_user.findUnique({
+    where: {
+      u_id : id,
+    },
+  });
+};
+
 module.exports = {
   createUserRepo,
   Login,
   getAllUserRepo,
-  deleteUserRepo
+  deleteUserRepo,
+  getUserByIdRepo
 };
