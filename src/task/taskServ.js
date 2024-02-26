@@ -69,16 +69,19 @@ const createTaskServ = async (data, files) => {
     task_type: data.task_type,
     task_title: data.task_title,
     priority: data.priority,
+    iteration: data.iteration,
     status: data.status,
     start_date: data.start_date,
     due_date: data.due_date,
     description: data.description,
     pic_title: data.pic_title,
+    created_by: data.created_by,
     pic: data.pic,
     spv: data.spv,
+    files: files,
   };
 
-  return await createTaskRepo(dataRest, files);
+  return await createTaskRepo(dataRest);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database

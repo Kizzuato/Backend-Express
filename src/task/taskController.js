@@ -25,6 +25,7 @@ const {
   getAllDeletedTaskServ,
 
   getTaskByIdServ,
+  getTaskByEmailServ,
 } = require("./taskServ");
 
 const router = express.Router();
@@ -122,15 +123,17 @@ router.post("/new", upload.array("files[]", 5), async (req, res) => {
       task_type,
       task_title,
       priority,
+      iteration,
       status,
       start_date,
       due_date,
       description,
       pic_title,
+      created_by,
       pic,
       spv,
     } = req.body;
-    const files = req.files;
+    const files = req.files; // Menyimpan file yang di-upload oleh multer
 
     // Process the data and files as needed
     const data = {
@@ -139,11 +142,13 @@ router.post("/new", upload.array("files[]", 5), async (req, res) => {
       task_type,
       task_title,
       priority,
+      iteration,
       status,
       start_date,
       due_date,
       description,
       pic_title,
+      created_by,
       pic,
       spv,
       files,
@@ -325,6 +330,18 @@ router.get("/deleted", async (req, res) => {
 
 //  Service untuk mengambil task berdasarkan Id
 router.get("/get-by-id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await getTaskByIdServ(id);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+//  Service untuk mengambil task berdasarkan Id
+router.get("/get-by-email/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const response = await getTaskByIdServ(id);

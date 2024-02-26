@@ -14,6 +14,7 @@ const createUserServ = async (data) => {
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
+    title: data.title,
     u_password: hashPassword,
   };
 
@@ -21,6 +22,7 @@ const createUserServ = async (data) => {
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
+      title: response.title,
       uuid: response.u_id,
     };
     return dataReq;

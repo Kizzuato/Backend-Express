@@ -204,6 +204,15 @@ const getTaskByIdRepo = async (id) => {
   });
 };
 
+// Repo untuk mencari task berdasarkan Id
+const getTaskByEmailRepo = async (email) => {
+  return await prisma.m_user.findUnique({
+    where: {
+      u_email: email,
+    }
+  });
+};
+
 module.exports = {
   updateTaskRepo,
   createTaskRepo,
@@ -233,4 +242,5 @@ module.exports = {
   // get all deleted acc task
 
   getTaskByIdRepo,
+  getTaskByEmailRepo,
 };

@@ -26,7 +26,6 @@ app.use(express.urlencoded({ limit: "1gb", extended: true }));
 app.use('/user', userController);
 app.use('/task', TaskController);
 
-// vjh
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
 //       cb(null, 'uploads/')
@@ -35,7 +34,6 @@ app.use('/task', TaskController);
 //       cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
 //   }
 // });
-
 
 // app.post('/upload', upload.single('file'), (req, res) => {
 //   if (!req.file) {

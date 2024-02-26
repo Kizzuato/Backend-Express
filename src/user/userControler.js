@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, repassword } = req.body;
+  const { name, email, title, password, repassword } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
@@ -21,6 +21,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password,
+      title
     };
 
     const response = await createUserServ(data);
