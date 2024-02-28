@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const multer = require('multer');
+const path = require('path');
 
 const userController = require('./user/userControler');
 const TaskController = require('./task/taskController')
@@ -21,7 +22,9 @@ const port = process.env.PORT || 9090; // default to 443 if PORT not set
 
 app.use(express.json({ limit: "1gb" }));
 app.use(express.urlencoded({ limit: "1gb", extended: true }));
-
+app.get('/image/:name', (req, res) => {
+  res.sendFile(path.join(__dirname, '../uploads', req.params.name));
+});
 
 app.use('/user', userController);
 app.use('/task', TaskController);

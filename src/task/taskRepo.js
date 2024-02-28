@@ -19,7 +19,7 @@ const createTaskRepo = async (data) => {
 };
 
 // buat ngambil data director task monit
-const getAllDirectorTaskRepo = async () => {
+const getAllDirectorTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
       NOT: {
@@ -27,12 +27,13 @@ const getAllDirectorTaskRepo = async () => {
       },
       deleted_at: null,
       pic_title: "director",
+      status: status || undefined,
     },
   });
 };
 
 // buat ngambil data manager task monit
-const getAllManagerTaskRepo = async () => {
+const getAllManagerTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
       NOT: {
@@ -40,25 +41,29 @@ const getAllManagerTaskRepo = async () => {
       },
       deleted_at: null,
       pic_title: "manager",
+      status: status || undefined,
     },
   });
 };
 
 // buat ngambil data spv task monit
-const getAllSupervisorTaskRepo = async () => {
+const getAllSupervisorTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
       deleted_at: null,
-      pic_title: "supervisor",
+      pic_title: {
+        in: ["supervisor", "operator"],
+      },
+      status: status || undefined,
     },
   });
 };
 
 // buat ngambil data worker task monit
-const getAllOperatorTaskRepo = async () => {
+const getAllOperatorTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
       NOT: {
@@ -66,18 +71,20 @@ const getAllOperatorTaskRepo = async () => {
       },
       deleted_at: null,
       pic_title: "operator",
+      status: status || undefined,
     },
   });
 };
 
 // buat ngambil data default task monit 
-const getAllTaskRepo = async () => {
+const getAllTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
       deleted_at: null,
+      status: status || undefined,
     },
   });
 };
