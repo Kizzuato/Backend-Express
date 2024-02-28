@@ -69,41 +69,44 @@ const createTaskServ = async (data, files) => {
     task_type: data.task_type,
     task_title: data.task_title,
     priority: data.priority,
+    iteration: data.iteration,
     status: data.status,
     start_date: data.start_date,
     due_date: data.due_date,
     description: data.description,
     pic_title: data.pic_title,
+    created_by: data.created_by,
     pic: data.pic,
     spv: data.spv,
+    fileName: data.files,
   };
 
-  return await createTaskRepo(dataRest, files);
+  return await createTaskRepo(dataRest);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllDirectorTaskServ = async () => {
-  return await getAllDirectorTaskRepo();
+const getAllDirectorTaskServ = async (status) => {
+  return await getAllDirectorTaskRepo(status);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllManagerTaskServ = async () => {
-  return await getAllManagerTaskRepo();
+const getAllManagerTaskServ = async (status) => {
+  return await getAllManagerTaskRepo(status);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllSupervisorTaskServ = async () => {
-  return await getAllSupervisorTaskRepo();
+const getAllSupervisorTaskServ = async (status) => {
+  return await getAllSupervisorTaskRepo(status);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllOperatorTaskServ = async () => {
-  return await getAllOperatorTaskRepo();
+const getAllOperatorTaskServ = async (status) => {
+  return await getAllOperatorTaskRepo(status);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllTaskServ = async () => {
-  return await getAllTaskRepo();
+const getAllTaskServ = async (status) => {
+  return await getAllTaskRepo(status);
 };
 
 //  Service untuk mengambil semua task yang belum di acc

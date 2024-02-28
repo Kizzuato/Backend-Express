@@ -4,12 +4,13 @@ const {
   LoginUser,
   getAllUserServ,
   deleteUserServ,
+  getUserByIdServ
 } = require("./userServ");
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, password, repassword } = req.body;
+  const { name, email, title, password, repassword } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
@@ -20,6 +21,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       password,
+      title
     };
 
     const response = await createUserServ(data);
@@ -62,6 +64,17 @@ router.delete("/delete-user/:id", async (req, res) => {
   try {
     const response = await deleteUserServ(id);
     return res.status(200).json("Deleted");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+router.get("/get-by-id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await getUserByIdServ(id);
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });

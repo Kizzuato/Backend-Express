@@ -32,8 +32,8 @@ model m_user {
 
 model task {
   id              String    @id @default(cuid())
-  pic_id          String    
-  spv_id          String    
+  pic_id          String?   
+  spv_id          String?   
   task_type       String?
   task_title      String?
   priority        String?

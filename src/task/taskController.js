@@ -1,6 +1,23 @@
 const express = require("express");
 const multer = require("multer");
-const path = require("path");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    // Dapatkan tanggal dan waktu saat ini
+    const now = new Date();
+    const date = now.toISOString().slice(0,10);
+    const time = now.toTimeString().slice(0,8).replace(/:/g, '-');
+
+    // Tambahkan tanggal dan waktu ke nama file
+    const filename = `${date}_${time}_${file.originalname}`;
+
+    cb(null, filename);
+  }
+});
+const upload = multer({ storage: storage });
+
 
 const {
   updateTaskServ,
@@ -25,6 +42,7 @@ const {
   getAllDeletedTaskServ,
 
   getTaskByIdServ,
+  getTaskByEmailServ,
 } = require("./taskServ");
 
 const router = express.Router();
@@ -97,40 +115,34 @@ router.put("/edit/:id", async (req, res) => {
   }
 });
 
-// Set up storage for uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Save files to the 'uploads' folder
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-    );
-  },
-});
 
-// Declare 'upload' after setting up storage
-const upload = multer({ storage: storage });
-
-router.post("/new", upload.array("files[]", 5), async (req, res) => {
+router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
   try {
+    const  nama_file = req.file.originalname;
+    const now = new Date();
+    const date = now.toISOString().slice(0,10);
+    const time = now.toTimeString().slice(0,8).replace(/:/g, '-');
+
+    // Tambahkan tanggal dan waktu ke nama file
+    const filename = `${date}_${time}_${nama_file}`;
+
+    console.log(nama_file);
     const {
       pic_id,
       spv_id,
       task_type,
       task_title,
       priority,
+      iteration,
       status,
       start_date,
       due_date,
       description,
       pic_title,
+      created_by,
       pic,
       spv,
     } = req.body;
-    const files = req.files;
 
     // Process the data and files as needed
     const data = {
@@ -139,14 +151,16 @@ router.post("/new", upload.array("files[]", 5), async (req, res) => {
       task_type,
       task_title,
       priority,
+      iteration,
       status,
       start_date,
       due_date,
       description,
       pic_title,
+      created_by,
       pic,
       spv,
-      files,
+      files : filename
     };
 
     const response = await createTaskServ(data);
@@ -161,7 +175,8 @@ router.post("/new", upload.array("files[]", 5), async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/director", async (req, res) => {
   try {
-    const response = await getAllDirectorTaskServ();
+    const { status } = req.query;
+    const response = await getAllDirectorTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -172,7 +187,8 @@ router.get("/all/director", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/manager", async (req, res) => {
   try {
-    const response = await getAllManagerTaskServ();
+    const { status } = req.query;
+    const response = await getAllManagerTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -183,7 +199,8 @@ router.get("/all/manager", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/supervisor", async (req, res) => {
   try {
-    const response = await getAllSupervisorTaskServ();
+    const { status } = req.query;
+    const response = await getAllSupervisorTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -194,7 +211,8 @@ router.get("/all/supervisor", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/operator", async (req, res) => {
   try {
-    const response = await getAllOperatorTaskServ();
+    const { status } = req.query;
+    const response = await getAllOperatorTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -205,7 +223,8 @@ router.get("/all/operator", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all", async (req, res) => {
   try {
-    const response = await getAllTaskServ();
+    const { status } = req.query;
+    const response = await getAllTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -325,6 +344,18 @@ router.get("/deleted", async (req, res) => {
 
 //  Service untuk mengambil task berdasarkan Id
 router.get("/get-by-id/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await getTaskByIdServ(id);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+//  Service untuk mengambil task berdasarkan Id
+router.get("/get-by-email/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const response = await getTaskByIdServ(id);

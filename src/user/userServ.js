@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const { createUserRepo, Login, getAllUserRepo, deleteUserRepo } = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo } = require("./userRepo");
 const { Response } = require("../../config/response");
 
 dotenv.config();
@@ -14,6 +14,7 @@ const createUserServ = async (data) => {
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
+    title: data.title,
     u_password: hashPassword,
   };
 
@@ -21,6 +22,7 @@ const createUserServ = async (data) => {
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
+      title: response.title,
       uuid: response.u_id,
     };
     return dataReq;
@@ -65,9 +67,14 @@ const deleteUserServ = async (id) => {
     return await deleteUserRepo(id)
 }
 
+const getUserByIdServ = async (id) => {
+  return await getUserByIdRepo(id);
+};
+
 module.exports = {
   createUserServ,
   LoginUser,
   getAllUserServ,
-  deleteUserServ
+  deleteUserServ,
+  getUserByIdServ,
 };
