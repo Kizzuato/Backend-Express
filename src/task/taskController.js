@@ -78,7 +78,6 @@ router.put("/edit/:id", async (req, res) => {
       created_at,
       edited_at,
     };
-    console.log(data)
     const response = await updateTaskServ(taskId, data);
 
     return res.status(200).json(response);
@@ -181,7 +180,6 @@ router.get("/all/operator", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const { status } = req.query;
-    console.log(status)
     const response = await getAllTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {
