@@ -90,8 +90,9 @@ router.put("/edit/:id", async (req, res) => {
 
 
 router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
+  let nama_file
   try {
-    const nama_file = req.file.originalname;
+    if(req.file) nama_file = req.file.originalname;
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
     const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
@@ -99,7 +100,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
     // Tambahkan tanggal dan waktu ke nama file
     const filename = `${date}_${time}_${nama_file}`;
 
-    const { pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, } = req.body;
+    const { pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, fileName } = req.body;
 
     // Process the data and files as needed
     const data = {
@@ -117,7 +118,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
       created_by,
       pic,
       spv,
-      files: filename
+      files: filename || fileName
     };
 
     const response = await createTaskServ(data);
@@ -144,8 +145,7 @@ router.get("/all/director", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/manager", async (req, res) => {
   try {
-    const { status } = req.query;
-    const response = await getAllManagerTaskServ(status);
+    const response = await getAllManagerTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -156,8 +156,9 @@ router.get("/all/manager", async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all/supervisor", async (req, res) => {
   try {
-    const { status } = req.query;
-    const response = await getAllSupervisorTaskServ(status);
+    const { status, search } = req.query;
+    console.log(status, search)
+    const response = await getAllSupervisorTaskServ(status, search);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -204,7 +205,7 @@ router.get("/waited/director", async (req, res) => {
 //  Router untuk mengambil semua task yang belum di acc di database
 router.get("/waited/manager", async (req, res) => {
   try {
-    const response = await getAllWaitedManagerTaskServ();
+    const response = await getAllWaitedManagerTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -215,7 +216,7 @@ router.get("/waited/manager", async (req, res) => {
 //  Router untuk mengambil semua task yang belum di acc di database
 router.get("/waited/supervisor", async (req, res) => {
   try {
-    const response = await getAllWaitedSupervisorTaskServ();
+    const response = await getAllWaitedSupervisorTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -259,7 +260,7 @@ router.get("/deleted/director", async (req, res) => {
 //  Service untuk mengambil semua histori task yang sudah dihapus
 router.get("/deleted/manager", async (req, res) => {
   try {
-    const response = await getAllManagerDeletedTaskServ();
+    const response = await getAllManagerDeletedTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -270,7 +271,7 @@ router.get("/deleted/manager", async (req, res) => {
 //  Service untuk mengambil semua histori task yang sudah dihapus
 router.get("/deleted/supervisor", async (req, res) => {
   try {
-    const response = await getAllSupervisorDeletedTaskServ();
+    const response = await getAllSupervisorDeletedTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
