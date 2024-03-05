@@ -11,7 +11,7 @@ datasource db {
 }
 
 model m_user {
-  u_id            String    @id @default(cuid())
+  u_id            Int    @id @default(autoincrement())
   u_name          String
   u_code          String?
   u_email         String    @unique
@@ -31,7 +31,7 @@ model m_user {
 }
 
 model task {
-  id              String    @id @default(cuid())
+  id              Int    @id @default(autoincrement())
   pic_id          String?   
   spv_id          String?   
   task_type       String?
