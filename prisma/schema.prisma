@@ -11,7 +11,7 @@ datasource db {
 }
 
 model m_user {
-  u_id            String    @id @default(cuid())
+  u_id            Int    @id @default(autoincrement())
   u_name          String
   u_code          String?
   u_email         String    @unique
@@ -31,9 +31,9 @@ model m_user {
 }
 
 model task {
-  id              String    @id @default(cuid())
-  pic_id          String?   
-  spv_id          String?   
+  id              Int    @id @default(autoincrement())
+  pic_id          Int?   
+  spv_id          Int?   
   task_type       String?
   task_title      String?
   priority        String?
@@ -42,8 +42,8 @@ model task {
   due_date        DateTime?
   description     String? @db.Text
   pic_title       String?
-  pic             String?
-  spv             String?
+  pic             Int?
+  spv             Int?
   approved_at     DateTime? 
   approved_by     String? 
   started_at     DateTime? 
@@ -56,7 +56,7 @@ model task {
   filePath        String?
   fileSize        String?
   created_at      DateTime? @default(now())
-  created_by      String?
+  created_by      Int?
   updated_at      DateTime? @updatedAt
   deleted_at      DateTime? 
 }
