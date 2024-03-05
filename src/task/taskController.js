@@ -157,7 +157,6 @@ router.get("/all/manager", async (req, res) => {
 router.get("/all/supervisor", async (req, res) => {
   try {
     const { status, search } = req.query;
-    console.log(status, search)
     const response = await getAllSupervisorTaskServ(status, search);
     return res.status(200).json(response);
   } catch (error) {
@@ -194,7 +193,7 @@ router.get("/all", async (req, res) => {
 //  Router untuk mengambil semua task yang belum di acc di database
 router.get("/waited/director", async (req, res) => {
   try {
-    const response = await getAllWaitedDirectorTaskServ();
+    const response = await getAllWaitedDirectorTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -227,7 +226,7 @@ router.get("/waited/supervisor", async (req, res) => {
 //  Router untuk mengambil semua task yang belum di acc di database
 router.get("/waited/operator", async (req, res) => {
   try {
-    const response = await getAllWaitedOperatorTaskServ();
+    const response = await getAllWaitedOperatorTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -282,7 +281,7 @@ router.get("/deleted/supervisor", async (req, res) => {
 //  Service untuk mengambil semua histori task yang sudah dihapus
 router.get("/deleted/operator", async (req, res) => {
   try {
-    const response = await getAllOperatorDeletedTaskServ();
+    const response = await getAllOperatorDeletedTaskServ(req.query);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
