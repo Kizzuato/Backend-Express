@@ -65,7 +65,7 @@ const taskSeed = async (userData) => {
             task.pic_title = userData.title
             task.pic = userData.id
             task.spv = userData.id
-            task.created_by = userData.id
+            task.created_by = userData.u_name
             await prisma.task.create({ data: task })
         }
     }catch(err){

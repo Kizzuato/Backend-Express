@@ -170,7 +170,7 @@ const getAllDeletedTaskServ = async () => {
 
 // Service untuk mengambil task berdasarkan id
 const getTaskByIdServ = async (id) => {
-  return await getTaskByIdRepo(id);
+  return await getTaskByIdRepo(+id);
 };
 
 module.exports = {

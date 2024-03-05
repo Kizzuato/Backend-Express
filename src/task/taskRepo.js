@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const updateTaskRepo = async (id, data) => {
   return await prisma.task.update({
     where: {
-      id,
+      id: +id,
     },
     data,
   });
@@ -124,7 +124,7 @@ const getAllWaitedSupervisorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
       ...(title && { task_title: { contains: title } }),
-      status: "wait-app",
+      status: "Wait-app",
       deleted_at: null,
       pic_title: "supervisor",
     }, orderBy: { updated_at: "desc" }
