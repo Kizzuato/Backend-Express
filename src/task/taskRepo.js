@@ -42,7 +42,7 @@ const getAllManagerTaskRepo = async (status) => {
       deleted_at: null,
       pic_title: "manager",
       status: status || undefined,
-    },
+    }, orderBy: { created_at: 'desc' }
   });
 };
 
@@ -50,9 +50,11 @@ const getAllManagerTaskRepo = async (status) => {
 const getAllSupervisorTaskRepo = async (status) => {
   return await prisma.task.findMany({
     where: {
-      NOT: {
-        status: "wait-app",
-      },
+      ...(status ? { status } : {
+        NOT: {
+          status: "wait-app",
+        }
+      }),
       deleted_at: null,
       pic_title: {
         in: ["supervisor", "operator"],
@@ -107,7 +109,7 @@ const getAllWaitedManagerTaskRepo = async () => {
       status: "wait-app",
       deleted_at: null,
       pic_title: "manager",
-    },
+    }, orderBy: { created_at: "desc" }
   });
 };
 
@@ -163,7 +165,7 @@ const getAllDeletedManagerTaskRepo = async () => {
         not: null,
       },
       pic_title: "manager",
-    },
+    },  orderBy: { created_at: 'desc' }
   });
 };
 
@@ -223,7 +225,7 @@ const getTaskByEmailRepo = async (email) => {
 module.exports = {
   updateTaskRepo,
   createTaskRepo,
-  
+
   // get all acc task
   getAllDirectorTaskRepo,
   getAllManagerTaskRepo,

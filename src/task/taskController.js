@@ -7,8 +7,8 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     // Dapatkan tanggal dan waktu saat ini
     const now = new Date();
-    const date = now.toISOString().slice(0,10);
-    const time = now.toTimeString().slice(0,8).replace(/:/g, '-');
+    const date = now.toISOString().slice(0, 10);
+    const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
 
     // Tambahkan tanggal dan waktu ke nama file
     const filename = `${date}_${time}_${file.originalname}`;
@@ -50,33 +50,7 @@ const router = express.Router();
 // Router untuk mengedit task
 router.put("/edit/:id", async (req, res) => {
   const taskId = req.params.id;
-
-  const {
-    pic_id,
-    spv_id,
-    task_type,
-    task_title,
-    priority,
-    iteration,
-    start_date,
-    due_date,
-    description,
-    pic_title,
-    pic,
-    spv,
-    approved_at,
-    approved_by,
-    started_at,
-    started_by,
-    finished_at,
-    finished_by,
-    status,
-    progress,
-    file_attachment,
-    created_at,
-    edited_at,
-    deleted_at,
-  } = req.body;
+  const { pic_id, spv_id, task_type, task_title, priority, iteration, start_date, due_date, description, pic_title, pic, spv, approved_at, approved_by, started_at, started_by, deleted_at, finished_by, status, progress, file_attachment, created_at, edited_at } = req.body;
 
   try {
     const data = {
@@ -96,16 +70,15 @@ router.put("/edit/:id", async (req, res) => {
       approved_by,
       started_at,
       started_by,
-      finished_at,
+      deleted_at,
       finished_by,
       status,
       progress,
       file_attachment,
       created_at,
       edited_at,
-      deleted_at,
     };
-
+    console.log(data)
     const response = await updateTaskServ(taskId, data);
 
     return res.status(200).json(response);
@@ -118,31 +91,15 @@ router.put("/edit/:id", async (req, res) => {
 
 router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
   try {
-    const  nama_file = req.file.originalname;
+    const nama_file = req.file.originalname;
     const now = new Date();
-    const date = now.toISOString().slice(0,10);
-    const time = now.toTimeString().slice(0,8).replace(/:/g, '-');
+    const date = now.toISOString().slice(0, 10);
+    const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
 
     // Tambahkan tanggal dan waktu ke nama file
     const filename = `${date}_${time}_${nama_file}`;
 
-    console.log(nama_file);
-    const {
-      pic_id,
-      spv_id,
-      task_type,
-      task_title,
-      priority,
-      iteration,
-      status,
-      start_date,
-      due_date,
-      description,
-      pic_title,
-      created_by,
-      pic,
-      spv,
-    } = req.body;
+    const { pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, } = req.body;
 
     // Process the data and files as needed
     const data = {
@@ -160,7 +117,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
       created_by,
       pic,
       spv,
-      files : filename
+      files: filename
     };
 
     const response = await createTaskServ(data);
@@ -224,6 +181,7 @@ router.get("/all/operator", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const { status } = req.query;
+    console.log(status)
     const response = await getAllTaskServ(status);
     return res.status(200).json(response);
   } catch (error) {

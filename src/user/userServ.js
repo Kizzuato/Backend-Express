@@ -33,12 +33,11 @@ const createUserServ = async (data) => {
 
 const LoginUser = async (email, password) => {
   const user = await Login(email);
-  console.log(user);
 
   if (!user) {
     return Response(404, "", "email invalid");
   }
-
+  console.log(user)
   const validPassword = await bcrypt.compare(password, user.u_password);
   if (!validPassword) {
     return Response(404, "", "password invalid");
