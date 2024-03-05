@@ -90,13 +90,15 @@ const getAllDirectorTaskServ = async (status) => {
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllManagerTaskServ = async (status) => {
-  return await getAllManagerTaskRepo(status);
+const getAllManagerTaskServ = async (q) => {
+  const { status, search } = q
+
+  return await getAllManagerTaskRepo(status, search);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
-const getAllSupervisorTaskServ = async (status) => {
-  return await getAllSupervisorTaskRepo(status);
+const getAllSupervisorTaskServ = async (status, search) => {
+  return await getAllSupervisorTaskRepo(status, search);
 };
 
 //  Service untuk mengambil semua task yang sudah di acc di database
@@ -110,23 +112,27 @@ const getAllTaskServ = async (status) => {
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedDirectorTaskServ = async () => {
-  return await getAllWaitedDirectorTaskRepo();
+const getAllWaitedDirectorTaskServ = async (q) => {
+  const { search } = q
+  return await getAllWaitedDirectorTaskRepo(search);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedManagerTaskServ = async () => {
-  return await getAllWaitedManagerTaskRepo();
+const getAllWaitedManagerTaskServ = async (q) => {
+  const { search } = q
+  return await getAllWaitedManagerTaskRepo(search);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedSupervisorTaskServ = async () => {
-  return await getAllWaitedSupervisorTaskRepo();
+const getAllWaitedSupervisorTaskServ = async (query) => {
+  const { search } = query
+  return await getAllWaitedSupervisorTaskRepo(search);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedOperatorTaskServ = async () => {
-  return await getAllWaitedOperatorTaskRepo();
+const getAllWaitedOperatorTaskServ = async (q) => {
+  const { search } = q
+  return await getAllWaitedOperatorTaskRepo(search);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
@@ -140,18 +146,21 @@ const getAllDirectorDeletedTaskServ = async () => {
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllManagerDeletedTaskServ = async () => {
-  return await getAllDeletedManagerTaskRepo();
+const getAllManagerDeletedTaskServ = async (q) => {
+  const { search } = q
+  return await getAllDeletedManagerTaskRepo(search);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllSupervisorDeletedTaskServ = async () => {
-  return await getAllDeletedSupervisorTaskRepo();
+const getAllSupervisorDeletedTaskServ = async (query) => {
+  const { search } = query
+  return await getAllDeletedSupervisorTaskRepo(search);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllOperatorDeletedTaskServ = async () => {
-  return await getAllDeletedOperatorTaskRepo();
+const getAllOperatorDeletedTaskServ = async (q) => {
+  const { search } = q
+  return await getAllDeletedOperatorTaskRepo(search);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
@@ -161,7 +170,7 @@ const getAllDeletedTaskServ = async () => {
 
 // Service untuk mengambil task berdasarkan id
 const getTaskByIdServ = async (id) => {
-  return await getTaskByIdRepo(id);
+  return await getTaskByIdRepo(+id);
 };
 
 module.exports = {

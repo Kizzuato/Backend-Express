@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const updateTaskRepo = async (id, data) => {
   return await prisma.task.update({
     where: {
-      id,
+      id: +id,
     },
     data,
   });
@@ -33,32 +33,38 @@ const getAllDirectorTaskRepo = async (status) => {
 };
 
 // buat ngambil data manager task monit
-const getAllManagerTaskRepo = async (status) => {
+const getAllManagerTaskRepo = async (status, title) => {
   return await prisma.task.findMany({
     where: {
-      NOT: {
-        status: "wait-app",
-      },
+      ...(title && { task_title: { contains: title } }),
+      ...(status ? { status } : {
+        NOT: {
+          status: "wait-app",
+        }
+      }),
       deleted_at: null,
       pic_title: "manager",
       status: status || undefined,
-    },
+    }, orderBy: { updated_at: 'desc' }
   });
 };
 
 // buat ngambil data spv task monit
-const getAllSupervisorTaskRepo = async (status) => {
+const getAllSupervisorTaskRepo = async (status, title) => {
   return await prisma.task.findMany({
     where: {
-      NOT: {
-        status: "wait-app",
-      },
+      ...(title && { task_title: { contains: title } }),
+      ...(status ? { status } : {
+        NOT: {
+          status: "wait-app",
+        }
+      }),
       deleted_at: null,
       pic_title: {
         in: ["supervisor", "operator"],
       },
       status: status || undefined,
-    },
+    }, orderBy: { updated_at: 'desc' }
   });
 };
 
@@ -90,42 +96,46 @@ const getAllTaskRepo = async (status) => {
 };
 
 //  buat ngambil data director task app
-const getAllWaitedDirectorTaskRepo = async () => {
+const getAllWaitedDirectorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: { contains: title } }),
       status: "wait-app",
       deleted_at: null,
       pic_title: "director",
-    },
+    }, orderBy: { updated_at: "desc" }
   });
 };
 
 //  buat ngambil data manager task app
-const getAllWaitedManagerTaskRepo = async () => {
+const getAllWaitedManagerTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: { contains: title } }),
       status: "wait-app",
       deleted_at: null,
       pic_title: "manager",
-    },
+    }, orderBy: { updated_at: "desc" }
   });
 };
 
 //  buat ngambil data supervisor task app
-const getAllWaitedSupervisorTaskRepo = async () => {
+const getAllWaitedSupervisorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
-      status: "wait-app",
+      ...(title && { task_title: { contains: title } }),
+      status: "Wait-app",
       deleted_at: null,
       pic_title: "supervisor",
-    },
+    }, orderBy: { updated_at: "desc" }
   });
 };
 
 //  buat ngambil data worker task app
-const getAllWaitedOperatorTaskRepo = async () => {
+const getAllWaitedOperatorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: { contains: title } }),
       status: "wait-app",
       deleted_at: null,
       pic_title: "operator",
@@ -156,21 +166,23 @@ const getAllDeletedDirectorTaskRepo = async () => {
 };
 
 //  buat ngambil data manager history manager
-const getAllDeletedManagerTaskRepo = async () => {
+const getAllDeletedManagerTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: {  contains: title} }),
       deleted_at: {
         not: null,
       },
       pic_title: "manager",
-    },
+    },  orderBy: { created_at: 'desc' }
   });
 };
 
 //  buat ngambil data supervisor history supervisor
-const getAllDeletedSupervisorTaskRepo = async () => {
+const getAllDeletedSupervisorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: { contains: title } }),
       deleted_at: {
         not: null,
       },
@@ -180,9 +192,10 @@ const getAllDeletedSupervisorTaskRepo = async () => {
 };
 
 //  buat ngambil data worker history operator
-const getAllDeletedOperatorTaskRepo = async () => {
+const getAllDeletedOperatorTaskRepo = async (title) => {
   return await prisma.task.findMany({
     where: {
+      ...(title && { task_title: { contains: title } }),
       deleted_at: {
         not: null,
       },
@@ -223,7 +236,7 @@ const getTaskByEmailRepo = async (email) => {
 module.exports = {
   updateTaskRepo,
   createTaskRepo,
-  
+
   // get all acc task
   getAllDirectorTaskRepo,
   getAllManagerTaskRepo,

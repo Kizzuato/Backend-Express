@@ -9,7 +9,6 @@ dotenv.config();
 const secretKey = process.env.SECRET_KEY_JWT;
 
 const createUserServ = async (data) => {
-    console.log(data);
   const hashPassword = await bcrypt.hash(data.password, 10);
   const dataRes = {
     u_name: data.name,
@@ -33,12 +32,6 @@ const createUserServ = async (data) => {
 
 const LoginUser = async (email, password) => {
   const user = await Login(email);
-  console.log(user);
-
-  if (!user) {
-    return Response(404, "", "email invalid");
-  }
-
   const validPassword = await bcrypt.compare(password, user.u_password);
   if (!validPassword) {
     return Response(404, "", "password invalid");
@@ -56,7 +49,7 @@ const LoginUser = async (email, password) => {
     accessToken: token,
   };
 
-  return Response(200, data, "email invalid");
+  return data
 };
 
 const getAllUserServ = async () => {
