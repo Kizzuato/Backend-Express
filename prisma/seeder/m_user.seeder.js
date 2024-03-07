@@ -100,6 +100,7 @@ const userSeed = async () => {
         for(let user of users){
             const salt = await bcrypt.genSalt()
             user.u_password = await bcrypt.hash(user.u_password, salt);
+            user.lastSeenNotification = new Date().toISOString()
             const createdUser = await prisma.m_user.upsert({
                 where: { u_email: user.u_email },
                 create: user, update: user

@@ -2,6 +2,9 @@ const express = require('express')
 const notificationRoute = express()
 const notificationControl = require('./notificationController')
 
-notificationRoute.get('/notification/:userId', notificationControl.get)
+notificationRoute.get('/unread/:userId', notificationControl.getUnreadMessages)
+notificationRoute.get('/:userId', notificationControl.get)
+notificationRoute.post('/read/:userId', notificationControl.postReadMessage)
+notificationRoute.post('/create', notificationControl.postCreate)
 
-module.exports =notificationRoute
+module.exports = notificationRoute
