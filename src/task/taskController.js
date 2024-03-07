@@ -22,27 +22,10 @@ const upload = multer({ storage: storage });
 const {
   updateTaskServ,
   createTaskServ,
-
-  getAllDirectorTaskServ,
-  getAllManagerTaskServ,
-  getAllSupervisorTaskServ,
-  getAllOperatorTaskServ,
   getAllTaskServ,
-
   getAllWaitedTaskServ,
-  getAllWaitedDirectorTaskServ,
-  getAllWaitedManagerTaskServ,
-  getAllWaitedSupervisorTaskServ,
-  getAllWaitedOperatorTaskServ,
-
-  getAllDirectorDeletedTaskServ,
-  getAllManagerDeletedTaskServ,
-  getAllSupervisorDeletedTaskServ,
-  getAllOperatorDeletedTaskServ,
   getAllDeletedTaskServ,
-
   getTaskByIdServ,
-  getTaskByEmailServ,
 } = require("./taskServ");
 
 const router = express.Router();
@@ -130,57 +113,14 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 });
 
 //  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all/director", async (req, res) => {
-  try {
-    const { status } = req.query;
-    const response = await getAllDirectorTaskServ(status);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all/manager", async (req, res) => {
-  try {
-    const response = await getAllManagerTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all/supervisor", async (req, res) => {
-  try {
-    const { status, search } = req.query;
-    const response = await getAllSupervisorTaskServ(status, search);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all/operator", async (req, res) => {
-  try {
-    const { status } = req.query;
-    const response = await getAllOperatorTaskServ(status);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all", async (req, res) => {
   try {
-    const { status } = req.query;
-    const response = await getAllTaskServ(status);
+    const { status, search } = req.query;
+    const {username} = req.headers;
+    console.log("status", status);
+    console.log("search", search);
+    console.log("username", username);
+    const response = await getAllTaskServ(status, username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -188,54 +128,11 @@ router.get("/all", async (req, res) => {
   }
 });
 
-//  Router untuk mengambil semua task yang belum di acc di database
-router.get("/waited/director", async (req, res) => {
-  try {
-    const response = await getAllWaitedDirectorTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang belum di acc di database
-router.get("/waited/manager", async (req, res) => {
-  try {
-    const response = await getAllWaitedManagerTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang belum di acc di database
-router.get("/waited/supervisor", async (req, res) => {
-  try {
-    const response = await getAllWaitedSupervisorTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang belum di acc di database
-router.get("/waited/operator", async (req, res) => {
-  try {
-    const response = await getAllWaitedOperatorTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Router untuk mengambil semua task yang belum di acc di database
 router.get("/waited", async (req, res) => {
   try {
-    const response = await getAllWaitedTaskServ();
+    const {username} = req.headers;
+    console.log("username", username);
+    const response = await getAllDeletedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -243,54 +140,11 @@ router.get("/waited", async (req, res) => {
   }
 });
 
-//  Service untuk mengambil semua histori task yang sudah dihapus
-router.get("/deleted/director", async (req, res) => {
-  try {
-    const response = await getAllDirectorDeletedTaskServ();
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Service untuk mengambil semua histori task yang sudah dihapus
-router.get("/deleted/manager", async (req, res) => {
-  try {
-    const response = await getAllManagerDeletedTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Service untuk mengambil semua histori task yang sudah dihapus
-router.get("/deleted/supervisor", async (req, res) => {
-  try {
-    const response = await getAllSupervisorDeletedTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Service untuk mengambil semua histori task yang sudah dihapus
-router.get("/deleted/operator", async (req, res) => {
-  try {
-    const response = await getAllOperatorDeletedTaskServ(req.query);
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
-  }
-});
-
-//  Service untuk mengambil semua histori task yang sudah dihapus
 router.get("/deleted", async (req, res) => {
   try {
-    const response = await getAllDeletedTaskServ();
+    const {username} = req.headers;
+    console.log("username", username);
+    const response = await getAllWaitedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
