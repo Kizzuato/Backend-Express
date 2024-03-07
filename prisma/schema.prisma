@@ -11,10 +11,10 @@ datasource db {
 }
 
 model m_user {
-  u_id            Int    @id @default(autoincrement())
+  u_id            Int            @id @default(autoincrement())
   u_name          String
   u_code          String?
-  u_email         String    @unique
+  u_email         String         @unique
   u_password      String?
   title           String?
   u_token         String?
@@ -26,37 +26,45 @@ model m_user {
   u_city_id       String?
   u_rate          Int?
   total_task      Int?
-  created_at      DateTime? @default(now())
-  updated_at      DateTime? @updatedAt
+  created_at      DateTime?      @default(now())
+  updated_at      DateTime?      @updatedAt
+  Notification    Notification[]
 }
 
 model task {
-  id              Int    @id @default(autoincrement())
-  pic_id          String?   
-  spv_id          String?   
-  task_type       String?
-  task_title      String?
-  priority        String?
-  iteration       String?
-  start_date      DateTime?
-  due_date        DateTime?
-  description     String? @db.Text
-  pic_title       String?
-  pic             String?
-  spv             String?
-  approved_at     DateTime? 
-  approved_by     String? 
-  started_at     DateTime? 
-  started_by     String? 
-  finished_at     DateTime? 
-  finished_by     String? 
-  status          String? @default("Wait-app")
-  progress        Int?    @default(0)
-  fileName        String?
-  filePath        String?
-  fileSize        String?
-  created_at      DateTime? @default(now())
-  created_by      String?
-  updated_at      DateTime? @updatedAt
-  deleted_at      DateTime? 
+  id          Int       @id @default(autoincrement())
+  pic_id      String?
+  spv_id      String?
+  task_type   String?
+  task_title  String?
+  priority    String?
+  iteration   String?
+  start_date  DateTime?
+  due_date    DateTime?
+  description String?   @db.Text
+  pic_title   String?
+  pic         String?
+  spv         String?
+  approved_at DateTime?
+  approved_by String?
+  started_at  DateTime?
+  started_by  String?
+  finished_at DateTime?
+  finished_by String?
+  status      String?   @default("Wait-app")
+  progress    Int?      @default(0)
+  fileName    String?
+  filePath    String?
+  fileSize    String?
+  created_at  DateTime? @default(now())
+  created_by  String?
+  updated_at  DateTime? @updatedAt
+  deleted_at  DateTime?
+}
+
+model Notification {
+  id        Int    @id @default(autoincrement())
+  timeStamp String
+  user      m_user @relation(fields: [userId], references: [u_id])
+  userId    Int
 }

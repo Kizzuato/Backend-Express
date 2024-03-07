@@ -1,31 +1,9 @@
 const {
   updateTaskRepo,
   createTaskRepo,
-
-  // get all acc task
-  getAllDirectorTaskRepo,
-  getAllManagerTaskRepo,
-  getAllSupervisorTaskRepo,
-  getAllOperatorTaskRepo,
   getAllTaskRepo,
-  // get all acc task
-
-  // get all waited acc task
-  getAllWaitedDirectorTaskRepo,
-  getAllWaitedManagerTaskRepo,
-  getAllWaitedSupervisorTaskRepo,
-  getAllWaitedOperatorTaskRepo,
   getAllWaitedTaskRepo,
-  // get all waited acc task
-
-  // get all deleted acc task
-  getAllDeletedDirectorTaskRepo,
-  getAllDeletedManagerTaskRepo,
-  getAllDeletedSupervisorTaskRepo,
-  getAllDeletedOperatorTaskRepo,
   getAllDeletedTaskRepo,
-  // get all deleted acc task
-
   getTaskByIdRepo,
 } = require("./taskRepo");
 
@@ -84,91 +62,20 @@ const createTaskServ = async (data, files) => {
   return await createTaskRepo(dataRest);
 };
 
-//  Service untuk mengambil semua task yang sudah di acc di database
-const getAllDirectorTaskServ = async (status) => {
-  return await getAllDirectorTaskRepo(status);
-};
-
-//  Service untuk mengambil semua task yang sudah di acc di database
-const getAllManagerTaskServ = async (q) => {
-  const { status, search } = q
-
-  return await getAllManagerTaskRepo(status, search);
-};
-
-//  Service untuk mengambil semua task yang sudah di acc di database
-const getAllSupervisorTaskServ = async (status, search) => {
-  return await getAllSupervisorTaskRepo(status, search);
-};
-
-//  Service untuk mengambil semua task yang sudah di acc di database
-const getAllOperatorTaskServ = async (status) => {
-  return await getAllOperatorTaskRepo(status);
-};
-
-//  Service untuk mengambil semua task yang sudah di acc di database
-const getAllTaskServ = async (status) => {
-  return await getAllTaskRepo(status);
+const getAllTaskServ = async (status, username) => {
+  return await getAllTaskRepo(status, username);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedDirectorTaskServ = async (q) => {
-  const { search } = q
-  return await getAllWaitedDirectorTaskRepo(search);
-};
-
-//  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedManagerTaskServ = async (q) => {
-  const { search } = q
-  return await getAllWaitedManagerTaskRepo(search);
-};
-
-//  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedSupervisorTaskServ = async (query) => {
-  const { search } = query
-  return await getAllWaitedSupervisorTaskRepo(search);
-};
-
-//  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedOperatorTaskServ = async (q) => {
-  const { search } = q
-  return await getAllWaitedOperatorTaskRepo(search);
-};
-
-//  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async () => {
-  return await getAllWaitedTaskRepo();
+const getAllWaitedTaskServ = async (username) => {
+  return await getAllWaitedTaskRepo(username);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDirectorDeletedTaskServ = async () => {
-  return await getAllDeletedDirectorTaskRepo();
+const getAllDeletedTaskServ = async (username) => {
+  return await getAllDeletedTaskRepo(username);
 };
 
-// Service untuk mengambil semua histori task yang telah di hapus
-const getAllManagerDeletedTaskServ = async (q) => {
-  const { search } = q
-  return await getAllDeletedManagerTaskRepo(search);
-};
-
-// Service untuk mengambil semua histori task yang telah di hapus
-const getAllSupervisorDeletedTaskServ = async (query) => {
-  const { search } = query
-  return await getAllDeletedSupervisorTaskRepo(search);
-};
-
-// Service untuk mengambil semua histori task yang telah di hapus
-const getAllOperatorDeletedTaskServ = async (q) => {
-  const { search } = q
-  return await getAllDeletedOperatorTaskRepo(search);
-};
-
-// Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async () => {
-  return await getAllDeletedTaskRepo();
-};
-
-// Service untuk mengambil task berdasarkan id
 const getTaskByIdServ = async (id) => {
   return await getTaskByIdRepo(+id);
 };
@@ -176,24 +83,8 @@ const getTaskByIdServ = async (id) => {
 module.exports = {
   updateTaskServ,
   createTaskServ,
-
-  getAllDirectorTaskServ,
-  getAllManagerTaskServ,
-  getAllSupervisorTaskServ,
-  getAllOperatorTaskServ,
   getAllTaskServ,
-
   getAllWaitedTaskServ,
-  getAllWaitedDirectorTaskServ,
-  getAllWaitedManagerTaskServ,
-  getAllWaitedSupervisorTaskServ,
-  getAllWaitedOperatorTaskServ,
-
-  getAllDirectorDeletedTaskServ,
-  getAllManagerDeletedTaskServ,
-  getAllSupervisorDeletedTaskServ,
-  getAllOperatorDeletedTaskServ,
   getAllDeletedTaskServ,
-
   getTaskByIdServ,
 };
