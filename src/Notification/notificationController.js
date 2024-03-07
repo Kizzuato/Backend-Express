@@ -10,8 +10,9 @@ const error = (res, message, status = 404) =>  {
 // Response Handler End
 
 const get = async (req, res) => {
+    const { id } = req.user
     try{
-        const data = await service.getAll(+req.params.userId)
+        const data = await service.getAll(id)
         return success(res, 'Get Success', data)
     }catch(err){
         return error(res, err.message)
@@ -19,8 +20,9 @@ const get = async (req, res) => {
 }
 
 const postReadMessage = async (req, res) => {
+    const { id } = req.user
     try{
-        const updateUser = await service.readMessage(+req.params.userId)
+        const updateUser = await service.readMessage(id)
         return success(res, 'Message Readed', updateUser)
     }catch(err){
         return error(res, err.message)
