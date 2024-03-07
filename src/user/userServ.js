@@ -9,7 +9,6 @@ dotenv.config();
 const secretKey = process.env.SECRET_KEY_JWT;
 
 const createUserServ = async (data) => {
-    console.log(data);
   const hashPassword = await bcrypt.hash(data.password, 10);
   const dataRes = {
     u_name: data.name,

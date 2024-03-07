@@ -61,7 +61,6 @@ router.put("/edit/:id", async (req, res) => {
       created_at,
       edited_at,
     };
-    console.log(data)
     const response = await updateTaskServ(taskId, data);
 
     return res.status(200).json(response);
