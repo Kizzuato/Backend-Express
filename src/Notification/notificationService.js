@@ -11,17 +11,7 @@ const getAll = async (userId) => {
             time: notif.timeStamp,
             message: notif.message,
         }))
-        return notifications
-    }catch(err){
-        console.log(err)
-        throw err
-    }
-}
-
-const getUnread = async  (userId) => {
-    try{
-        const user = await prisma.m_user.findFirstOrThrow({  where: { u_id: userId }})
-        return await prisma.notification.count({where: { ...(user.lastSeenNotification != null && {created_at: { gte: user.lastSeenNotification }}) } })
+        return { notifs: notifications, unread: notifications.length }
     }catch(err){
         console.log(err)
         throw err
@@ -51,8 +41,9 @@ const createNotif = async (data) => {
 
 const generateTimeStamp = () => {
     const currentDate = new Date()
-    const currentHour = currentDate.getHours(), currentMinute = currentDate.getMinutes()
-    return `${currentHour}:${currentMinute} ${currentHour > 12 ? "PM" : "AM"}`
+    let currentHour = currentDate.getHours(), currentMinute = currentDate.getMinutes()
+    if(currentHour >= 12) currentHour = currentHour - 12 
+    return `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')} ${currentHour > 12 ? "PM" : "AM"}`
 }
 
-module.exports = { getAll, createNotif, getUnread, readMessage,createNotif }
+module.exports = { getAll, createNotif, readMessage,createNotif }

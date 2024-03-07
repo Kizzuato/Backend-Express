@@ -11,17 +11,8 @@ const error = (res, message, status = 404) =>  {
 
 const get = async (req, res) => {
     try{
-        const messages = await service.getAll(+req.params.userId)
-        return success(res, 'Get Success', messages)
-    }catch(err){
-        return error(res, err.message)
-    }
-}
-
-const getUnreadMessages = async (req, res) => {
-    try{
-        const messages = await service.getUnread(+req.params.userId)
-        return success(res, 'Get Success', messages)
+        const data = await service.getAll(+req.params.userId)
+        return success(res, 'Get Success', data)
     }catch(err){
         return error(res, err.message)
     }
@@ -45,4 +36,4 @@ const postCreate = async (req, res) => {
     }
 }
 
-module.exports = { get, getUnreadMessages, postReadMessage, postCreate }
+module.exports = { get, postReadMessage, postCreate }
