@@ -43,6 +43,7 @@ model task {
   description     String? @db.Text
   pic_title       String?
   pic             String?
+  pic_rating      Int?
   spv             String?
   approved_at     DateTime? 
   approved_by     String? 

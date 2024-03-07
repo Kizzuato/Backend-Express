@@ -21,6 +21,7 @@ const updateTaskServ = async (id, data) => {
     description: data.description,
     pic_title: data.pic_title,
     pic: data.pic,
+    pic_rating: data.pic_rating,
     spv: data.spv,
     approved_at: data.approved_at,
     approved_by: data.approved_by,
