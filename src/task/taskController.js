@@ -33,7 +33,7 @@ const router = express.Router();
 // Router untuk mengedit task
 router.put("/edit/:id", async (req, res) => {
   const taskId = req.params.id;
-  const { pic_id, spv_id, task_type, task_title, priority, iteration, start_date, due_date, description, pic_title, pic, spv, approved_at, approved_by, started_at, started_by, deleted_at, finished_by, status, progress, file_attachment, created_at, edited_at } = req.body;
+  const { pic_id, spv_id, task_type, task_title, priority, iteration, start_date, due_date, description, pic_title, pic, spv, approved_at, approved_by, started_at, started_by, deleted_at, finished_by, status, progress, file_attachment, created_at, edited_at, pic_rating } = req.body;
 
   try {
     const data = {
@@ -48,6 +48,7 @@ router.put("/edit/:id", async (req, res) => {
       description,
       pic_title,
       pic,
+      pic_rating,
       spv,
       approved_at,
       approved_by,
@@ -132,7 +133,7 @@ router.get("/waited", async (req, res) => {
   try {
     const {username} = req.headers;
     console.log("username", username);
-    const response = await getAllDeletedTaskServ(username);
+    const response = await getAllWaitedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -144,7 +145,7 @@ router.get("/deleted", async (req, res) => {
   try {
     const {username} = req.headers;
     console.log("username", username);
-    const response = await getAllWaitedTaskServ(username);
+    const response = await getAllDeletedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

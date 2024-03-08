@@ -6,6 +6,7 @@ const path = require('path');
 
 const userController = require('./user/userControler');
 const TaskController = require('./task/taskController')
+const notificationRoute = require('./Notification/notificationRoute');
 
 const corsOptions = {
   origin: "*",
@@ -28,6 +29,7 @@ app.get('/image/:name', (req, res) => {
 
 app.use('/user', userController);
 app.use('/task', TaskController);
+app.use('/notif', notificationRoute)
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
