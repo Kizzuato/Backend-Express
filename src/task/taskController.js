@@ -133,7 +133,7 @@ router.get("/waited", async (req, res) => {
   try {
     const {username} = req.headers;
     console.log("username", username);
-    const response = await getAllDeletedTaskServ(username);
+    const response = await getAllWaitedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -145,7 +145,7 @@ router.get("/deleted", async (req, res) => {
   try {
     const {username} = req.headers;
     console.log("username", username);
-    const response = await getAllWaitedTaskServ(username);
+    const response = await getAllDeletedTaskServ(username);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
