@@ -7,6 +7,8 @@ const {
   getTaskByIdRepo,
 } = require("./taskRepo");
 
+const {updatePicRepo} = require("../user/userRepo");
+
 // service untuk mengedit task
 const updateTaskServ = async (id, data) => {
   const dataRest = {
@@ -38,6 +40,34 @@ const updateTaskServ = async (id, data) => {
   };
 
   return await updateTaskRepo(id, dataRest);
+};
+
+const AcceptTaskServe = async (id, data) => {
+  try {
+    // Ambil data task sebelum diupdate
+    const existingTask = await getTaskByIdRepo(+id);
+
+    // Lakukan validasi atau logika bisnis jika diperlukan
+    const pic = data.pic;
+    const updatedTask = {
+      pic_rating: data.pic_rating,
+      status: data.status,
+      approved_at: data.approved_at
+    };
+    await updateTaskRepo(id, updatedTask);
+
+    // Perbarui total_task dan total_rating pada tabel pic jika task diterima (misalnya, status "accepted")
+    if (
+      existingTask.status === "In-progress" &&
+      updatedTask.status === "Close"
+    ) {
+      await updatePicRepo(pic, updatedTask.pic_rating);
+    }
+
+    return updatedTask;
+  } catch (error) {
+    throw error;
+  }
 };
 
 // Service untuk membuat task baru
@@ -83,6 +113,7 @@ const getTaskByIdServ = async (id) => {
 
 module.exports = {
   updateTaskServ,
+  AcceptTaskServe,
   createTaskServ,
   getAllTaskServ,
   getAllWaitedTaskServ,

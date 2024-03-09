@@ -20,6 +20,7 @@ const upload = multer({ storage: storage });
 
 
 const {
+  AcceptTaskServe,
   updateTaskServ,
   createTaskServ,
   getAllTaskServ,
@@ -29,6 +30,27 @@ const {
 } = require("./taskServ");
 
 const router = express.Router();
+
+// Router untuk mengedit task
+router.put("/acc/:id", async (req, res) => {
+  const { id } = req.params;
+  const {pic, status, pic_rating, approved_at } = req.body;
+
+  try {
+    const data = {
+      pic,
+      pic_rating,
+      status,
+      approved_at
+    };
+    const response = await AcceptTaskServe(id, data);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
 
 // Router untuk mengedit task
 router.put("/edit/:id", async (req, res) => {
