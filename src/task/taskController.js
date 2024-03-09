@@ -17,6 +17,18 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
+const uploadExcel = multer({
+  storage,
+  fileFilter(req, file, cb) {
+    const allowedMimeTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      req.fileValidationError = 'Only image file are allowed'
+      cb(null, false)
+      return
+    }
+    cb(null, true)
+  }
+})
 
 
 const {
@@ -26,7 +38,10 @@ const {
   getAllWaitedTaskServ,
   getAllDeletedTaskServ,
   getTaskByIdServ,
+  storeToExcel,
 } = require("./taskServ");
+const { error, success } = require("../Notification/notificationController");
+const { auth } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -75,7 +90,7 @@ router.put("/edit/:id", async (req, res) => {
 router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
   let nama_file
   try {
-    if(req.file) nama_file = req.file.originalname;
+    if (req.file) nama_file = req.file.originalname;
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
     const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
@@ -117,7 +132,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const { status, search } = req.query;
-    const {username} = req.headers;
+    const { username } = req.headers;
     console.log("status", status);
     console.log("search", search);
     console.log("username", username);
@@ -131,7 +146,7 @@ router.get("/all", async (req, res) => {
 
 router.get("/waited", async (req, res) => {
   try {
-    const {username} = req.headers;
+    const { username } = req.headers;
     console.log("username", username);
     const response = await getAllWaitedTaskServ(username);
     return res.status(200).json(response);
@@ -143,7 +158,7 @@ router.get("/waited", async (req, res) => {
 
 router.get("/deleted", async (req, res) => {
   try {
-    const {username} = req.headers;
+    const { username } = req.headers;
     console.log("username", username);
     const response = await getAllDeletedTaskServ(username);
     return res.status(200).json(response);
@@ -176,5 +191,18 @@ router.get("/get-by-email/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
+
+
+// Import Excel
+router.post('/store-excel', auth, uploadExcel.single('file'), async (req, res) => {
+  try {
+    if (!req.file) throw Error('Please include the proper Excel File')
+    const data = await storeToExcel(req.file, req.user, req.body.info)
+    return success(res, 'Excel Stored Successfully', data)
+  } catch (err) {
+    console.log(err)
+    return error(res, err.message)
+  }
+})
 
 module.exports = router;
