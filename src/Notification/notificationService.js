@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 const getAll = async (userId) => {
     try{
         const user = await prisma.m_user.findFirstOrThrow({  where: { u_id: userId }})
-        let notifications = await prisma.notification.findMany({ where: { ...(user.lastSeenNotification != null && {created_at: { gte: user.lastSeenNotification }}) }, select:{ message: true, timeStamp: true, task: true } })
+        let notifications = await prisma.notification.findMany({ where: { ...(user.lastSeenNotification != null && {created_at: { gt: user.lastSeenNotification }}) }, select:{ message: true, timeStamp: true, task: true }, take: 5, orderBy: { created_at: 'desc' } })
         notifications = notifications.map(notif => ({
             taskTitle: notif.task.task_title,
             pic: notif.task.pic,
