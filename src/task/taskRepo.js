@@ -18,9 +18,13 @@ const createTaskRepo = async (data) => {
   });
 };
 
+const createManyTask = async (data) => {
+  return await prisma.task.createMany({ data })
+}
+
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllTaskRepo = async (status, username) => {
-  return await prisma.task.findMany({
+return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
@@ -76,6 +80,7 @@ const getTaskByEmailRepo = async (email) => {
 module.exports = {
   updateTaskRepo,
   createTaskRepo,
+  createManyTask,
   getAllTaskRepo,
   getAllWaitedTaskRepo,
   getAllDeletedTaskRepo,

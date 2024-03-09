@@ -38,4 +38,4 @@ const postCreate = async (req, res) => {
     }
 }
 
-module.exports = { get, postReadMessage, postCreate }
+module.exports = { get, postReadMessage, postCreate, success, error }
