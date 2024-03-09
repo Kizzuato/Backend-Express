@@ -66,6 +66,13 @@ const AcceptTaskServe = async (id, data) => {
       updatedTask.status === "Close"
     ) {
       await updatePicRepo(pic, updatedTask.pic_rating);
+    } else if (
+      existingTask.status === "Idle" &&
+      updatedTask.status === "Close"
+    ) {
+      const pic_rating = updatedTask.pic_rating - 2
+      console.log(pic_rating)
+      await updatePicRepo(pic, pic_rating);
     }
 
     return updatedTask;
