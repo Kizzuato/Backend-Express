@@ -172,8 +172,8 @@ router.get("/all", async (req, res) => {
 router.get("/waited", async (req, res) => {
   try {
     const { pic, spv, division } = req.headers;
-    // console.log("pic", pic);
-    // console.log("spv", spv);
+    console.log("pic", pic);
+    console.log("spv", spv);
     const response = await getAllWaitedTaskServ(pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {

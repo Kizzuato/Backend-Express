@@ -39,28 +39,28 @@ return await prisma.task.findMany({
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async (division, pic, spv) => {
+const getAllWaitedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
       deleted_at: null,
-      division: division || undefined,
       pic: pic || undefined,
       spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (division, pic, spv) => {
+const getAllDeletedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {
         not: null,
       },
-      division: division || undefined,
       pic: pic || undefined,
       spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
