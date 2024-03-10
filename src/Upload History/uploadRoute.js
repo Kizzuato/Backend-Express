@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
         const now = new Date();
         const date = now.toISOString().slice(0, 10);
         const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
-
         // Tambahkan tanggal dan waktu ke nama file
         const filename = `${date}_${time}_${file.originalname}`;
 
@@ -24,7 +23,7 @@ const uploadExcel = multer({
     fileFilter(req, file, cb) {
         const allowedMimeTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
         if (!allowedMimeTypes.includes(file.mimetype)) {
-            req.fileValidationError = 'Only image file are allowed'
+            req.fileValidationError = 'Only excel file are allowed'
             cb(null, false)
             return
         }

@@ -69,13 +69,18 @@ const getAllHistory = async (search, from, to) => {
       },
       select: { fileName: true, created_at: true, user: { select: { u_name: true, title: true } } }
     })
-    histories = histories.map(history => ({
-      fileName: history.fileName,
-      uploadedDate: history.created_at.toISOString().split('T')[0],
-      uploadedBy: history.user.u_name,
-      jabatan: history.user.title
-    }))
-    return histories
+    let no = 1, historyData = []
+    for(let history of histories){
+      historyData.push({
+        no,
+        fileName: history.fileName,
+        uploadedDate: history.created_at.toISOString().split('T')[0],
+        uploadedBy: history.user.u_name,
+        jabatan: history.user.title
+      })
+      no++
+    }
+    return historyData
   } catch (err) {
     console.log(err)
     throw err
