@@ -111,17 +111,39 @@ router.put("/edit/:id", async (req, res) => {
 
 
 router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
-  let nama_file
   try {
-    if (req.file) nama_file = req.file.originalname;
-    const now = new Date();
-    const date = now.toISOString().slice(0, 10);
-    const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+    let nama_file = null;
 
-    // Tambahkan tanggal dan waktu ke nama file
-    const filename = `${date}_${time}_${nama_file}`;
+    if (req.file) {
+      nama_file = req.file.originalname;
+    }
 
-    const { pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, fileName } = req.body;
+    let filename = null;
+
+    if (nama_file !== null) {
+      const now = new Date();
+      const date = now.toISOString().slice(0, 10);
+      const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+      filename = `${date}_${time}_${nama_file}`;
+    }
+
+    const {
+      pic_id,
+      spv_id,
+      task_type,
+      task_title,
+      priority,
+      iteration,
+      status,
+      start_date,
+      due_date,
+      description,
+      pic_title,
+      created_by,
+      pic,
+      spv,
+      fileName
+    } = req.body;
 
     // Process the data and files as needed
     const data = {
@@ -150,6 +172,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
+
 
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all", async (req, res) => {
