@@ -155,12 +155,12 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const { status, search } = req.query;
-    const { pic, spv } = req.headers;
-    console.log("status", status);
-    console.log("search", search);
-    console.log("pic", pic);
-    console.log("spv", spv);
-    const response = await getAllTaskServ(status, pic, spv);
+    const { pic, spv, division } = req.headers;
+    // console.log("status", status);
+    // console.log("search", search);
+    // console.log("pic", pic);
+    // console.log("spv", spv);
+    const response = await getAllTaskServ(search, status, pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -170,10 +170,10 @@ router.get("/all", async (req, res) => {
 
 router.get("/waited", async (req, res) => {
   try {
-    const { pic, spv } = req.headers;
-    console.log("pic", pic);
-    console.log("spv", spv);
-    const response = await getAllWaitedTaskServ(pic, spv);
+    const { pic, spv, division } = req.headers;
+    // console.log("pic", pic);
+    // console.log("spv", spv);
+    const response = await getAllWaitedTaskServ(pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -183,10 +183,10 @@ router.get("/waited", async (req, res) => {
 
 router.get("/deleted", async (req, res) => {
   try {
-    const { pic, spv } = req.headers;
-    console.log("pic", pic);
-    console.log("spv", spv);
-    const response = await getAllDeletedTaskServ(pic, spv);
+    const { pic, spv, division } = req.headers;
+    // console.log("pic", pic);
+    // console.log("spv", spv);
+    const response = await getAllDeletedTaskServ(pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
