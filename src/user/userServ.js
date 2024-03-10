@@ -70,7 +70,8 @@ const getAllUserServ = async () => {
 };
 
 const deleteUserServ = async (id) => {
-    return await deleteUserRepo(id)
+    const UserId = parseInt(id)
+    return await deleteUserRepo(UserId)
 }
 
 const getUserByIdServ = async (id) => {

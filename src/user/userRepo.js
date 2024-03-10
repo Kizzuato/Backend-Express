@@ -33,10 +33,10 @@ const getAllUserRepo = async () => {
   return await prisma.m_user.findMany();
 };
 
-const deleteUserRepo = async (id) => {
+const deleteUserRepo = async (UserId) => {
   return await prisma.m_user.delete({
     where: {
-      u_id: id,
+      u_id: UserId,
     },
   });
 };
