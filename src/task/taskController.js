@@ -156,10 +156,11 @@ router.get("/all", async (req, res) => {
   try {
     const { status, search } = req.query;
     const { pic, spv, division } = req.headers;
-    // console.log("status", status);
-    // console.log("search", search);
-    // console.log("pic", pic);
-    // console.log("spv", spv);
+    console.log("division", division);
+    console.log("status", status);
+    console.log("search", search);
+    console.log("pic", pic);
+    console.log("spv", spv);
     const response = await getAllTaskServ(search, status, pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {

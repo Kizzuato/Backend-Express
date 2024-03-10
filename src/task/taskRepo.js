@@ -23,17 +23,17 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (status, division, pic, spv) => {
+const getAllTaskRepo = async (search, status, pic, spv, division) => {
 return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
-      deleted_at: null,
-      division: division || undefined,
-      pic: pic || undefined,
-      spv: spv || undefined,
       status: status || undefined,
+      pic: pic || undefined,
+      deleted_at: null,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };

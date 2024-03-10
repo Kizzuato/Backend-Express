@@ -18,7 +18,8 @@ const tasks = [
         pic_title: "Manager",
         progress: 100,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -34,7 +35,8 @@ const tasks = [
         pic_title: "Manager",
         progress: 0,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -51,7 +53,8 @@ const tasks = [
         pic_title: "Manager",
         progress: 20,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -67,7 +70,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 0,
         pic: "Ara ariyanti",
-        spv: "Ikromullah"
+        spv: "Ikromullah",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -84,7 +88,8 @@ const tasks = [
         pic_title: "Supervisor",
         progress: 50,
         pic: "M.Azuari Rahman",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -101,7 +106,8 @@ const tasks = [
         pic_title: "Supervisor",
         progress: 65,
         pic: "Ikromullah",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -118,7 +124,8 @@ const tasks = [
         pic_title: "Supervisor",
         progress: 77,
         pic: "Komariah Santi",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -135,7 +142,8 @@ const tasks = [
         pic_title: "Supervisor",
         progress: 67,
         pic: "M.Azuari Rahman",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -152,7 +160,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 75,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -169,7 +178,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 89,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -185,7 +195,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 0,
         pic: "Sanusi",
-        spv: "M.Azuari Rahman"
+        spv: "M.Azuari Rahman",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -203,7 +214,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 100,
         pic: "Entin",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -221,7 +233,8 @@ const tasks = [
         pic_title: "Operator",
         progress: 100,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -239,14 +252,14 @@ const tasks = [
         pic_title: "Operator",
         progress: 100,
         pic: "Sanusi",
-        spv: "Komariah Santi"
+        spv: "Komariah Santi",
+        division: "RES"
     },
 ]
 
 const taskSeed = async (userData) => {
     try {
         for (let task of tasks) {
-            // Melakukan pengecekan apakah task dengan karakteristik tertentu sudah ada atau belum
             const existingTask = await prisma.task.findFirst({
                 where: {
                     task_title: task.task_title,
