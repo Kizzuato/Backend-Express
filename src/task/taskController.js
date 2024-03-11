@@ -17,18 +17,6 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
-const uploadExcel = multer({
-  storage,
-  fileFilter(req, file, cb) {
-    const allowedMimeTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
-    if (!allowedMimeTypes.includes(file.mimetype)) {
-      req.fileValidationError = 'Only image file are allowed'
-      cb(null, false)
-      return
-    }
-    cb(null, true)
-  }
-})
 
 
 const {
@@ -41,8 +29,6 @@ const {
   getTaskByIdServ,
   storeToExcel,
 } = require("./taskServ");
-const { error, success } = require("../Notification/notificationController");
-const { auth } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -242,17 +228,5 @@ router.get("/get-by-email/:id", async (req, res) => {
   }
 });
 
-
-// Import Excel
-router.post('/store-excel', auth, uploadExcel.single('file'), async (req, res) => {
-  try {
-    if (!req.file) throw Error('Please include the proper Excel File')
-    const data = await storeToExcel(req.file, req.user, req.body.info)
-    return success(res, 'Excel Stored Successfully', data)
-  } catch (err) {
-    console.log(err)
-    return error(res, err.message)
-  }
-})
 
 module.exports = router;
