@@ -18,39 +18,49 @@ const createTaskRepo = async (data) => {
   });
 };
 
+const createManyTask = async (data) => {
+  return await prisma.task.createMany({ data })
+}
+
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (status, username) => {
-  return await prisma.task.findMany({
+const getAllTaskRepo = async (search, status, pic, spv, division) => {
+return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
-      deleted_at: null,
-      pic: username || undefined,
       status: status || undefined,
+      pic: pic || undefined,
+      deleted_at: null,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async (username) => {
+const getAllWaitedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
       deleted_at: null,
-      pic: username || undefined,
+      pic: pic || undefined,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (username) => {
+const getAllDeletedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {
         not: null,
       },
-      pic: username || undefined,
+      pic: pic || undefined,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
@@ -76,6 +86,7 @@ const getTaskByEmailRepo = async (email) => {
 module.exports = {
   updateTaskRepo,
   createTaskRepo,
+  createManyTask,
   getAllTaskRepo,
   getAllWaitedTaskRepo,
   getAllDeletedTaskRepo,

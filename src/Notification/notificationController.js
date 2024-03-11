@@ -10,9 +10,9 @@ const error = (res, message, status = 404) =>  {
 // Response Handler End
 
 const get = async (req, res) => {
-    const { id } = req.user
+    const { u_id } = req.user
     try{
-        const data = await service.getAll(id)
+        const data = await service.getAll(u_id)
         return success(res, 'Get Success', data)
     }catch(err){
         return error(res, err.message)
@@ -20,9 +20,9 @@ const get = async (req, res) => {
 }
 
 const postReadMessage = async (req, res) => {
-    const { id } = req.user
+    const { u_id } = req.user
     try{
-        const updateUser = await service.readMessage(id)
+        const updateUser = await service.readMessage(u_id)
         return success(res, 'Message Readed', updateUser)
     }catch(err){
         return error(res, err.message)
@@ -38,4 +38,4 @@ const postCreate = async (req, res) => {
     }
 }
 
-module.exports = { get, postReadMessage, postCreate }
+module.exports = { get, postReadMessage, postCreate, success, error }

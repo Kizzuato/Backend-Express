@@ -31,25 +31,38 @@ const createUserServ = async (data) => {
 };
 
 const LoginUser = async (email, password) => {
-  const user = await Login(email);
-  const validPassword = await bcrypt.compare(password, user.u_password);
-  if (!validPassword) {
-    return Response(404, "", "password invalid");
+  try {
+    const user = await Login(email);
+
+    if (!user) {
+      return Response(404, null, 'User not found');
+    }
+
+    const validPassword = await bcrypt.compare(password, user.u_password);
+
+    if (!validPassword) {
+      return Response(401, null, 'Invalid password');
+    }
+
+    const token = jwt.sign({ namaUser: user.u_name, id: user.u_id }, secretKey, {
+      expiresIn: '1d',
+    });
+
+    const data = {
+      name: user.u_name,
+      uuid: user.u_id,
+      email: user.u_email,
+      title: user.title,
+      u_rate: user.u_rate,
+      total_task: user.total_task,
+      accessToken: token,
+    };
+
+    return Response(200, data, 'Login successful');
+  } catch (error) {
+    console.error(error);
+    return Response(500, null, 'Internal server error');
   }
-
-  const token = jwt.sign({ namaUser: user.u_name, id: user.u_id }, secretKey, {
-    expiresIn: "1d",
-  });
-
-  const data = {
-    name: user.u_name,
-    uuid: user.u_id,
-    email: user.u_email,
-    title: user.title,
-    accessToken: token,
-  };
-
-  return data
 };
 
 const getAllUserServ = async () => {
@@ -57,7 +70,8 @@ const getAllUserServ = async () => {
 };
 
 const deleteUserServ = async (id) => {
-    return await deleteUserRepo(id)
+    const UserId = parseInt(id)
+    return await deleteUserRepo(UserId)
 }
 
 const getUserByIdServ = async (id) => {
