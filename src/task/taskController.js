@@ -33,12 +33,12 @@ const {
 const router = express.Router();
 
 // Router untuk mengedit task
-router.put("/file_hasil/:id", upload.single('file_hasil'), async (req, res) => {
+router.put("/file_hasil/:strid", upload.single('file_hasil'), async (req, res) => {
   try {
     let nama_file = null;
 
     if (req.file) {
-      nama_file = req.file.originalname;
+      nama_file = req.yoriginalname;
     }
 
     let filename = null;
@@ -50,7 +50,8 @@ router.put("/file_hasil/:id", upload.single('file_hasil'), async (req, res) => {
       filename = `${date}_${time}_${nama_file}`;
     }
 
-    const { id } = req.params;
+    const { strid } = req.params;
+    const id = parseInt(strid);
 
     const {
       fileName
@@ -61,7 +62,7 @@ router.put("/file_hasil/:id", upload.single('file_hasil'), async (req, res) => {
       file_hasil: filename || fileName
     };
 
-    const response = await updateTaskServ(file_hasil, id);
+    const response = await updateTaskServ(id, data);
 
     return res.status(200).json(response);
   } catch (error) {
