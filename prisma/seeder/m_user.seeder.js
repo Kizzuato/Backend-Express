@@ -8,7 +8,7 @@ const users = [
         u_email: "Novi@gmail.com",
         u_password: "12345678",
         title: "director",
-        division: "RESS"
+        division: "RES"
     },
     {
         u_name: "user",
