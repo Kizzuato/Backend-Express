@@ -161,7 +161,6 @@ router.get("/waited", auth, async (req, res) => {
 
 router.get("/deleted", auth, async (req, res) => {
   try {
-    console.log("req.user", req.user);
     const response = await getAllDeletedTaskServ(req.user);
     return res.status(200).json(response);
   } catch (error) {
