@@ -10,6 +10,12 @@ const users = [
         title: "director",
     },
     {
+        u_name: "Director",
+        u_email: "director@gmail.com",
+        u_password: "12345678",
+        title: "director",
+    },
+    {
         u_name: "user",
         u_email: "user@gmail.com",
         u_password: "12345678",
@@ -27,6 +33,12 @@ const users = [
         u_password: "12345678",
         title: "manager",
     },
+    {
+        u_name: "Manager",
+        u_email: "manager@gmail.com",
+        u_password: "12345678",
+        title: "manager",
+},
     {
         u_name: "Komariah Santi",
         u_email: "komariah@gmail.com",
@@ -54,6 +66,12 @@ const users = [
     {
         u_name: "Ikromullah",
         u_email: "ikromullah@gmail.com",
+        u_password: "12345678",
+        title: "supervisor",
+    },
+    {
+        u_name: "Supervisor",
+        u_email: "supervisor@gmail.com",
         u_password: "12345678",
         title: "supervisor",
     },
@@ -90,6 +108,12 @@ const users = [
     {
         u_name: "Romi pangestuda",
         u_email: "romi@gmail.com",
+        u_password: "12345678",
+        title: "operator",
+    },
+    {
+        u_name: "Operator",
+        u_email: "operator@gmail.com",
         u_password: "12345678",
         title: "operator",
     }

@@ -29,6 +29,7 @@ const {
   getTaskByIdServ,
   storeToExcel,
 } = require("./taskServ");
+const { auth } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -137,14 +138,10 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 });
 
 //  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all", async (req, res) => {
+router.get("/all", auth, async (req, res) => {
   try {
     const { status, search } = req.query;
-    const { username } = req.headers;
-    console.log("status", status);
-    console.log("search", search);
-    console.log("username", username);
-    const response = await getAllTaskServ(status, username);
+    const response = await getAllTaskServ(status, req.user);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -152,11 +149,9 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/waited", async (req, res) => {
+router.get("/waited", auth, async (req, res) => {
   try {
-    const { username } = req.headers;
-    console.log("username", username);
-    const response = await getAllWaitedTaskServ(username);
+    const response = await getAllWaitedTaskServ(req.user);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -164,11 +159,10 @@ router.get("/waited", async (req, res) => {
   }
 });
 
-router.get("/deleted", async (req, res) => {
+router.get("/deleted", auth, async (req, res) => {
   try {
-    const { username } = req.headers;
-    console.log("username", username);
-    const response = await getAllDeletedTaskServ(username);
+    console.log("req.user", req.user);
+    const response = await getAllDeletedTaskServ(req.user);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

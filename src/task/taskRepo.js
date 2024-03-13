@@ -1,6 +1,18 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+
+const getShownTitle = (title) => {
+  const taskHierarchy = ['director', 'manager', 'supervisor', 'operator']
+  try {
+    const titleIndexs = taskHierarchy.indexOf(title.toLowerCase());
+    if (titleIndexs < 0) throw Error('No Title Match')
+    return taskHierarchy.splice(titleIndexs)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // repo untuk mengedit data
 const updateTaskRepo = async (id, data) => {
   return await prisma.task.update({
@@ -23,38 +35,38 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (status, username) => {
-return await prisma.task.findMany({
+const getAllTaskRepo = async (status, userData) => {
+  return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
       deleted_at: null,
-      pic: username || undefined,
+      pic_title: { in: getShownTitle(userData.title) },
       status: status || undefined,
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async (username) => {
+const getAllWaitedTaskRepo = async (userData) => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
       deleted_at: null,
-      pic: username || undefined,
+      pic_title: { in: getShownTitle(userData.title) },
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (username) => {
+const getAllDeletedTaskRepo = async (userData) => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {
         not: null,
       },
-      pic: username || undefined,
+      pic_title: { in: getShownTitle(userData.title) },
     },
   });
 };
