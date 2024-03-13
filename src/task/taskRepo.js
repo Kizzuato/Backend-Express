@@ -36,13 +36,15 @@ const createManyTask = async (data) => {
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllTaskRepo = async (status, userData) => {
+  const { title, u_name } = userData
   return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
       deleted_at: null,
-      pic_title: { in: getShownTitle(userData.title) },
+      pic_title: { in: getShownTitle(title) },
+      ...(title === "operator" && { pic: { contains: u_name } }),
       status: status || undefined,
     },
   });
@@ -50,24 +52,28 @@ const getAllTaskRepo = async (status, userData) => {
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllWaitedTaskRepo = async (userData) => {
+  const { title, u_name } = userData
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
       deleted_at: null,
-      pic_title: { in: getShownTitle(userData.title) },
+      pic_title: { in: getShownTitle(title) },
+      ...(title === "operator" && { pic: { contains: u_name } }) 
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllDeletedTaskRepo = async (userData) => {
+  const { title, u_name } = userData
+  console.log(title, u_name)
   return await prisma.task.findMany({
     where: {
       deleted_at: {
         not: null,
       },
-      pic_title: { in: getShownTitle(userData.title) },
-    },
+      pic_title: { in: getShownTitle(title) },
+      ...(title === "operator" && { pic: { contains: u_name } }) },
   });
 };
 
@@ -82,7 +88,7 @@ const getTaskByIdRepo = async (id) => {
 
 // Repo untuk mencari task berdasarkan Id
 const getTaskByEmailRepo = async (email) => {
-  return await prisma.m_user.findUnique({
+  return await prisma.m_user.findunique({
     where: {
       u_email: email,
     }
