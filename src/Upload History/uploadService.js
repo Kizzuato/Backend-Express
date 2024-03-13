@@ -3,43 +3,56 @@ const prisma = new PrismaClient()
 const xlsx = require('xlsx')
 const { createManyTask } = require("../task/taskRepo")
 
+const formatDateToISO = (date) => {
+  return new Date(date).toISOString()
+}
+
 const storeToExcel = async (file, user, addInformation) => {
   let dataToStore = []
   try {
     const excel = xlsx.readFile(file.path)
     const worksheet = excel.Sheets[excel.SheetNames[0]]
-    let tasks = xlsx.utils.sheet_to_json(worksheet)
+    let tasks = xlsx.utils.sheet_to_json(worksheet, { header: 1 })
+    tasks.shift()
     if (tasks.length < 1) throw Error('No Data to Store')
-    if (addInformation) addInformation = JSON.parse(addInformation)
-    const formatDataExcel = async (properties, referenceObject, defaultValue) => {
-      if (!addInformation) return referenceObject[properties] || defaultValue
-      return addInformation[properties] ? referenceObject[addInformation[properties]] : referenceObject[properties] || defaultValue
-    }
 
     for (let task of tasks) {
+      let [task_type, task_title, priority, iteration, start_date, due_date, description, picName, spvName, status] = task
+      let pic = { pic: picName, pic_id: null, pic_title: null }
+      let spv = { spv: spvName, spv_id: null }
+      start_date = formatDateToISO(start_date)
+      due_date = formatDateToISO(due_date)
+      
+      if (pic.pic != null) {
+        const personInContact = await prisma.m_user.findFirst({ where: { u_name: { contains: pic.pic } } })
+        if (!personInContact) {
+          pic.pic = null
+        }else{
+          pic = { pic_id: `${personInContact.u_id}`, pic_title: personInContact.title, pic: personInContact.u_name }
+        }
+      }
+      if (spv.spv != null) {
+        const spvList = spv.spv.split(',')
+        let spvListId = '', spvListName = ''
+        for (let spvName of spvList) {
+          const supervisor = await prisma.m_user.findFirst({ where: { u_name: { contains: spvName } } })
+          if (!supervisor) continue
+          spvListId += `${supervisor.u_id},`
+          spvListName += `${supervisor.u_name},`
+        }
+        if(spvListId.length < 2){
+          spvListId = null, spvListName = null
+        } else{
+          spvListId = spvListId.substring(0, spvListId.length - 1)
+          spvListName = spvListName.substring(0, spvListName.length - 1)
+        } 
+        spv.spv_id = spvListId
+        spv.spv = spvListName
+      }
+
       dataToStore.push({
-        pic_id: await formatDataExcel('pic_id', task, null),
-        spv_id: await formatDataExcel('spv_id', task, null),
-        task_type: await formatDataExcel('task_type', task, null),
-        task_title: await formatDataExcel('task_title', task, null),
-        priority: await formatDataExcel('priority', task, null),
-        iteration: await formatDataExcel('iteration', task, null),
-        start_date: await formatDataExcel('start_date', task, null).then(data => { new Date(data).toISOString() }),
-        due_date: await formatDataExcel('due_date', task, null).then(data => { new Date(data).toISOString() }),
-        description: await formatDataExcel('description', task, null),
-        pic_title: await formatDataExcel('pic_title', task, null),
-        pic: await formatDataExcel('pic', task, null),
-        pic_rating: await formatDataExcel('pic_rating', task, null),
-        spv: await formatDataExcel('spv', task, null),
-        approved_at: await formatDataExcel('approved_at', task, null).then(data => { new Date(data).toISOString() }),
-        approved_by: await formatDataExcel('approved_by', task, null),
-        started_at: await formatDataExcel('started_at', task, null).then(data => { new Date(data).toISOString() }),
-        started_by: await formatDataExcel('started_by', task, null),
-        finished_at: await formatDataExcel('finished_at', task, null).then(data => { new Date(data).toISOString() }),
-        finished_by: await formatDataExcel('finished_by', task, null),
-        status: await formatDataExcel('status', task, null),
-        progress: await formatDataExcel('progress', task, null),
-        created_by: user.u_name,
+        task_type, task_title, priority, iteration, status, start_date, due_date, description,
+        ...pic, ...spv, created_by: user.u_name
       })
     }
     await createManyTask(dataToStore)
@@ -55,8 +68,9 @@ const getAllHistory = async (search, from, to) => {
   try {
     let currentDate = new Date()
     let finishDate = new Date(currentDate)
-    if (from) currentDate = new Date(from )
-    if (to) { finishDate = new Date(to)
+    if (from) currentDate = new Date(from)
+    if (to) {
+      finishDate = new Date(to)
     } else finishDate.setDate(currentDate.getDate() + 7);
     const [startDate, endDate] = [currentDate.toISOString().split('T')[0], finishDate.toISOString().split('T')[0]]
     let histories = await prisma.uploadHistory.findMany({
@@ -70,7 +84,7 @@ const getAllHistory = async (search, from, to) => {
       select: { fileName: true, created_at: true, user: { select: { u_name: true, title: true } } }
     })
     let no = 1, historyData = []
-    for(let history of histories){
+    for (let history of histories) {
       historyData.push({
         no,
         fileName: history.fileName,
