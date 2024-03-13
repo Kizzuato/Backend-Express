@@ -33,6 +33,44 @@ const {
 const router = express.Router();
 
 // Router untuk mengedit task
+router.put("/file_hasil/:strid", upload.single('file_hasil'), async (req, res) => {
+  try {
+    let nama_file = null;
+
+    if (req.file) {
+      nama_file = req.yoriginalname;
+    }
+
+    let filename = null;
+
+    if (nama_file !== null) {
+      const now = new Date();
+      const date = now.toISOString().slice(0, 10);
+      const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+      filename = `${date}_${time}_${nama_file}`;
+    }
+
+    const { strid } = req.params;
+    const id = parseInt(strid);
+
+    const {
+      fileName
+    } = req.body;
+
+    // Process the data and files as needed
+    const data = {
+      file_hasil: filename || fileName
+    };
+
+    const response = await updateTaskServ(id, data);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
 router.put("/acc/:id", async (req, res) => {
   const { id } = req.params;
   const {pic, status, pic_rating, approved_at } = req.body;

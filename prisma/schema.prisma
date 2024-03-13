@@ -58,8 +58,7 @@ model task {
   status       String?        @default("Wait-app")
   progress     Int?           @default(0)
   fileName     String?
-  filePath     String?
-  fileSize     String?
+  file_hasil     String?
   created_at   DateTime?      @default(now())
   created_by   String?
   updated_at   DateTime?      @updatedAt

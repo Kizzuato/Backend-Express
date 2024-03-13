@@ -36,7 +36,7 @@ const updateTaskServ = async (id, data) => {
     finished_by: data.finished_by,
     status: data.status,
     progress: data.progress,
-    file_attachment: data.file_attachment,
+    file_hasil: data.file_hasil,
     created_at: data.created_at,
     edited_at: data.edited_at,
     deleted_at: data.deleted_at,

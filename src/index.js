@@ -33,21 +33,25 @@ app.use('/task', TaskController);
 app.use('/notif', notificationRoute)
 app.use('/upload', uploadRoute)
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//       cb(null, 'uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//       cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-//   }
-// });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    // Dapatkan tanggal dan waktu saat ini
+    // const now = new Date();
+    // const date = now.toISOString().slice(0, 10);
+    // const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
 
-// app.post('/upload', upload.single('file'), (req, res) => {
-//   if (!req.file) {
-//       return res.status(400).json({ error: 'Tidak ada file yang diunggah' });
-//   }
-//   res.json({ filename: req.file.filename });
-// });
+    // Tambahkan tanggal dan waktu ke nama file
+    // const filename = `${date}_${time}_${file.originalname}`;
+    const filename = file.originalname;
+
+    cb(null, filename);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.use((req, res) => {
   res.status(404).json({ message: "Endpoint not found" });
