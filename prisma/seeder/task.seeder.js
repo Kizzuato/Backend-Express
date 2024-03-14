@@ -15,10 +15,11 @@ const tasks = [
         started_at: "2024-01-31T17:00:00.000Z",
         finished_at: "2024-03-31T17:00:00.000Z",
         description: "desc",
-        pic_title: "Manager",
+        pic_title: "manager",
         progress: 100,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -31,10 +32,11 @@ const tasks = [
         start_date: "2024-03-08T17:00:00.000Z",
         due_date: "2024-12-30T17:00:00.000Z",
         description: "desc",
-        pic_title: "Manager",
+        pic_title: "manager",
         progress: 0,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -48,10 +50,11 @@ const tasks = [
         due_date: "2024-12-30T17:00:00.000Z",
         started_at: "2024-03-09T17:00:00.000Z",
         description: "desc",
-        pic_title: "Manager",
+        pic_title: "manager",
         progress: 20,
         pic: "user",
-        spv: "Novi Handayani"
+        spv: "Novi Handayani",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -64,10 +67,11 @@ const tasks = [
         start_date: "2024-03-24T17:00:00.000Z",
         due_date: "2024-12-30T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 0,
         pic: "Ara ariyanti",
-        spv: "Ikromullah"
+        spv: "Ikromullah",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -81,10 +85,11 @@ const tasks = [
         due_date: "2024-12-30T17:00:00.000Z",
         started_at: "2024-03-03T17:00:00.000Z",
         description: "desc",
-        pic_title: "Supervisor",
+        pic_title: "supervisor",
         progress: 50,
         pic: "M.Azuari Rahman",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -98,10 +103,11 @@ const tasks = [
         due_date: "2024-12-28T17:00:00.000Z",
         started_at: "2024-03-07T17:00:00.000Z",
         description: "desc",
-        pic_title: "Supervisor",
+        pic_title: "supervisor",
         progress: 65,
         pic: "Ikromullah",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -115,10 +121,11 @@ const tasks = [
         due_date: "2024-03-09T17:00:00.000Z",
         started_at: "2024-03-08T17:00:00.000Z",
         description: "desc",
-        pic_title: "Supervisor",
+        pic_title: "supervisor",
         progress: 77,
         pic: "Komariah Santi",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -132,10 +139,11 @@ const tasks = [
         due_date: "2024-12-09T17:00:00.000Z",
         started_at: "2024-03-11T17:00:00.000Z",
         description: "desc",
-        pic_title: "Supervisor",
+        pic_title: "supervisor",
         progress: 67,
         pic: "M.Azuari Rahman",
-        spv: "user"
+        spv: "user",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -149,10 +157,11 @@ const tasks = [
         due_date: "2024-12-30T17:00:00.000Z",
         started_at: "2024-03-04T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 75,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -166,10 +175,11 @@ const tasks = [
         due_date: "2024-12-30T17:00:00.000Z",
         started_at: "2024-03-11T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 89,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -182,10 +192,11 @@ const tasks = [
         start_date: "2024-03-05T17:00:00.000Z",
         due_date: "2024-12-25T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 0,
         pic: "Sanusi",
-        spv: "M.Azuari Rahman"
+        spv: "M.Azuari Rahman",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -200,10 +211,11 @@ const tasks = [
         started_at: "2024-03-05T17:00:00.000Z",
         finished_at: "2024-03-25T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 100,
         pic: "Entin",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -218,10 +230,11 @@ const tasks = [
         started_at: "2024-03-07T17:00:00.000Z",
         finished_at: "2024-03-26T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 100,
         pic: "Sri Wahyuni",
-        spv: "Aulia Novianty"
+        spv: "Aulia Novianty",
+        division: "RES"
     },
     {
         pic_id: "",
@@ -236,17 +249,17 @@ const tasks = [
         started_at: "2024-03-07T17:00:00.000Z",
         finished_at: "2024-03-26T17:00:00.000Z",
         description: "desc",
-        pic_title: "Operator",
+        pic_title: "operator",
         progress: 100,
         pic: "Sanusi",
-        spv: "Komariah Santi"
+        spv: "Komariah Santi",
+        division: "RES"
     },
 ]
 
 const taskSeed = async (userData) => {
     try {
         for (let task of tasks) {
-            // Melakukan pengecekan apakah task dengan karakteristik tertentu sudah ada atau belum
             const existingTask = await prisma.task.findFirst({
                 where: {
                     task_title: task.task_title,

@@ -65,6 +65,13 @@ const AcceptTaskServe = async (id, data) => {
       updatedTask.status === "Close"
     ) {
       await updatePicRepo(pic, updatedTask.pic_rating);
+    } else if (
+      existingTask.status === "Idle" &&
+      updatedTask.status === "Close"
+    ) {
+      const pic_rating = updatedTask.pic_rating - 2
+      console.log(pic_rating)
+      await updatePicRepo(pic, pic_rating);
     }
 
     return updatedTask;
@@ -96,18 +103,18 @@ const createTaskServ = async (data, files) => {
   return await createTaskRepo(dataRest);
 };
 
-const getAllTaskServ = async (status, user) => {
-  return await getAllTaskRepo(status, user);
+const getAllTaskServ = async (search, status, pic, spv, division) => {
+  return await getAllTaskRepo(search, status, pic, spv, division);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (user) => {
-  return await getAllWaitedTaskRepo(user);
+const getAllWaitedTaskServ = async (pic, spv, division) => {
+  return await getAllWaitedTaskRepo(pic, spv, division);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (user) => {
-  return await getAllDeletedTaskRepo(user);
+const getAllDeletedTaskServ = async (pic, spv, division) => {
+  return await getAllDeletedTaskRepo(pic, spv, division);
 };
 
 const getTaskByIdServ = async (id) => {

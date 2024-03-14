@@ -8,6 +8,7 @@ const users = [
         u_email: "Novi@gmail.com",
         u_password: "12345678",
         title: "director",
+        division: "RES"
     },
     {
         u_name: "Director",
@@ -20,54 +21,62 @@ const users = [
         u_email: "user@gmail.com",
         u_password: "12345678",
         title: "manager",
+        division: "RES",
     },
     {
         u_name: "Siti Mariyam",
         u_email: "siti@gmail.com",
         u_password: "12345678",
         title: "manager",
+        division: "RES",
     },
     {
         u_name: "Vivi Wasiah",
         u_email: "vivi@gmail.com",
         u_password: "12345678",
         title: "manager",
+        division: "RES"
     },
     {
         u_name: "Manager",
         u_email: "manager@gmail.com",
         u_password: "12345678",
         title: "manager",
-},
+    },
     {
         u_name: "Komariah Santi",
         u_email: "komariah@gmail.com",
         u_password: "12345678",
         title: "supervisor",
+        division: "RES",
     },
     {
         u_name: "Aulia Novianty",
         u_email: "aulia@gmail.com",
         u_password: "12345678",
         title: "supervisor",
+        division: "RES",
     },
     {
         u_name: "M.Azuari Rahman",
         u_email: "azuari@gmail.com",
         u_password: "12345678",
         title: "supervisor",
+        division: "RES",
     },
     {
         u_name: "Nahda Eliza Zaeni",
         u_email: "nahda@gmail.com",
         u_password: "12345678",
         title: "supervisor",
+        division: "RES",
     },
     {
         u_name: "Ikromullah",
         u_email: "ikromullah@gmail.com",
         u_password: "12345678",
         title: "supervisor",
+        division: "RES",
     },
     {
         u_name: "Supervisor",
@@ -80,42 +89,48 @@ const users = [
         u_email: "ara@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Sanusi",
         u_email: "sanusi@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Entin",
         u_email: "entin@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Sri Wahyuni",
         u_email: "sriwiw@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Ruli Saputra",
         u_email: "Ruli@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Romi pangestuda",
         u_email: "romi@gmail.com",
         u_password: "12345678",
         title: "operator",
+        division: "RES",
     },
     {
         u_name: "Operator",
         u_email: "operator@gmail.com",
         u_password: "12345678",
-        title: "operator",
+        title: "operator"
     }
 ]
 

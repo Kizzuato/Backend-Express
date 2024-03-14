@@ -1,4 +1,5 @@
 const { error, success } = require("../Notification/notificationController")
+const { importUser } = require("../user/userServ")
 const { storeToExcel } = require("./uploadService")
 const uploadService = require('./uploadService')
 
@@ -9,6 +10,16 @@ const store = async (req, res) => {
         return success(res, 'Excel Stored Successfully', data)
     } catch (err) {
         console.log(err)
+        return error(res, err.message)
+    }
+}
+
+const storeUser = async(req, res) => {
+    try{
+        if (!req.file) throw Error('Please include the proper Excel File')
+        const importedUser = await importUser(req.file)
+        return success(res, `User Imported with ${importedUser.existed} User already exist`,  importedUser.imported)
+    }catch(err){
         return error(res, err.message)
     }
 }
@@ -24,4 +35,4 @@ const getAll = async (req, res) => {
     }
 }
 
-module.exports = { store, getAll }
+module.exports = { store, getAll, storeUser }

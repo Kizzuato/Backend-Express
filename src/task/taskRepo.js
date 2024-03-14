@@ -35,24 +35,23 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (status, userData) => {
-  const { title, u_name } = userData
-  return await prisma.task.findMany({
+const getAllTaskRepo = async (search, status, pic, spv, division) => {
+return await prisma.task.findMany({
     where: {
       NOT: {
         status: "wait-app",
       },
-      deleted_at: null,
-      pic_title: { in: getShownTitle(title) },
-      ...(title === "operator" && { pic: { contains: u_name } }),
       status: status || undefined,
+      pic: pic || undefined,
+      deleted_at: null,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async (userData) => {
-  const { title, u_name } = userData
+const getAllWaitedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
@@ -64,16 +63,16 @@ const getAllWaitedTaskRepo = async (userData) => {
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (userData) => {
-  const { title, u_name } = userData
-  console.log(title, u_name)
+const getAllDeletedTaskRepo = async ( pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {
         not: null,
       },
-      pic_title: { in: getShownTitle(title) },
-      ...(title === "operator" && { pic: { contains: u_name } }) },
+      pic: pic || undefined,
+      spv: spv || undefined,
+      division: division || undefined,
+    },
   });
 };
 

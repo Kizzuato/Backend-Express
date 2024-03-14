@@ -1,8 +1,9 @@
 const express = require("express");
 const multer = require("multer");
 const { auth } = require("../middleware/auth.middleware");
-const { error } = require("../Notification/notificationController");
-const uploadControl = require('./uploadController')
+const { error, success } = require("../Notification/notificationController");
+const uploadControl = require('./uploadController');
+const { importUser } = require("../user/userServ");
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/excels')
@@ -38,5 +39,6 @@ router.get('/', uploadControl.getAll)
 
 //Import Excel
 router.post('/store-excel', auth, uploadExcel.single('file'), uploadControl.store)
+router.post('/store-user', auth, uploadExcel.single('file'), uploadControl.storeUser)
 
 module.exports = router

@@ -25,9 +25,10 @@ model m_user {
   u_address            String?
   u_province_id        String?
   u_city_id            String?
-  u_rate               Int? @default(0)
-  total_task           Int? @default(0)
+  u_rate               Int?            @default(0)
+  total_task           Int?            @default(0)
   lastSeenNotification DateTime?
+  deleted              Boolean         @default(false)
   created_at           DateTime?       @default(now())
   updated_at           DateTime?       @updatedAt
   uploadHistory        uploadHistory[]
