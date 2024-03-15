@@ -20,14 +20,7 @@ router.post("/register", async (req, res) => {
   }
 
   try {
-    const data = {
-      name,
-      email,
-      password,
-      title,
-      divisi
-    };
-
+    const data = { name, email, password, title, divisi };
     const response = await createUserServ(data);
 
     if (response.error) {
@@ -74,10 +67,10 @@ router.delete("/delete-user/:id", async (req, res) => {
 });
 
 router.put('/update-user/:id', async (req, res) => {
-  try{
+  try {
     const updatedUser = await updateUserServ(+req.params.id, req.body)
     return success(res, `User ${updatedUser.u_name} Updated Successfully`, updateUserServ)
-  }catch(err){
+  } catch (err) {
     return error(res, err.message)
   }
 })
