@@ -4,6 +4,13 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 const users = [
     {
+        u_name: "Admin",
+        u_email: "admin@gmail.com",
+        u_password: "12345678",
+        title: "admin",
+        division: "RES"
+    },
+    {
         u_name: "Novi Handayani",
         u_email: "Novi@gmail.com",
         u_password: "12345678",
