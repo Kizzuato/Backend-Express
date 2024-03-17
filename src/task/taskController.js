@@ -29,6 +29,7 @@ const {
   getTaskByIdServ,
   storeToExcel,
 } = require("./taskServ");
+const { auth } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
@@ -199,7 +200,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 
 
 //  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all", async (req, res) => {
+router.get("/all", auth, async (req, res) => {
   try {
     const { status, search } = req.query;
     const { pic, spv, division } = req.headers;
@@ -216,7 +217,7 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/waited", async (req, res) => {
+router.get("/waited", auth, async (req, res) => {
   try {
     const { pic, spv, division } = req.headers;
     console.log("pic", pic);
@@ -229,7 +230,7 @@ router.get("/waited", async (req, res) => {
   }
 });
 
-router.get("/deleted", async (req, res) => {
+router.get("/deleted", auth, async (req, res) => {
   try {
     const { pic, spv, division } = req.headers;
     // console.log("pic", pic);
@@ -265,6 +266,5 @@ router.get("/get-by-email/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
-
 
 module.exports = router;
