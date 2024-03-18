@@ -209,6 +209,7 @@ router.get("/all", auth, async (req, res) => {
     console.log("search", search);
     console.log("pic", pic);
     console.log("spv", spv);
+    console.log("search", search);
     const response = await getAllTaskServ(search, status, pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
