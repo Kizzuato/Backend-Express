@@ -220,10 +220,12 @@ router.get("/all", auth, async (req, res) => {
 
 router.get("/waited", auth, async (req, res) => {
   try {
+    const { status, search } = req.query;
     const { pic, spv, division } = req.headers;
     console.log("pic", pic);
     console.log("spv", spv);
-    const response = await getAllWaitedTaskServ(pic, spv, division);
+    console.log("search", search);
+    const response = await getAllWaitedTaskServ(search, status, pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -233,10 +235,11 @@ router.get("/waited", auth, async (req, res) => {
 
 router.get("/deleted", auth, async (req, res) => {
   try {
+    const { status, search } = req.query;
     const { pic, spv, division } = req.headers;
     // console.log("pic", pic);
     // console.log("spv", spv);
-    const response = await getAllDeletedTaskServ(pic, spv, division);
+    const response = await getAllDeletedTaskServ(search, status, pic, spv, division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

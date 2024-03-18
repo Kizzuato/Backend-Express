@@ -54,7 +54,7 @@ return await prisma.task.findMany({
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async ( pic, spv, division, search, status) => {
+const getAllWaitedTaskRepo = async ( search, status, pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       status: "wait-app",
@@ -70,7 +70,7 @@ const getAllWaitedTaskRepo = async ( pic, spv, division, search, status) => {
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async ( pic, spv, division, search, status) => {
+const getAllDeletedTaskRepo = async (search, status, pic, spv, division) => {
   return await prisma.task.findMany({
     where: {
       deleted_at: {

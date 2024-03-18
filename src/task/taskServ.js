@@ -108,13 +108,13 @@ const getAllTaskServ = async (search, status, pic, spv, division) => {
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (pic, spv, division) => {
-  return await getAllWaitedTaskRepo(pic, spv, division);
+const getAllWaitedTaskServ = async (search, status, pic, spv, division) => {
+  return await getAllWaitedTaskRepo(search, status, pic, spv, division);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (pic, spv, division) => {
-  return await getAllDeletedTaskRepo(pic, spv, division);
+const getAllDeletedTaskServ = async (search, status, pic, spv, division) => {
+  return await getAllDeletedTaskRepo(search, status, pic, spv, division);
 };
 
 const getTaskByIdServ = async (id) => {
