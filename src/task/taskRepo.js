@@ -1,6 +1,18 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+
+const getShownTitle = (title) => {
+  const taskHierarchy = ['director', 'manager', 'supervisor', 'operator']
+  try {
+    const titleIndexs = taskHierarchy.indexOf(title.toLowerCase());
+    if (titleIndexs < 0) throw Error('No Title Match')
+    return taskHierarchy.splice(titleIndexs)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 // repo untuk mengedit data
 const updateTaskRepo = async (id, data) => {
   return await prisma.task.update({
@@ -76,7 +88,7 @@ const getTaskByIdRepo = async (id) => {
 
 // Repo untuk mencari task berdasarkan Id
 const getTaskByEmailRepo = async (email) => {
-  return await prisma.m_user.findUnique({
+  return await prisma.m_user.findunique({
     where: {
       u_email: email,
     }

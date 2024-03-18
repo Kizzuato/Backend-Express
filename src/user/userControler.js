@@ -4,26 +4,23 @@ const {
   LoginUser,
   getAllUserServ,
   deleteUserServ,
-  getUserByIdServ
+  getUserByIdServ,
+  updateUserServ
 } = require("./userServ");
+const { route } = require("./userControler");
+const { error, success } = require("../Notification/notificationController");
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, title, password, repassword } = req.body;
+  const { name, email, title, password, repassword, divisi } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
   }
 
   try {
-    const data = {
-      name,
-      email,
-      password,
-      title
-    };
-
+    const data = { name, email, password, title, divisi };
     const response = await createUserServ(data);
 
     if (response.error) {
@@ -60,9 +57,8 @@ router.get("/all", async (req, res) => {
 
 router.delete("/delete-user/:id", async (req, res) => {
   const { id } = req.params;
-
   try {
-    const response = await deleteUserServ(id);
+    const response = await deleteUserServ(+id);
     return res.status(200).json("Deleted");
   } catch (error) {
     console.log(error);
@@ -70,10 +66,19 @@ router.delete("/delete-user/:id", async (req, res) => {
   }
 });
 
+router.put('/update-user/:id', async (req, res) => {
+  try {
+    const updatedUser = await updateUserServ(+req.params.id, req.body)
+    return success(res, `User ${updatedUser.u_name} Updated Successfully`, updateUserServ)
+  } catch (err) {
+    return error(res, err.message)
+  }
+})
+
 router.get("/get-by-id/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const response = await getUserByIdServ(id);
+    const response = await getUserByIdServ(+id);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

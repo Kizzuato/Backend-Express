@@ -4,11 +4,24 @@ const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 const users = [
     {
+        u_name: "Admin",
+        u_email: "admin@gmail.com",
+        u_password: "12345678",
+        title: "admin",
+        division: "RES"
+    },
+    {
         u_name: "Novi Handayani",
         u_email: "Novi@gmail.com",
         u_password: "12345678",
         title: "director",
         division: "RES"
+    },
+    {
+        u_name: "Director",
+        u_email: "director@gmail.com",
+        u_password: "12345678",
+        title: "director",
     },
     {
         u_name: "user",
@@ -29,7 +42,13 @@ const users = [
         u_email: "vivi@gmail.com",
         u_password: "12345678",
         title: "manager",
-        division: "RES",
+        division: "RES"
+    },
+    {
+        u_name: "Manager",
+        u_email: "manager@gmail.com",
+        u_password: "12345678",
+        title: "manager",
     },
     {
         u_name: "Komariah Santi",
@@ -65,6 +84,12 @@ const users = [
         u_password: "12345678",
         title: "supervisor",
         division: "RES",
+    },
+    {
+        u_name: "Supervisor",
+        u_email: "supervisor@gmail.com",
+        u_password: "12345678",
+        title: "supervisor",
     },
     {
         u_name: "Ara ariyanti",
@@ -107,6 +132,12 @@ const users = [
         u_password: "12345678",
         title: "operator",
         division: "RES",
+    },
+    {
+        u_name: "Operator",
+        u_email: "operator@gmail.com",
+        u_password: "12345678",
+        title: "operator"
     }
 ]
 
