@@ -2,8 +2,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const xlsx = require('xlsx')
-const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo } = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted } = require("./userRepo");
 const { Response } = require("../../config/response");
+const { response } = require("../Notification/notificationRoute");
 
 dotenv.config();
 
@@ -15,14 +16,16 @@ const createUserServ = async (data) => {
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
-    title: data.title,
     u_password: data.password,
+    title: data.title,
+    division: data.division,
   };
 
   try {
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
+      division: response.division,
       title: response.title,
       uuid: response.u_id,
     };
@@ -40,6 +43,11 @@ const LoginUser = async (email, password) => {
       return Response(404, null, 'User not found');
     }
 
+    
+    if (user.deleted === true) {
+      return Response(401, user, 'Account Deleted');
+    }
+
     const validPassword = await bcrypt.compare(password, user.u_password);
 
     if (!validPassword) {
@@ -55,11 +63,14 @@ const LoginUser = async (email, password) => {
       id: user.u_id,
       email: user.u_email,
       title: user.title,
+      division: user.division,
       u_rate: user.u_rate,
       total_task: user.total_task,
       accessToken: token,
+      deleted: user.deleted,
     };
 
+    
     return Response(200, data, 'Login successful');
   } catch (error) {
     console.error(error);
@@ -73,7 +84,8 @@ const getAllUserServ = async () => {
 
 const updateUserServ = async (id, data) => {
   try {
-    if(data.u_email) await emailUsed(data.u_email).then((act) =>{ if(act) throw Error('Email already exist')})
+    // if(data.u_email) await emailUsed(data.u_email).then((act) =>{ if(act) throw Error('Email already exist')})
+    console.log(data);
     return await updateUserRepo(+id, data)
   } catch (err) {
     console.log(err)
