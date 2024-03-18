@@ -56,8 +56,9 @@ const getAllWaitedTaskRepo = async ( pic, spv, division) => {
     where: {
       status: "wait-app",
       deleted_at: null,
-      pic_title: { in: getShownTitle(title) },
-      ...(title === "operator" && { pic: { contains: u_name } }) 
+      pic: pic || undefined,
+      spv: spv || undefined,
+      division: division || undefined,
     },
   });
 };

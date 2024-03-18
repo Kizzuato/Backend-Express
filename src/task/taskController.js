@@ -39,7 +39,7 @@ router.put("/file_hasil/:strid", upload.single('file_hasil'), async (req, res) =
     let nama_file = null;
 
     if (req.file) {
-      nama_file = req.yoriginalname;
+      nama_file = req.file.originalname;
     }
 
     let filename = null;

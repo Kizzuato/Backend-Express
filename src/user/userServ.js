@@ -52,7 +52,7 @@ const LoginUser = async (email, password) => {
 
     const data = {
       name: user.u_name,
-      uuid: user.u_id,
+      id: user.u_id,
       email: user.u_email,
       title: user.title,
       u_rate: user.u_rate,
