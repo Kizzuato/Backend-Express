@@ -35,23 +35,33 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (search, status, pic, spv, division) => {
-return await prisma.task.findMany({
-    where: {
-      NOT: {
-        status: "wait-app",
-      },
-      status: status || undefined,
-      pic: pic || undefined,
-      deleted_at: null,
-      spv: spv || undefined,
-      division: division || undefined,
-      OR: [
-        { task_title: { contains: search || '' } },
-      ]
+const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDate) => {
+  const whereClause = {
+    NOT: {
+      status: "wait-app",
     },
+    status: status || undefined,
+    pic: pic || undefined,
+    deleted_at: null,
+    spv: spv || undefined,
+    division: division || undefined,
+    OR: [
+      { task_title: { contains: search || '' } },
+    ]
+  };
+
+  if (fromDate && toDate) {
+    whereClause.created_at = {
+      gte: fromDate || undefined,
+      lte: toDate || undefined,
+    };
+  }
+
+  return await prisma.task.findMany({
+    where: whereClause,
   });
 };
+
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllWaitedTaskRepo = async ( search, status, pic, spv, division) => {

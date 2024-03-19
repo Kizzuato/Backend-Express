@@ -202,7 +202,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
 //  Router untuk mengambil semua task yang sudah di acc di database
 router.get("/all", auth, async (req, res) => {
   try {
-    const { status, search } = req.query;
+    const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division } = req.headers;
     console.log("division", division);
     console.log("status", status);
@@ -210,7 +210,9 @@ router.get("/all", auth, async (req, res) => {
     console.log("pic", pic);
     console.log("spv", spv);
     console.log("search", search);
-    const response = await getAllTaskServ(search, status, pic, spv, division);
+    console.log("startDate", startDate);
+    console.log("dueDate", dueDate);
+    const response = await getAllTaskServ(search, status, pic, spv, division, startDate, dueDate);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

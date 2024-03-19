@@ -13,18 +13,19 @@ datasource db {
 model m_user {
   u_id                 Int             @id @default(autoincrement())
   u_name               String
-  u_code               String?
+  // u_code               String?
   u_email              String          @unique
   u_password           String?
   title                String?
   division             String?
-  u_token              String?
-  u_phone              Int?
-  u_gender             String?
-  u_date_of_birth      DateTime?
-  u_address            String?
-  u_province_id        String?
-  u_city_id            String?
+  branch             String?
+  // u_token              String?
+  // u_phone              Int?
+  // u_gender             String?
+  // u_date_of_birth      DateTime?
+  // u_address            String?
+  // u_province_id        String?
+  // u_city_id            String?
   u_rate               Int?            @default(0)
   total_task           Int?            @default(0)
   lastSeenNotification DateTime?

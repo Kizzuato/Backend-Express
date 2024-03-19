@@ -103,8 +103,10 @@ const createTaskServ = async (data, files) => {
   return await createTaskRepo(dataRest);
 };
 
-const getAllTaskServ = async (search, status, pic, spv, division) => {
-  return await getAllTaskRepo(search, status, pic, spv, division);
+const getAllTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+  const fromDate = startDate ? new Date(startDate).toISOString() : null;
+  const toDate = dueDate? new Date(dueDate).toISOString() : null;
+  return await getAllTaskRepo(search, status, pic, spv, division, fromDate, toDate);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
