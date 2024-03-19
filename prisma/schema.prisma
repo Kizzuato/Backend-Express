@@ -35,6 +35,11 @@ model m_user {
   uploadHistory        uploadHistory[]
 }
 
+model Division {
+  id           Int    @id @default(autoincrement())
+  divisionName String @unique
+}
+
 model task {
   id           Int            @id @default(autoincrement())
   pic_id       String?

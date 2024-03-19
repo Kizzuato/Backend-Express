@@ -5,10 +5,11 @@ const {
   getAllUserServ,
   deleteUserServ,
   getUserByIdServ,
-  updateUserServ
+  updateUserServ,
+  changePassword
 } = require("./userServ");
 const { route } = require("./userControler");
-const { error, success } = require("../Notification/notificationController");
+const { success, error } = require("../utils/response.utils");
 
 const router = express.Router();
 
@@ -71,6 +72,22 @@ router.put('/update-user/:id', async (req, res) => {
   try {
     const updatedUser = await updateUserServ(+req.params.id, req.body)
     return success(res, `User ${updatedUser.u_name} Updated Successfully`, updateUserServ)
+  } catch (err) {
+    return error(res, err.message)
+  }
+})
+
+router.put('/update-password/:id/:forced?', async (req, res) => {
+  const { confirmPass, newPass } = req.body
+  try {
+    if(!req.params.forced){
+      if(!confirmPass) throw Error('Send Confirmation Password to change the password')
+      const { u_password } = await getUserByIdRepo(req.params.id)
+      const passwordMatch = bcrypt.compare(confirmPass, u_password)
+      if(!passwordMatch) throw Error('Confirmation Password didnt match, please check again')
+    }
+    const updatePassword = await changePassword(req.params.id, { u_password: newPass })
+    return success(res`User ${updatePassword.u_name} Password Changed Successfully`, updatePassword)
   } catch (err) {
     return error(res, err.message)
   }

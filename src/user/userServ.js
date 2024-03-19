@@ -101,6 +101,18 @@ const getUserByIdServ = async (id) => {
   return await getUserByIdRepo(id);
 };
 
+
+const changePassword = async (id, { u_password }) => {
+  try{
+    const salt = bcrypt.genSalt()
+    newVal = bcrypt.hash(newVal, salt)
+    return await updateUserRepo(id, { u_password })
+  }catch(err){
+    console.log(err)
+    throw err
+  }
+}
+
 const importUser = async (file) => {
   let userExist = 0, dataToStore = []
   try {
@@ -130,6 +142,7 @@ const importUser = async (file) => {
 module.exports = {
   createUserServ,
   LoginUser,
+  changePassword,
   updateUserServ,
   getAllUserServ,
   importUser,
