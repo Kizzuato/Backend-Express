@@ -26,6 +26,14 @@ CREATE TABLE `m_user` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Division` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `divisionName` VARCHAR(191) NOT NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `task` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `pic_id` VARCHAR(191) NULL,
