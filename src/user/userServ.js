@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const xlsx = require('xlsx')
-const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted } = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, getUserByDivisionRepo, userDeleted } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
 
@@ -18,6 +18,7 @@ const createUserServ = async (data) => {
     u_email: data.email,
     u_password: data.password,
     title: data.title,
+    branch: data.branch,
     division: data.division,
   };
 
@@ -25,6 +26,7 @@ const createUserServ = async (data) => {
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
+      branch: response.branch,
       division: response.division,
       title: response.title,
       uuid: response.u_id,
@@ -35,7 +37,7 @@ const createUserServ = async (data) => {
   }
 };
 
-const LoginUser = async (email, password) => {
+const LoginUser = async (email, password, branch) => {
   try {
     const user = await Login(email);
 
@@ -48,7 +50,12 @@ const LoginUser = async (email, password) => {
       return Response(401, user, 'Account Deleted');
     }
 
+    if (user.branch !== branch) {
+      return Response(401, null, 'Wrong Branch');
+    }
+
     const validPassword = await bcrypt.compare(password, user.u_password);
+
 
     if (!validPassword) {
       return Response(401, null, 'Invalid password');
@@ -64,8 +71,7 @@ const LoginUser = async (email, password) => {
       email: user.u_email,
       title: user.title,
       division: user.division,
-      u_rate: user.u_rate,
-      total_task: user.total_task,
+      branch: user.branch,
       accessToken: token,
       deleted: user.deleted,
     };
@@ -96,6 +102,10 @@ const updateUserServ = async (id, data) => {
 const deleteUserServ = async (id) => {
   return await deleteUserRepo(+id)
 }
+
+const getUserByDivision = async (division) => {
+  return await getUserByDivisionRepo(division);
+};
 
 const getUserByIdServ = async (id) => {
   return await getUserByIdRepo(id);
@@ -147,5 +157,6 @@ module.exports = {
   getAllUserServ,
   importUser,
   deleteUserServ,
+  getUserByDivision,
   getUserByIdServ,
 };

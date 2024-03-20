@@ -2,25 +2,19 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const divisions = [
     {
-        divisionName: "PT. RES"
+        divisionName: "Acc & Purches"
     },
     {
-        divisionName: "Produksi RES"
+        divisionName: "Oprasional Sales"
     },
     {
-        divisionName: "ONIC 1"
+        divisionName: "Produksi"
     },
     {
-        divisionName: "ONIC 2"
+        divisionName: "HRD & GA"
     },
     {
-        divisionName: "ONIC 3"
-    },
-    {
-        divisionName: "Sehatku"
-    },
-    {
-        divisionName: "ONIC KLP"
+        divisionName: "Marketing"
     },
 ]
 

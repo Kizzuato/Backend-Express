@@ -51,7 +51,7 @@ const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDa
   };
 
   if (fromDate && toDate) {
-    whereClause.created_at = {
+    whereClause.start_date = {
       gte: fromDate || undefined,
       lte: toDate || undefined,
     };
@@ -64,9 +64,8 @@ const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDa
 
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async ( search, status, pic, spv, division) => {
-  return await prisma.task.findMany({
-    where: {
+const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, fromDate, toDate) => {
+    const whereClause = {
       status: "wait-app",
       deleted_at: null,
       pic: pic || undefined,
@@ -75,14 +74,23 @@ const getAllWaitedTaskRepo = async ( search, status, pic, spv, division) => {
       OR: [
         { task_title: { contains: search || '' } },
       ]
-    },
-  });
+    };
+
+    if (fromDate && toDate) {
+      whereClause.start_date = {
+        gte: fromDate || undefined,
+        lte: toDate || undefined,
+      };
+    };
+  
+    return await prisma.task.findMany({
+      where: whereClause,
+    });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (search, status, pic, spv, division) => {
-  return await prisma.task.findMany({
-    where: {
+const getAllDeletedTaskRepo = async (search, status, pic, spv, division, fromDate, toDate) => {
+    const whereClause = {
       deleted_at: {
         not: null,
       },
@@ -92,8 +100,18 @@ const getAllDeletedTaskRepo = async (search, status, pic, spv, division) => {
       OR: [
         { task_title: { contains: search || '' } },
       ]
-    },
-  });
+    };
+
+    if (fromDate && toDate) {
+      whereClause.start_date = {
+        gte: fromDate || undefined,
+        lte: toDate || undefined,
+      };
+    };
+  
+    return await prisma.task.findMany({
+      where: whereClause,
+    });
 };
 
 // Repo untuk mencari task berdasarkan Id

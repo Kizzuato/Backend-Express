@@ -8,6 +8,7 @@ const userController = require('./user/userControler');
 const TaskController = require('./task/taskController')
 const notificationRoute = require('./Notification/notificationRoute');
 const uploadRoute = require('./Upload History/uploadRoute');
+const branchRoute = require("./Branch/branchRoute");
 const divisiRoute = require("./Division/divisiRoute");
 
 const corsOptions = {
@@ -31,6 +32,7 @@ app.get('/image/:name', (req, res) => {
 
 app.use('/user', userController);
 app.use('/task', TaskController);
+app.use('/branch', branchRoute)
 app.use('/divisi', divisiRoute)
 app.use('/notif', notificationRoute)
 app.use('/upload', uploadRoute)

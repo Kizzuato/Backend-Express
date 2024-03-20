@@ -110,13 +110,17 @@ const getAllTaskServ = async (search, status, pic, spv, division, startDate, due
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (search, status, pic, spv, division) => {
-  return await getAllWaitedTaskRepo(search, status, pic, spv, division);
+const getAllWaitedTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+  const fromDate = startDate ? new Date(startDate).toISOString() : null;
+  const toDate = dueDate? new Date(dueDate).toISOString() : null;
+  return await getAllWaitedTaskRepo(search, status, pic, spv, division, fromDate, toDate);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (search, status, pic, spv, division) => {
-  return await getAllDeletedTaskRepo(search, status, pic, spv, division);
+const getAllDeletedTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+  const fromDate = startDate ? new Date(startDate).toISOString() : null;
+  const toDate = dueDate? new Date(dueDate).toISOString() : null;
+  return await getAllDeletedTaskRepo(search, status, pic, spv, division, fromDate, toDate);
 };
 
 const getTaskByIdServ = async (id) => {

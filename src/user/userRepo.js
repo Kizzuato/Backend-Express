@@ -53,6 +53,14 @@ const deleteUserRepo = async (u_id) => {
   });
 };
 
+const getUserByDivisionRepo = async (division) => {
+  return await prisma.m_user.findMany({
+    where: {
+      division: division,
+    },
+  });
+};
+
 const getUserByIdRepo = async (id) => {
   return await prisma.m_user.findUnique({
     where: {
@@ -105,5 +113,6 @@ module.exports = {
   updateUserRepo,
   getAllUserRepo,
   deleteUserRepo,
+  getUserByDivisionRepo,
   getUserByIdRepo,
 };

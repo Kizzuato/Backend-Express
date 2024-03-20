@@ -5,6 +5,7 @@ const {
   getAllUserServ,
   deleteUserServ,
   getUserByIdServ,
+  getUserByDivision,
   updateUserServ,
   changePassword
 } = require("./userServ");
@@ -14,15 +15,14 @@ const { success, error } = require("../utils/response.utils");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, title, password, repassword, division } = req.body;
+  const { name, email, title, password, repassword, branch, division } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
   }
 
   try {
-    const data = { name, email, password, title, division };
-    console.log(data.division);
+    const data = { name, email, password, title, branch, division };
     const response = await createUserServ(data);
 
     if (response.error) {
@@ -37,10 +37,21 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, branch } = req.body;
   try {
-    const response = await LoginUser(email, password);
+    const response = await LoginUser(email, password, branch);
     return res.status(response.status).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+router.get("/division", async (req, res) => {
+  try {
+    const division = req.params;
+    const response = await getUserByDivision(division);
+    return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });

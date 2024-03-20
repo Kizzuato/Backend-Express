@@ -18,7 +18,7 @@ model m_user {
   u_password           String?
   title                String?
   division             String?
-  branch             String?
+  branch               String?
   // u_token              String?
   // u_phone              Int?
   // u_gender             String?
@@ -33,6 +33,11 @@ model m_user {
   created_at           DateTime?       @default(now())
   updated_at           DateTime?       @updatedAt
   uploadHistory        uploadHistory[]
+}
+
+model Branch {
+  id           Int    @id @default(autoincrement())
+  branchName   String @unique
 }
 
 model Division {
