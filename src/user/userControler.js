@@ -87,7 +87,7 @@ router.get("/get-by-id/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
-router.get("/reset-password/:id", async (req, res) => {
+router.patch("/reset-password/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const {password} = req.body
