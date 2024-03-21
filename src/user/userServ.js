@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const xlsx = require('xlsx')
-const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted } = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted, resetPassword } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
 
@@ -13,6 +13,7 @@ const secretKey = process.env.SECRET_KEY_JWT;
 const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt()
   data.password = await bcrypt.hash(data.password, salt);
+
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
@@ -127,6 +128,22 @@ const importUser = async (file) => {
   }
 }
 
+const resetPasswordServ = async(id, password) => {
+  const user = getUserByIdRepo(id)
+  if(!user){
+    return 'user tidak ditemukan'
+  }
+  const salt = await bcrypt.genSalt()
+  const passwordNew = await bcrypt.hash(password, salt);
+  try {
+    const response = await resetPassword(id, passwordNew)
+    return response
+  } catch (error) {
+    return error
+  }
+
+}
+
 module.exports = {
   createUserServ,
   LoginUser,
@@ -135,4 +152,5 @@ module.exports = {
   importUser,
   deleteUserServ,
   getUserByIdServ,
+  resetPasswordServ
 };
