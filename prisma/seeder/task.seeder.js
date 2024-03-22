@@ -5,6 +5,8 @@ const tasks = [
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Memastikan Pembayaran Lapak",
         priority: "High",
@@ -19,11 +21,14 @@ const tasks = [
         progress: 100,
         pic: "user",
         spv: "Novi Handayani",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Stok Opname Mingguan",
         priority: "High",
@@ -36,11 +41,14 @@ const tasks = [
         progress: 0,
         pic: "user",
         spv: "Novi Handayani",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Membuat laporan mingguan",
         priority: "High",
@@ -54,11 +62,14 @@ const tasks = [
         progress: 20,
         pic: "user",
         spv: "Novi Handayani",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Relokasi Outlet SPJ2",
         priority: "important",
@@ -71,11 +82,14 @@ const tasks = [
         progress: 0,
         pic: "Ara ariyanti",
         spv: "Ikromullah",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Kontrol kebersihan booth dan area outlet",
         priority: "Normal",
@@ -89,11 +103,14 @@ const tasks = [
         progress: 50,
         pic: "M.Azuari Rahman",
         spv: "user",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Rencana Pembayaran",
         priority: "Normal",
@@ -107,11 +124,14 @@ const tasks = [
         progress: 65,
         pic: "Ikromullah",
         spv: "user",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Melaksanakan kegiatan jumsih",
         priority: "High",
@@ -125,11 +145,14 @@ const tasks = [
         progress: 77,
         pic: "Komariah Santi",
         spv: "user",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Review Inputan Kas Bank",
         priority: "High",
@@ -143,11 +166,14 @@ const tasks = [
         progress: 67,
         pic: "M.Azuari Rahman",
         spv: "user",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Review Inputan Kas Bank",
         priority: "High",
@@ -161,11 +187,14 @@ const tasks = [
         progress: 75,
         pic: "Sri Wahyuni",
         spv: "Aulia Novianty",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Kontrol ATK & Obat",
         priority: "High",
@@ -179,11 +208,14 @@ const tasks = [
         progress: 89,
         pic: "Sri Wahyuni",
         spv: "Aulia Novianty",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Meeting Bulanan Cabang Onic",
         priority: "High",
@@ -196,11 +228,14 @@ const tasks = [
         progress: 0,
         pic: "Sanusi",
         spv: "M.Azuari Rahman",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Meeting Bulanan Cabang",
         priority: "High",
@@ -215,11 +250,14 @@ const tasks = [
         progress: 100,
         pic: "Entin",
         spv: "Aulia Novianty",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Menata Gudang Mingguan",
         priority: "High",
@@ -234,11 +272,14 @@ const tasks = [
         progress: 100,
         pic: "Sri Wahyuni",
         spv: "Aulia Novianty",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
     {
         pic_id: "",
         spv_id: "",
+        division_id: "",
+        branch_id: "",
         task_type: "Single",
         task_title: "Pengecekan kelayakan peralatan produksi",
         priority: "Normal",
@@ -253,7 +294,8 @@ const tasks = [
         progress: 100,
         pic: "Sanusi",
         spv: "Komariah Santi",
-        division: "RES"
+        division: "RES",
+        branch: "RES"
     },
 ]
 

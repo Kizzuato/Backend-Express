@@ -4,7 +4,7 @@ const { userSeed } = require("./m_user.seeder")
 
 const runSeeder = async () => {
     // await branchSeed()
-    await divisiSeed()
+    // await divisiSeed()
     await userSeed()
 }
 
