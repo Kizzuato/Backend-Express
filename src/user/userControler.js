@@ -49,8 +49,10 @@ router.post("/login", async (req, res) => {
 
 router.get("/division", async (req, res) => {
   try {
-    const division = req.params;
-    const response = await getUserByDivision(division);
+    const { division, branch } = req.query;
+    const data = {division, branch};
+    console.log("Data : ", data);
+    const response = await getUserByDivision(division, branch);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

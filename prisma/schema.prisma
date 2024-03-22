@@ -49,6 +49,8 @@ model task {
   id           Int            @id @default(autoincrement())
   pic_id       String?
   spv_id       String?
+  branch_id    Int?
+  division_id  Int?
   task_type    String?
   task_title   String?
   priority     String?

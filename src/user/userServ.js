@@ -103,8 +103,8 @@ const deleteUserServ = async (id) => {
   return await deleteUserRepo(+id)
 }
 
-const getUserByDivision = async (division) => {
-  return await getUserByDivisionRepo(division);
+const getUserByDivision = async (division, branch) => {
+  return await getUserByDivisionRepo(division, branch);
 };
 
 const getUserByIdServ = async (id) => {

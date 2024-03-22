@@ -53,10 +53,11 @@ const deleteUserRepo = async (u_id) => {
   });
 };
 
-const getUserByDivisionRepo = async (division) => {
+const getUserByDivisionRepo = async (division, branch) => {
   return await prisma.m_user.findMany({
     where: {
-      division: division,
+      branch: branch || undefined,
+      division: division || undefined,
     },
   });
 };
