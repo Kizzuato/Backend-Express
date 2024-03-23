@@ -1,3 +1,6 @@
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
 const {
   updateTaskRepo,
   createTaskRepo,
@@ -17,6 +20,8 @@ const updateTaskServ = async (id, data) => {
   const dataRest = {
     pic_id: data.pic_id,
     spv_id: data.spv_id,
+    branch_id: data.branch_id,
+    division_id: data.division_id,
     task_type: data.task_type,
     task_title: data.task_title,
     priority: data.priority,
@@ -26,8 +31,10 @@ const updateTaskServ = async (id, data) => {
     description: data.description,
     pic_title: data.pic_title,
     pic: data.pic,
-    pic_rating: data.pic_rating,
     spv: data.spv,
+    branch: data.branch,
+    division: data.division,
+    pic_rating: data.pic_rating,
     approved_at: data.approved_at,
     approved_by: data.approved_by,
     started_at: data.started_at,
@@ -82,9 +89,12 @@ const AcceptTaskServe = async (id, data) => {
 
 // Service untuk membuat task baru
 const createTaskServ = async (data, files) => {
+  const picId = parseInt(data.pic_id);
+  const spvId = parseInt(data.spv_id);
+
   const dataRest = {
-    pic_id: data.pic_id,
-    spv_id: data.spv_id,
+    pic_id: picId,
+    spv_id: spvId,
     task_type: data.task_type,
     task_title: data.task_title,
     priority: data.priority,
@@ -99,28 +109,50 @@ const createTaskServ = async (data, files) => {
     spv: data.spv,
     fileName: data.files,
   };
+  console.log("🚀 ~ createTaskServ ~ dataRest.spv_id:", dataRest.spv_id)
 
+  const user = await prisma.m_user.findUnique({
+    where: {
+      u_id: spvId
+    },
+    select: {
+      division_id: true,
+      division: true,
+      branch_id: true,
+      branch: true
+    }
+  });
+
+  // Jika user ditemukan, tambahkan division dan branch ke dalam data yang akan dikirim
+  if (user) {
+    dataRest.division_id = user.division_id;
+    dataRest.division = user.division;
+    dataRest.branch_id = user.branch_id;
+    dataRest.branch = user.branch;
+  }
+
+  console.log("🚀 ~ router.put ~ data:", dataRest)
   return await createTaskRepo(dataRest);
 };
 
-const getAllTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+const getAllTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllTaskRepo(search, status, pic, spv, division, fromDate, toDate);
+  return await getAllTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+const getAllWaitedTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllWaitedTaskRepo(search, status, pic, spv, division, fromDate, toDate);
+  return await getAllWaitedTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
 };
 
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (search, status, pic, spv, division, startDate, dueDate) => {
+const getAllDeletedTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllDeletedTaskRepo(search, status, pic, spv, division, fromDate, toDate);
+  return await getAllDeletedTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
 };
 
 const getTaskByIdServ = async (id) => {

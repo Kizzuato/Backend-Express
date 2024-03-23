@@ -2,25 +2,25 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const branch = [
     {
-        branchName: "PT. RES"
+        b_name: "PT. RES"
     },
     {
-        branchName: "Produksi RES"
+        b_name: "Produksi RES"
     },
     {
-        branchName: "ONIC 1"
+        b_name: "ONIC 1"
     },
     {
-        branchName: "ONIC 2"
+        b_name: "ONIC 2"
     },
     {
-        branchName: "ONIC 3"
+        b_name: "ONIC 3"
     },
     {
-        branchName: "Sehatku"
+        b_name: "Sehatku"
     },
     {
-        branchName: "ONIC KLP"
+        b_name: "ONIC KLP"
     },
 ]
 

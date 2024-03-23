@@ -22,6 +22,26 @@ const createUserServ = async (data) => {
     division: data.division,
   };
 
+  const branch = await prisma.branch.findUnique({
+    where: {
+      u_id: spvId
+    },
+    select: {
+      division_id: true,
+      division: true,
+      branch_id: true,
+      branch: true
+    }
+  });
+
+  // Jika user ditemukan, tambahkan division dan branch ke dalam data yang akan dikirim
+  if (user) {
+    dataRest.division_id = user.division_id;
+    dataRest.division = user.division;
+    dataRest.branch_id = user.branch_id;
+    dataRest.branch = user.branch;
+  }
+
   try {
     const response = await createUserRepo(dataRes);
     const dataReq = {

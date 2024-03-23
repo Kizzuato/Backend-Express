@@ -26,9 +26,9 @@ const del = async (id) => {
     }
 }
 
-const isExist = async (branchName) => {
+const isExist = async (b_name) => {
     try {
-        const exist = await prismaBranch.findFirst({ where: { branchName } })
+        const exist = await prismaBranch.findFirst({ where: { b_name } })
         return exist
     } catch (err) {
         throwError(err)

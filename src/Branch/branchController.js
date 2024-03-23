@@ -13,10 +13,10 @@ const getAll = async (req, res) => {
 
 const deleteData = async (req, res) => {
     try{
-        const branch = await branchRepo.isExist(req.params.branchName)
+        const branch = await branchRepo.isExist(req.params.b_name)
         if(!branch) throw Error('Branch didnt exist')
         const deletedBranch = await branchRepo.del(branch.id)
-        return success(res, `Branch ${deletedBranch.branchName} Deleted Successfully`, deletedBranch)
+        return success(res, `Branch ${deletedBranch.b_name} Deleted Successfully`, deletedBranch)
     }catch(err){
         return error(res, err.message)
     }
@@ -24,10 +24,10 @@ const deleteData = async (req, res) => {
 
 const createNew = async (req, res) => {
     try{
-        const exist = await branchRepo.isExist(req.body.branchName)
+        const exist = await branchRepo.isExist(req.body.b_name)
         if(exist) throw Error('Branch already exist')
         const createdBranch = await branchRepo.create(req.body)
-        return success(res, `Branch ${createdBranch.branchName} Created`, createdBranch)
+        return success(res, `Branch ${createdBranch.b_name} Created`, createdBranch)
     }catch(err){
         return error(res, err.message)
     }

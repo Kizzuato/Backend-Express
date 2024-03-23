@@ -1,5 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const { taskSeed } = require("./task.seeder");
+const { branchSeed } = require("./branch.seeder");
+const { divisionSeed } = require("./division.seeder");
 const bcrypt = require("bcrypt");
 const prisma = new PrismaClient();
 const users = [
@@ -166,19 +168,35 @@ const users = [
 ]
 
 const userSeed = async () => {
-    try{
-        for(let user of users){
-            const salt = await bcrypt.genSalt()
+    try {
+        // Looping melalui setiap pengguna
+        for (let user of users) {
+            // Mengambil ID dari cabang dan divisi berdasarkan nama
+            const branchData = await prisma.branch.findUnique({ where: { b_name: user.branch } });
+            const divisionData = await prisma.division.findUnique({ where: { divisionName: user.division } });
+
+            // Jika cabang atau divisi tidak ditemukan, lewati pengguna ini
+            if (!branchData || !divisionData) {
+                console.log(`Branch or Division not found for user: ${user.u_name}`);
+                continue;
+            }
+
+            // Mengisi branch_id dan division_id di dalam objek pengguna
+            user.branch_id = branchData.id;
+            user.division_id = divisionData.id;
+
+            // Membuat hash password sebelum menyimpan pengguna
+            const salt = await bcrypt.genSalt();
             user.u_password = await bcrypt.hash(user.u_password, salt);
-            user.lastSeenNotification = new Date().toISOString()
-            const createdUser = await prisma.m_user.upsert({
-                where: { u_email: user.u_email },
-                create: user, update: user
-            })
-            await taskSeed(createdUser)
+
+            // Menyimpan pengguna ke basis data
+            const createdUser = await prisma.m_user.create({ data: user });
+
+            // Memanggil taskSeed dengan pengguna yang dibuat
+            await taskSeed(createdUser);
         }
-    }catch(err){
-        console.log(err)
+    } catch (err) {
+        console.log(err);
     }
 }
 

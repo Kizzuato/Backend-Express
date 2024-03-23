@@ -35,7 +35,7 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDate) => {
+const getAllTaskRepo = async (search, status, pic, spv, division, branch, fromDate, toDate) => {
   const whereClause = {
     NOT: {
       status: "wait-app",
@@ -45,6 +45,7 @@ const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDa
     deleted_at: null,
     spv: spv || undefined,
     division: division || undefined,
+    branch: branch || undefined,
     OR: [
       { task_title: { contains: search || '' } },
     ]
@@ -64,13 +65,14 @@ const getAllTaskRepo = async (search, status, pic, spv, division, fromDate, toDa
 
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, fromDate, toDate) => {
+const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, branch, fromDate, toDate) => {
     const whereClause = {
       status: "wait-app",
       deleted_at: null,
       pic: pic || undefined,
       spv: spv || undefined,
       division: division || undefined,
+      branch: branch || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
@@ -89,7 +91,7 @@ const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, fromDat
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (search, status, pic, spv, division, fromDate, toDate) => {
+const getAllDeletedTaskRepo = async (search, status, pic, spv, division, branch, fromDate, toDate) => {
     const whereClause = {
       deleted_at: {
         not: null,
@@ -97,6 +99,7 @@ const getAllDeletedTaskRepo = async (search, status, pic, spv, division, fromDat
       pic: pic || undefined,
       spv: spv || undefined,
       division: division || undefined,
+      branch: branch || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]

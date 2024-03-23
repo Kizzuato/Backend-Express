@@ -99,6 +99,8 @@ router.put("/edit/:id", async (req, res) => {
   const {
     pic_id,
     spv_id,
+    branch_id,
+    division_id,
     task_type,
     task_title,
     priority,
@@ -109,6 +111,8 @@ router.put("/edit/:id", async (req, res) => {
     pic_title,
     pic,
     spv,
+    branch,
+    division,
     approved_at,
     approved_by,
     started_at,
@@ -128,6 +132,8 @@ router.put("/edit/:id", async (req, res) => {
     const data = {
       pic_id,
       spv_id,
+      branch_id,
+      division_id,
       task_type,
       task_title,
       priority,
@@ -137,8 +143,10 @@ router.put("/edit/:id", async (req, res) => {
       description,
       pic_title,
       pic,
-      pic_rating,
       spv,
+      branch,
+      division,
+      pic_rating,
       approved_at,
       approved_by,
       started_at,
@@ -154,6 +162,7 @@ router.put("/edit/:id", async (req, res) => {
     };
     const response = await updateTaskServ(taskId, data);
 
+    
     return res.status(200).json(response);
   } catch (error) {
     console.error(error);
@@ -225,11 +234,12 @@ router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
 });
 
 //  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all", auth, async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
-    const { pic, spv, division } = req.headers;
-    // console.log("division", division);
+    const { pic, spv, division, branch } = req.headers;
+    console.log("division", division);
+    console.log("Branch", branch);
     // console.log("status", status);
     // console.log("search", search);
     // console.log("pic", pic);
@@ -243,6 +253,7 @@ router.get("/all", auth, async (req, res) => {
       pic,
       spv,
       division,
+      branch,
       startDate,
       dueDate
     );
@@ -256,7 +267,7 @@ router.get("/all", auth, async (req, res) => {
 router.get("/waited", auth, async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
-    const { pic, spv, division } = req.headers;
+    const { pic, spv, division, branch } = req.headers;
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
@@ -268,6 +279,7 @@ router.get("/waited", auth, async (req, res) => {
       pic,
       spv,
       division,
+      branch,
       startDate,
       dueDate
     );
@@ -281,17 +293,18 @@ router.get("/waited", auth, async (req, res) => {
 router.get("/deleted", auth, async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
-    const { pic, spv, division } = req.headers;
-    console.log("pic", pic);
-    console.log("spv", spv);
-    console.log("startDate", startDate);
-    console.log("dueDate", dueDate);
+    const { pic, spv, division, branch } = req.headers;
+    // console.log("pic", pic);
+    // console.log("spv", spv);
+    // console.log("startDate", startDate);
+    // console.log("dueDate", dueDate);
     const response = await getAllDeletedTaskServ(
       search,
       status,
       pic,
       spv,
       division,
+      branch,
       startDate,
       dueDate
     );

@@ -13,6 +13,8 @@ datasource db {
 model m_user {
   u_id                 Int             @id @default(autoincrement())
   u_name               String
+  branch_id             Int?
+  division_id           Int?
   // u_code               String?
   u_email              String          @unique
   u_password           String?
@@ -35,22 +37,27 @@ model m_user {
   uploadHistory        uploadHistory[]
 }
 
+// i change the name for branch & division
 model Branch {
-  id           Int    @id @default(autoincrement())
-  branchName   String @unique
+  id          Int       @id @default(autoincrement())
+  divisions   Division[] // Cabang dapat memiliki lebih dari satu divisi
+  b_name      String?
 }
 
 model Division {
-  id           Int    @id @default(autoincrement())
-  divisionName String @unique
+  id          Int      @id @default(autoincrement())
+  branch      Branch   @relation(fields: [branch_id], references: [id])
+  branch_id   Int      
+  d_name      String?
 }
 
 model task {
   id           Int            @id @default(autoincrement())
-  pic_id       String?
-  spv_id       String?
+  pic_id       Int?
+  spv_id       Int?
   branch_id    Int?
   division_id  Int?
+  branch       String?
   task_type    String?
   task_title   String?
   priority     String?
