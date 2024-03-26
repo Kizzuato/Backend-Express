@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const { auth } = require("../middleware/auth.middleware");
-const { error, success } = require("../Notification/notificationController");
 const uploadControl = require('./uploadController');
 const { importUser } = require("../user/userServ");
 const storage = multer.diskStorage({

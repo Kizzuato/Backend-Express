@@ -2,22 +2,21 @@ const express = require("express");
 const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     // Dapatkan tanggal dan waktu saat ini
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
-    const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+    const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
 
     // Tambahkan tanggal dan waktu ke nama file
     const filename = `${date}_${time}_${file.originalname}`;
 
     cb(null, filename);
-  }
+  },
 });
 const upload = multer({ storage: storage });
-
 
 const {
   AcceptTaskServe,
@@ -34,54 +33,56 @@ const { auth } = require("../middleware/auth.middleware");
 const router = express.Router();
 
 // Router untuk mengedit task
-router.put("/file_hasil/:strid", upload.single('file_hasil'), async (req, res) => {
-  try {
-    let nama_file = null;
+router.put(
+  "/file_hasil/:strid",
+  upload.single("file_hasil"),
+  async (req, res) => {
+    try {
+      let nama_file = null;
 
-    if (req.file) {
-      nama_file = req.file.originalname;
+      if (req.file) {
+        nama_file = req.file.originalname;
+      }
+
+      let filename = null;
+
+      if (nama_file !== null) {
+        const now = new Date();
+        const date = now.toISOString().slice(0, 10);
+        const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+        filename = `${date}_${time}_${nama_file}`;
+      }
+
+      const { strid } = req.params;
+      const id = parseInt(strid);
+
+      const { fileName } = req.body;
+
+      // Process the data and files as needed
+      const data = {
+        file_hasil: filename || fileName,
+      };
+
+      const response = await updateTaskServ(id, data);
+
+      return res.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Terjadi kesalahan pada server" });
     }
-
-    let filename = null;
-
-    if (nama_file !== null) {
-      const now = new Date();
-      const date = now.toISOString().slice(0, 10);
-      const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
-      filename = `${date}_${time}_${nama_file}`;
-    }
-
-    const { strid } = req.params;
-    const id = parseInt(strid);
-
-    const {
-      fileName
-    } = req.body;
-
-    // Process the data and files as needed
-    const data = {
-      file_hasil: filename || fileName
-    };
-
-    const response = await updateTaskServ(id, data);
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
-});
+);
 
 router.put("/acc/:id", async (req, res) => {
   const { id } = req.params;
-  const {pic, status, pic_rating, approved_at } = req.body;
+  const { pic, status, pic_rating, approved_at } = req.body;
 
   try {
     const data = {
       pic,
       pic_rating,
       status,
-      approved_at
+      approved_at,
     };
     const response = await AcceptTaskServe(id, data);
 
@@ -95,12 +96,44 @@ router.put("/acc/:id", async (req, res) => {
 // Router untuk mengedit task
 router.put("/edit/:id", async (req, res) => {
   const taskId = req.params.id;
-  const { pic_id, spv_id, task_type, task_title, priority, iteration, start_date, due_date, description, pic_title, pic, spv, approved_at, approved_by, started_at, started_by, deleted_at, finished_at, finished_by, status, progress, file_attachment, created_at, edited_at, pic_rating } = req.body;
+  const {
+    pic_id,
+    spv_id,
+    branch_id,
+    division_id,
+    task_type,
+    task_title,
+    priority,
+    iteration,
+    start_date,
+    due_date,
+    description,
+    pic_title,
+    pic,
+    spv,
+    branch,
+    division,
+    approved_at,
+    approved_by,
+    started_at,
+    started_by,
+    deleted_at,
+    finished_at,
+    finished_by,
+    status,
+    progress,
+    file_attachment,
+    created_at,
+    edited_at,
+    pic_rating,
+  } = req.body;
 
   try {
     const data = {
       pic_id,
       spv_id,
+      branch_id,
+      division_id,
       task_type,
       task_title,
       priority,
@@ -110,8 +143,10 @@ router.put("/edit/:id", async (req, res) => {
       description,
       pic_title,
       pic,
-      pic_rating,
       spv,
+      branch,
+      division,
+      pic_rating,
       approved_at,
       approved_by,
       started_at,
@@ -127,6 +162,7 @@ router.put("/edit/:id", async (req, res) => {
     };
     const response = await updateTaskServ(taskId, data);
 
+    
     return res.status(200).json(response);
   } catch (error) {
     console.error(error);
@@ -134,8 +170,7 @@ router.put("/edit/:id", async (req, res) => {
   }
 });
 
-
-router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
+router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
   try {
     let nama_file = null;
 
@@ -148,7 +183,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
     if (nama_file !== null) {
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
-      const time = now.toTimeString().slice(0, 8).replace(/:/g, '-');
+      const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
       filename = `${date}_${time}_${nama_file}`;
     }
 
@@ -167,7 +202,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
       created_by,
       pic,
       spv,
-      fileName
+      fileName,
     } = req.body;
 
     // Process the data and files as needed
@@ -186,7 +221,7 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
       created_by,
       pic,
       spv,
-      files: filename || fileName
+      files: filename || fileName,
     };
 
     const response = await createTaskServ(data);
@@ -198,20 +233,30 @@ router.post("/new", upload.single('bukti_tayang'), async (req, res) => {
   }
 });
 
-
 //  Router untuk mengambil semua task yang sudah di acc di database
-router.get("/all", auth, async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
-    const { status, search } = req.query;
-    const { pic, spv, division } = req.headers;
-    console.log("division", division);
-    console.log("status", status);
-    console.log("search", search);
-    console.log("pic", pic);
-    console.log("spv", spv);
-    console.log("search", search);
-    const response = await getAllTaskServ(search, status, pic, spv, division);
+    const { status, search, startDate, dueDate } = req.query;
+    const { pic, spv, division, branch } = req.headers;
+    const data = {pic, spv, division, branch};
+    // console.log("division", division);
+    // console.log("🚀 ~ router.get ~ data:"  , data)
+    // console.log("Branch", branch);
+    // console.log("status", status);
+    // console.log("search", search);
+    // console.log("spv", spv);
+    // console.log("search", search);
+    // console.log("startDate", startDate);
+    // console.log("dueDate", dueDate);
+    const response = await getAllTaskServ(
+      search,
+      status,
+      data,
+      startDate,
+      dueDate
+    );
     return res.status(200).json(response);
+    // console.log("🚀 ~ router.get ~ response:", response)
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
@@ -220,12 +265,21 @@ router.get("/all", auth, async (req, res) => {
 
 router.get("/waited", auth, async (req, res) => {
   try {
-    const { status, search } = req.query;
-    const { pic, spv, division } = req.headers;
-    console.log("pic", pic);
-    console.log("spv", spv);
-    console.log("search", search);
-    const response = await getAllWaitedTaskServ(search, status, pic, spv, division);
+    const { status, search, startDate, dueDate } = req.query;
+    const { pic, spv, division, branch } = req.headers;
+    const data = {pic, spv, division, branch};
+    // console.log("pic", pic);
+    // console.log("spv", spv);
+    // console.log("search", search);
+    // console.log("startDate", startDate);
+    // console.log("dueDate", dueDate);
+    const response = await getAllWaitedTaskServ(
+      search,
+      status,
+      data,
+      startDate,
+      dueDate
+    );
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -235,11 +289,20 @@ router.get("/waited", auth, async (req, res) => {
 
 router.get("/deleted", auth, async (req, res) => {
   try {
-    const { status, search } = req.query;
-    const { pic, spv, division } = req.headers;
+    const { status, search, startDate, dueDate } = req.query;
+    const { pic, spv, division, branch } = req.headers;
+    const data = {pic, spv, division, branch}
     // console.log("pic", pic);
     // console.log("spv", spv);
-    const response = await getAllDeletedTaskServ(search, status, pic, spv, division);
+    // console.log("startDate", startDate);
+    // console.log("dueDate", dueDate);
+    const response = await getAllDeletedTaskServ(
+      search,
+      status,
+      data,
+      startDate,
+      dueDate
+    );
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

@@ -13,31 +13,47 @@ datasource db {
 model m_user {
   u_id                 Int             @id @default(autoincrement())
   u_name               String
-  u_code               String?
+  division             Division        @relation(fields: [division_id], references: [id])
+  branch               Branch          @relation(fields: [branch_id], references: [id])
+  division_id          Int
+  branch_id            Int
+  tasks_as_pic         task[]          @relation("pic")
+  tasks_as_spv         task[]          @relation("spv")
+  uploadHistory        uploadHistory[]
   u_email              String          @unique
   u_password           String?
   title                String?
-  division             String?
-  u_token              String?
-  u_phone              Int?
-  u_gender             String?
-  u_date_of_birth      DateTime?
-  u_address            String?
-  u_province_id        String?
-  u_city_id            String?
   u_rate               Int?            @default(0)
   total_task           Int?            @default(0)
   lastSeenNotification DateTime?
   deleted              Boolean         @default(false)
   created_at           DateTime?       @default(now())
   updated_at           DateTime?       @updatedAt
-  uploadHistory        uploadHistory[]
+}
+
+model Branch {
+  id          Int       @id @default(autoincrement())
+  b_name      String?
+  divisions   Division[] 
+  tasks       task[]
+  users       m_user[]
+}
+
+model Division {
+  id          Int      @id @default(autoincrement())
+  branch      Branch   @relation(fields: [branch_id], references: [id])
+  branch_id   Int      
+  d_name      String?
+  tasks       task[]
+  users       m_user[]
 }
 
 model task {
   id           Int            @id @default(autoincrement())
-  pic_id       String?
-  spv_id       String?
+  pic          m_user?        @relation("pic", fields: [pic_id], references: [u_id])
+  spv          m_user?        @relation("spv", fields: [spv_id], references: [u_id])
+  branch       Branch?        @relation(fields: [branch_id], references: [id])
+  division     Division?      @relation(fields: [division_id], references: [id])
   task_type    String?
   task_title   String?
   priority     String?
@@ -45,11 +61,6 @@ model task {
   start_date   DateTime?
   due_date     DateTime?
   description  String?        @db.Text
-  pic_title    String?
-  pic          String?
-  pic_rating   Int?
-  spv          String?
-  division     String?
   approved_at  DateTime?
   approved_by  String?
   started_at   DateTime?
@@ -59,13 +70,21 @@ model task {
   status       String?        @default("Wait-app")
   progress     Int?           @default(0)
   fileName     String?
-  file_hasil     String?
+  file_hasil   String?
   created_at   DateTime?      @default(now())
   created_by   String?
   updated_at   DateTime?      @updatedAt
   deleted_at   DateTime?
-  Notification Notification[]
+  notifications Notification[] 
+
+  pic_rating  Int?
+  pic_id    Int?
+  spv_id    Int?
+  branch_id    Int?
+  division_id  Int?
 }
+
+
 
 model Notification {
   id         Int       @id @default(autoincrement())
@@ -85,3 +104,4 @@ model uploadHistory {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+

@@ -1,4 +1,6 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const dotenv = require("dotenv");
 const cors = require("cors");
 const multer = require('multer');
@@ -7,7 +9,9 @@ const path = require('path');
 const userController = require('./user/userControler');
 const TaskController = require('./task/taskController')
 const notificationRoute = require('./Notification/notificationRoute');
-const uploadRoute = require('./Upload History/uploadRoute')
+const uploadRoute = require('./Upload History/uploadRoute');
+const branchRoute = require("./Branch/branchRoute");
+const divisiRoute = require("./Division/divisiRoute");
 
 const corsOptions = {
   origin: "*",
@@ -18,6 +22,12 @@ const corsOptions = {
 const app = express();
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 dotenv.config();
 const port = process.env.PORT || 9090; // default to 443 if PORT not set
@@ -30,6 +40,8 @@ app.get('/image/:name', (req, res) => {
 
 app.use('/user', userController);
 app.use('/task', TaskController);
+app.use('/branch', branchRoute)
+app.use('/divisi', divisiRoute)
 app.use('/notif', notificationRoute)
 app.use('/upload', uploadRoute)
 

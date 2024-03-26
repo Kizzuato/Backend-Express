@@ -35,55 +35,86 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (search, status, pic, spv, division) => {
-return await prisma.task.findMany({
-    where: {
-      NOT: {
-        status: "wait-app",
-      },
-      status: status || undefined,
-      pic: pic || undefined,
-      deleted_at: null,
-      spv: spv || undefined,
-      division: division || undefined,
-      OR: [
-        { task_title: { contains: search || '' } },
-      ]
+const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
+  const whereClause = {
+    NOT: {
+      status: "wait-app",
     },
+    spv_id: parseInt(data.spv) || undefined,
+    pic_id: parseInt(data.pic) || undefined,
+    status: status || undefined,
+    deleted_at: null,
+    division_id: parseInt(data.division) || undefined,
+    branch_id: parseInt(data.branch) || undefined,
+    OR: [
+      { task_title: { contains: search || '' } },
+    ]
+  };
+
+  if (fromDate && toDate) {
+    whereClause.start_date = {
+      gte: fromDate || undefined,
+      lte: toDate || undefined,
+    };
+  }
+
+  return await prisma.task.findMany({
+    where: whereClause,
   });
 };
 
+
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async ( search, status, pic, spv, division) => {
-  return await prisma.task.findMany({
-    where: {
+const getAllWaitedTaskRepo = async ( search, status, data, fromDate, toDate) => {
+    const whereClause = {
       status: "wait-app",
       deleted_at: null,
-      pic: pic || undefined,
-      spv: spv || undefined,
-      division: division || undefined,
+      spv_id: parseInt(data.spv) || undefined,
+      pic_id: parseInt(data.pic) || undefined,
+      division_id: parseInt(data.division) || undefined,
+      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
-    },
-  });
+    };
+
+    if (fromDate && toDate) {
+      whereClause.start_date = {
+        gte: fromDate || undefined,
+        lte: toDate || undefined,
+      };
+    };
+  
+    return await prisma.task.findMany({
+      where: whereClause,
+    });
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (search, status, pic, spv, division) => {
-  return await prisma.task.findMany({
-    where: {
+const getAllDeletedTaskRepo = async (search, status, data, fromDate, toDate) => {
+    const whereClause = {
       deleted_at: {
         not: null,
       },
-      pic: pic || undefined,
-      spv: spv || undefined,
-      division: division || undefined,
+      pic_id: parseInt(data.pic) || undefined,
+      spv_id: parseInt(data.spv) || undefined,
+      division_id: parseInt(data.division) || undefined,
+      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
-    },
-  });
+    };
+
+    if (fromDate && toDate) {
+      whereClause.start_date = {
+        gte: fromDate || undefined,
+        lte: toDate || undefined,
+      };
+    };
+  
+    return await prisma.task.findMany({
+      where: whereClause,
+    });
 };
 
 // Repo untuk mencari task berdasarkan Id
