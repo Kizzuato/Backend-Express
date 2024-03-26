@@ -104,6 +104,17 @@ const userDeleted = async (deleted) => {
   }
 };
 
+const resetPassword = async (id, password) => {
+  return response = await prisma.m_user.update({
+    where: {
+      u_id : id
+    },
+    data: {
+      u_password: password
+    }
+  })
+}
+
 module.exports = {
   updatePicRepo,
   createUserRepo,
@@ -116,4 +127,5 @@ module.exports = {
   deleteUserRepo,
   getUserByDivisionRepo,
   getUserByIdRepo,
+  resetPassword
 };

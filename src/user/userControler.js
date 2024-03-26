@@ -151,5 +151,16 @@ router.get("/get-by-id/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
+router.patch("/reset-password/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {password} = req.body
+    const response = await resetPasswordServ(id, password);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
 
 module.exports = router;

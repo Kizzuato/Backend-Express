@@ -26,6 +26,7 @@ const secretKey = process.env.SECRET_KEY_JWT;
 const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt();
   data.password = await bcrypt.hash(data.password, salt);
+
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
@@ -270,4 +271,5 @@ module.exports = {
   deleteUserServ,
   getUserByDivision,
   getUserByIdServ,
+  resetPasswordServ
 };
