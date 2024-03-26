@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const express = require("express");
 const {
   createUserServ,
@@ -15,14 +16,14 @@ const { success, error } = require("../utils/response.utils");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, title, password, repassword, branch, division } = req.body;
+  const { name, email, title, password, repassword, branch_id, division_id } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
   }
 
   try {
-    const data = { name, email, password, title, branch, division };
+    const data = { name, email, password, title, branch_id, division_id };
     const response = await createUserServ(data);
 
     if (response.error) {
@@ -38,8 +39,10 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password, branch } = req.body;
+  const token = null;
+  // console.log("🚀 ~ router.post ~ token:", token)
   try {
-    const response = await LoginUser(email, password, branch);
+    const response = await LoginUser(email, password, branch, token);
     return res.status(response.status).json(response);
   } catch (error) {
     console.log(error);
@@ -49,10 +52,10 @@ router.post("/login", async (req, res) => {
 
 router.get("/division", async (req, res) => {
   try {
-    const { division, branch } = req.query;
-    const data = {division, branch};
-    console.log("Data : ", data);
-    const response = await getUserByDivision(division, branch);
+    const { division } = req.query;
+    const data = {division };
+    // console.log("Data : ", data);
+    const response = await getUserByDivision(division);
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -62,12 +65,35 @@ router.get("/division", async (req, res) => {
 
 router.get("/all", async (req, res) => {
   try {
-    const response = await getAllUserServ();
+    const { division, branch } = req.headers;
+    const data = {division, branch };
+    console.log("🚀 ~ router.get ~ data:", data)
+    const response = await getAllUserServ(data);
+    // console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
+
+router.post('/refreshToken', (req, res) => {
+  const oldToken = req.body.oldToken;
+
+  // Periksa validitas token yang lama
+  jwt.verify(oldToken, 'secret_key', (err, decoded) => {
+    if (err) {
+      // Jika token tidak valid, kembalikan respons dengan status 401 Unauthorized
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+
+    // Jika token valid, buat token yang baru
+    const newToken = jwt.sign({ /* data tambahan */ }, 'secret_key', { expiresIn: '1h' });
+
+    // Kembalikan token baru sebagai respons
+    res.status(200).json({ newToken });
+  });
+});
+
 });
 
 router.delete("/delete-user/:id", async (req, res) => {
@@ -90,17 +116,26 @@ router.put('/update-user/:id', async (req, res) => {
   }
 })
 
+// router.put('/update-password/:id/:forced?', async (req, res) => {
+//   const { confirmPass, newPass } = req.body
+//   try {
+//     if(!req.params.forced){
+//       if(!confirmPass) throw Error('Send Confirmation Password to change the password')
+//       const { u_password } = await getUserByIdRepo(req.params.id)
+//       const passwordMatch = bcrypt.compare(confirmPass, u_password)
+//       if(!passwordMatch) throw Error('Confirmation Password didnt match, please check again')
+//     }
+//     const updatePassword = await changePassword(req.params.id, { u_password: newPass })
+//     return success(res`User ${updatePassword.u_name} Password Changed Successfully`, updatePassword)
+//   } catch (err) {
+//     return error(res, err.message)
+//   }
+// })
 router.put('/update-password/:id/:forced?', async (req, res) => {
-  const { confirmPass, newPass } = req.body
+  const { newPassword } = req.body
   try {
-    if(!req.params.forced){
-      if(!confirmPass) throw Error('Send Confirmation Password to change the password')
-      const { u_password } = await getUserByIdRepo(req.params.id)
-      const passwordMatch = bcrypt.compare(confirmPass, u_password)
-      if(!passwordMatch) throw Error('Confirmation Password didnt match, please check again')
-    }
-    const updatePassword = await changePassword(req.params.id, { u_password: newPass })
-    return success(res`User ${updatePassword.u_name} Password Changed Successfully`, updatePassword)
+    const updatePassword = await changePassword(req.params.id, newPassword)
+    return success(res, `User ${updatePassword.u_name} Password Changed Successfully`, updatePassword)
   } catch (err) {
     return error(res, err.message)
   }

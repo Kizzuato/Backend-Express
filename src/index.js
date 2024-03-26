@@ -1,4 +1,6 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const dotenv = require("dotenv");
 const cors = require("cors");
 const multer = require('multer');
@@ -20,6 +22,12 @@ const corsOptions = {
 const app = express();
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
+app.use(session({
+  secret: 'secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 dotenv.config();
 const port = process.env.PORT || 9090; // default to 443 if PORT not set

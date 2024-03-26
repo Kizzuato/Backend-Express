@@ -2,9 +2,27 @@ const { throwError } = require("../utils/error.utils")
 const { success, error } = require("../utils/response.utils")
 const branchRepo = require('./branchRepo')
 
+const getById = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const branch = await branchRepo.getById(id)
+        return success(res, 'Success', branch)
+    }catch(err){
+        return error(res, err.message)
+    }
+}
+
 const getAll = async (req, res) => {
     try{
-        const branch = await branchRepo.getAll()
+        let branch_id = req.headers.branch;
+        // console.log("🚀 ~ getAll ~ branch_id:", branch_id)
+        const branch_name = await branchRepo.getById(branch_id)
+        // console.log("🚀 ~ getAll ~ branch_name:", branch_name)
+    if (branch_name.b_name === "PT. RES") {
+        branch_id = undefined;
+    } 
+    console.log("🚀 ~ getAll ~ branch_id:", branch_id)
+        const branch = await branchRepo.getAll(branch_id)
         return success(res, 'Success', branch)
     }catch(err){
         return error(res, err.message)
@@ -33,4 +51,4 @@ const createNew = async (req, res) => {
     }
 }
 
-module.exports = { createNew , getAll, deleteData}
+module.exports = { createNew , getAll, deleteData, getById}

@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const User = require("../user/userRepo");
 
 const {
   updateTaskRepo,
@@ -14,6 +15,7 @@ const { getUserByIdRepo } = require('../user/userRepo');
 const { check } = require('prisma');
 
 const {updatePicRepo} = require("../user/userRepo");
+const { response } = require("../Notification/notificationRoute");
 
 // service untuk mengedit task
 const updateTaskServ = async (id, data) => {
@@ -59,8 +61,8 @@ const AcceptTaskServe = async (id, data) => {
 
     // Lakukan validasi atau logika bisnis jika diperlukan
     const pic = data.pic;
+    const pic_rating = data.pic_rating
     const updatedTask = {
-      pic_rating: data.pic_rating,
       status: data.status,
       approved_at: data.approved_at
     };
@@ -71,13 +73,13 @@ const AcceptTaskServe = async (id, data) => {
       existingTask.status === "In-progress" &&
       updatedTask.status === "Close"
     ) {
-      await updatePicRepo(pic, updatedTask.pic_rating);
+      await updatePicRepo(pic, pic_rating);
     } else if (
       existingTask.status === "Idle" &&
       updatedTask.status === "Close"
     ) {
-      const pic_rating = updatedTask.pic_rating - 2
-      console.log(pic_rating)
+      const pic_rating = pic_rating - 2
+      // console.log(pic_rating)
       await updatePicRepo(pic, pic_rating);
     }
 
@@ -103,13 +105,10 @@ const createTaskServ = async (data, files) => {
     start_date: data.start_date,
     due_date: data.due_date,
     description: data.description,
-    pic_title: data.pic_title,
     created_by: data.created_by,
-    pic: data.pic,
-    spv: data.spv,
     fileName: data.files,
   };
-  console.log("🚀 ~ createTaskServ ~ dataRest.spv_id:", dataRest.spv_id)
+  // console.log("🚀 ~ createTaskServ ~ dataRest.spv_id:", dataRest.spv_id)
 
   const user = await prisma.m_user.findUnique({
     where: {
@@ -117,47 +116,150 @@ const createTaskServ = async (data, files) => {
     },
     select: {
       division_id: true,
-      division: true,
+    }
+  });
+  const division = await prisma.division.findUnique({
+    where: {
+      id: user.division_id
+    },
+    select: {
+      id: true,
       branch_id: true,
-      branch: true
     }
   });
 
   // Jika user ditemukan, tambahkan division dan branch ke dalam data yang akan dikirim
   if (user) {
-    dataRest.division_id = user.division_id;
-    dataRest.division = user.division;
-    dataRest.branch_id = user.branch_id;
-    dataRest.branch = user.branch;
+    dataRest.division_id = division.id;
+    dataRest.branch_id = division.branch_id;
   }
 
-  console.log("🚀 ~ router.put ~ data:", dataRest)
+  // console.log("🚀 ~ router.put ~ data:", dataRest)
   return await createTaskRepo(dataRest);
 };
 
-const getAllTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
+const getAllTaskServ = async (search, status,data, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
+  const response = await getAllTaskRepo(search, status, data, fromDate, toDate);
+
+    const picIds = [...new Set(response.map(task => task.pic_id))];
+    const spvIds = [...new Set(response.map(task => task.spv_id))];
+
+    const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+    const picData = await Promise.all(picPromises);
+    const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+    const spvData = await Promise.all(spvPromises);
+    
+    const tasksWithUserData = response.map(task => {
+      const user = picData.find(userData => {return userData.u_id === task.pic_id})
+      const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+      if (user) {
+        return {
+          ...task,
+          pic_title: user.title,
+          pic: user.u_name,
+          spv: spv.u_name
+        };
+      } else {
+        return task;
+      }
+    });
+
+  return tasksWithUserData;
 };
 
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
-  const fromDate = startDate ? new Date(startDate).toISOString() : null;
-  const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllWaitedTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
+const getAllWaitedTaskServ = async (search, status, data, startDate, dueDate) => {
+  try {
+    const fromDate = startDate ? new Date(startDate).toISOString() : null;
+    const toDate = dueDate ? new Date(dueDate).toISOString() : null;
+
+    const response = await getAllWaitedTaskRepo(search, status, data, fromDate, toDate);
+
+    // Dapatkan id pic dari respons
+    const picIds = [...new Set(response.map(task => task.pic_id))];
+    const spvIds = [...new Set(response.map(task => task.spv_id))];
+
+    const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+    const picData = await Promise.all(picPromises);
+    const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+    const spvData = await Promise.all(spvPromises);
+
+    const tasksWithUserData = response.map(task => {
+      const user = picData.find(userData => {return userData.u_id === task.pic_id})
+      const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+      if (user) {
+        return {
+          ...task,
+          pic_title: user.title,
+          pic: user.u_name,
+          spv: spv.u_name
+        };
+      } else {
+        return task;
+      }
+    });
+
+    return tasksWithUserData;
+  } catch (error) {
+    console.error("Error in getAllWaitedTaskServ:", error);
+    throw error;
+  }
 };
 
+
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (search, status, pic, spv, division, branch, startDate, dueDate) => {
+const getAllDeletedTaskServ = async (search, status, data, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  return await getAllDeletedTaskRepo(search, status, pic, spv, division, branch, fromDate, toDate);
+  const response = await getAllDeletedTaskRepo(search, status, data, fromDate, toDate);
+
+  const picIds = [...new Set(response.map(task => task.pic_id))];
+  const spvIds = [...new Set(response.map(task => task.spv_id))];
+
+  const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+  const picData = await Promise.all(picPromises);
+  const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+  const spvData = await Promise.all(spvPromises);
+
+  const tasksWithUserData = response.map(task => {
+    const user = picData.find(userData => {return userData.u_id === task.pic_id})
+    const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+    if (user) {
+      return {
+        ...task,
+        pic_title: user.title,
+        pic: user.u_name,
+        spv: spv.u_name
+      };
+    } else {
+      return task;
+    }
+  });
+
+  return await tasksWithUserData;
 };
 
 const getTaskByIdServ = async (id) => {
-  return await getTaskByIdRepo(+id);
+  const task = await getTaskByIdRepo(+id);
+
+  // Mendapatkan data spv (supervisor) berdasarkan spv_id
+  const spvUser = await User.getUserByIdRepo(task.spv_id);
+  // Mendapatkan data pic (personal in charge) berdasarkan pic_id
+  const picUser = await User.getUserByIdRepo(task.pic_id);
+
+  // Menambahkan judul dan nama spv serta pic ke dalam objek task
+  if (spvUser && picUser) {
+    task.spv_title = spvUser.title;
+    task.spv = spvUser.u_name;
+    task.pic_title = picUser.title;
+    task.pic = picUser.u_name;
+  }
+
+  return task;
 };
+
 
 
 module.exports = {

@@ -6,6 +6,7 @@ const divisions = [
   { branch_id: 1, d_name: "HRD & GA" },
   { branch_id: 1, d_name: "Produksi" },
   { branch_id: 1, d_name: "Marketing" },
+  { branch_id: 1, d_name: "Acc & Purchase" },
 ];
 
 const divisionSeed = async () => {

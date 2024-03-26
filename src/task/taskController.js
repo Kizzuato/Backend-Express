@@ -238,11 +238,12 @@ router.get("/all", async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch } = req.headers;
-    console.log("division", division);
-    console.log("Branch", branch);
+    const data = {pic, spv, division, branch};
+    // console.log("division", division);
+    // console.log("🚀 ~ router.get ~ data:"  , data)
+    // console.log("Branch", branch);
     // console.log("status", status);
     // console.log("search", search);
-    // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
     // console.log("startDate", startDate);
@@ -250,14 +251,12 @@ router.get("/all", async (req, res) => {
     const response = await getAllTaskServ(
       search,
       status,
-      pic,
-      spv,
-      division,
-      branch,
+      data,
       startDate,
       dueDate
     );
     return res.status(200).json(response);
+    // console.log("🚀 ~ router.get ~ response:", response)
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
@@ -268,6 +267,7 @@ router.get("/waited", auth, async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch } = req.headers;
+    const data = {pic, spv, division, branch};
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
@@ -276,10 +276,7 @@ router.get("/waited", auth, async (req, res) => {
     const response = await getAllWaitedTaskServ(
       search,
       status,
-      pic,
-      spv,
-      division,
-      branch,
+      data,
       startDate,
       dueDate
     );
@@ -294,6 +291,7 @@ router.get("/deleted", auth, async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch } = req.headers;
+    const data = {pic, spv, division, branch}
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("startDate", startDate);
@@ -301,10 +299,7 @@ router.get("/deleted", auth, async (req, res) => {
     const response = await getAllDeletedTaskServ(
       search,
       status,
-      pic,
-      spv,
-      division,
-      branch,
+      data,
       startDate,
       dueDate
     );

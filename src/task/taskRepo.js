@@ -35,17 +35,17 @@ const createManyTask = async (data) => {
 }
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllTaskRepo = async (search, status, pic, spv, division, branch, fromDate, toDate) => {
+const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
   const whereClause = {
     NOT: {
       status: "wait-app",
     },
+    spv_id: parseInt(data.spv) || undefined,
+    pic_id: parseInt(data.pic) || undefined,
     status: status || undefined,
-    pic: pic || undefined,
     deleted_at: null,
-    spv: spv || undefined,
-    division: division || undefined,
-    branch: branch || undefined,
+    division_id: parseInt(data.division) || undefined,
+    branch_id: parseInt(data.branch) || undefined,
     OR: [
       { task_title: { contains: search || '' } },
     ]
@@ -65,14 +65,14 @@ const getAllTaskRepo = async (search, status, pic, spv, division, branch, fromDa
 
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, branch, fromDate, toDate) => {
+const getAllWaitedTaskRepo = async ( search, status, data, fromDate, toDate) => {
     const whereClause = {
       status: "wait-app",
       deleted_at: null,
-      pic: pic || undefined,
-      spv: spv || undefined,
-      division: division || undefined,
-      branch: branch || undefined,
+      spv_id: parseInt(data.spv) || undefined,
+      pic_id: parseInt(data.pic) || undefined,
+      division_id: parseInt(data.division) || undefined,
+      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
@@ -91,15 +91,15 @@ const getAllWaitedTaskRepo = async ( search, status, pic, spv, division, branch,
 };
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
-const getAllDeletedTaskRepo = async (search, status, pic, spv, division, branch, fromDate, toDate) => {
+const getAllDeletedTaskRepo = async (search, status, data, fromDate, toDate) => {
     const whereClause = {
       deleted_at: {
         not: null,
       },
-      pic: pic || undefined,
-      spv: spv || undefined,
-      division: division || undefined,
-      branch: branch || undefined,
+      pic_id: parseInt(data.pic) || undefined,
+      spv_id: parseInt(data.spv) || undefined,
+      division_id: parseInt(data.division) || undefined,
+      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]

@@ -38,9 +38,10 @@ const Login = async (email) => {
   });
 };
 
-const getAllUserRepo = async () => {
+const getAllUserRepo = async (data) => {
   return await prisma.m_user.findMany({
     where: {
+      branch_id: parseInt(data.branch) || undefined,
       deleted: false,
     },
   });
@@ -53,11 +54,10 @@ const deleteUserRepo = async (u_id) => {
   });
 };
 
-const getUserByDivisionRepo = async (division, branch) => {
+const getUserByDivisionRepo = async (division) => {
   return await prisma.m_user.findMany({
     where: {
-      branch: branch || undefined,
-      division: division || undefined,
+      division_id: parseInt(division),
     },
   });
 };
@@ -65,7 +65,7 @@ const getUserByDivisionRepo = async (division, branch) => {
 const getUserByIdRepo = async (id) => {
   return await prisma.m_user.findUnique({
     where: {
-      u_id: id,
+      u_id: parseInt(id),
     },
   });
 };
