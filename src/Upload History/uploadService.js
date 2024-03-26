@@ -19,6 +19,8 @@ const storeToExcel = async (file, user, addInformation) => {
     for (let task of tasks) {
       let [task_type, task_title, priority, iteration, start_date, due_date, description, picName, spvName, status] = task
       let pic = { pic: picName, pic_id: null, pic_title: null }
+      // console.log("🚀 ~ storeToExcel ~ due_date:", due_date)
+      console.log("🚀 ~ storeToExcel ~ start_date:", task)
       let spv = { spv: spvName, spv_id: null }
       start_date = formatDateToISO(start_date)
       due_date = formatDateToISO(due_date)
@@ -28,31 +30,31 @@ const storeToExcel = async (file, user, addInformation) => {
         if (!personInContact) {
           pic.pic = null
         }else{
-          pic = { pic_id: `${personInContact.u_id}`, pic_title: personInContact.title, pic: personInContact.u_name }
+          pic = { pic_id: personInContact.u_id }
         }
       }
       if (spv.spv != null) {
         const spvList = spv.spv.split(',')
-        let spvListId = '', spvListName = ''
+        let spvListId = ''
         for (let spvName of spvList) {
           const supervisor = await prisma.m_user.findFirst({ where: { u_name: { contains: spvName } } })
           if (!supervisor) continue
           spvListId += `${supervisor.u_id},`
-          spvListName += `${supervisor.u_name},`
         }
         if(spvListId.length < 2){
-          spvListId = null, spvListName = null
+          spvListId = null
         } else{
           spvListId = spvListId.substring(0, spvListId.length - 1)
-          spvListName = spvListName.substring(0, spvListName.length - 1)
         } 
-        spv.spv_id = spvListId
-        spv.spv = spvListName
+        spv.spv_id = parseInt(spvListId)
+        // spv.spv = spvListName
       }
-
+      
+      console.log("AKSKOASA:" + start_date)
+      console.log("KONKLSANKAJSN:" + due_date)
       dataToStore.push({
         task_type, task_title, priority, iteration, status, start_date, due_date, description,
-        ...pic, ...spv, created_by: user.u_name
+        pic_id: pic.pic_id, spv_id: spv.spv_id, created_by: user.u_name
       })
     }
     await createManyTask(dataToStore)
