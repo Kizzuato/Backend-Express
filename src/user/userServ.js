@@ -4,18 +4,7 @@ const dotenv = require("dotenv");
 const xlsx = require("xlsx");
 const Branch = require("../Branch/branchRepo");
 const Division = require("../Division/divisiRepo");
-const {
-  createUserRepo,
-  Login,
-  getAllUserRepo,
-  deleteUserRepo,
-  getUserByIdRepo,
-  updateUserRepo,
-  emailUsed,
-  createManyUserRepo,
-  getUserByDivisionRepo,
-  userDeleted,
-} = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted, resetPassword } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
 
@@ -260,6 +249,22 @@ const importUser = async (file) => {
     throw err;
   }
 };
+
+const resetPasswordServ = async(id, password) => {
+  const user = getUserByIdRepo(id)
+  if(!user){
+    return 'user tidak ditemukan'
+  }
+  const salt = await bcrypt.genSalt()
+  const passwordNew = await bcrypt.hash(password, salt);
+  try {
+    const response = await resetPassword(id, passwordNew)
+    return response
+  } catch (error) {
+    return error
+  }
+
+}
 
 module.exports = {
   createUserServ,
