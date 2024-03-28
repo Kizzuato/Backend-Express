@@ -57,7 +57,7 @@ const deleteUserRepo = async (u_id) => {
 const getUserByDivisionRepo = async (division) => {
   return await prisma.m_user.findMany({
     where: {
-      division_id: parseInt(division),
+      division_id: parseInt(division) || undefined,
     },
   });
 };
@@ -65,7 +65,7 @@ const getUserByDivisionRepo = async (division) => {
 const getUserByIdRepo = async (id) => {
   return await prisma.m_user.findUnique({
     where: {
-      u_id: parseInt(id),
+      u_id: parseInt(id) || undefined,
     },
   });
 };

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const xlsx = require("xlsx");
 const Branch = require("../Branch/branchRepo");
+
 const Division = require("../Division/divisiRepo");
 const {
   createUserRepo,
@@ -45,7 +46,7 @@ const createUserServ = async (data) => {
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
-      email:  response.u_email,
+      email: response.u_email,
       password: response.password,
       division_id: response.division_id,
       branch_id: response.branch_id,
@@ -66,11 +67,11 @@ const LoginUser = async (email, password, branch, token) => {
 
     const division = await Division.getById(user.division_id);
     const branchRes = await Branch.getById(division.branch_id);
-    
+
     if (token !== null) {
       const division = await Division.getById(user.division_id);
       const branchRes = await Branch.getById(division.branch_id);
-      
+
       const token = jwt.sign(
         { namaUser: user.u_name, id: user.u_id },
         secretKey,
@@ -145,22 +146,26 @@ const LoginUser = async (email, password, branch, token) => {
 
 const getAllUserServ = async (data) => {
   try {
-    const branch_name = await Branch.getById(data.branch)
-    
+    const branch_name = await Branch.getById(data.branch);
+
     if (branch_name.b_name === "PT. RES") {
-        data.branch = undefined;
-      } 
-      
+      data.branch = undefined;
+    }
+
     const response = await getAllUserRepo(data);
-    
+
+    if (response.length === 0) {
+      throw new Error("Data kosong");
+    }
+
     const branchIds = [...new Set(response.map((user) => user.branch_id))];
     const branchPromises = branchIds.map((id) => Branch.getById(id));
     const branches = await Promise.all(branchPromises);
-    
+
     const divisionIds = [...new Set(response.map((user) => user.division_id))];
     const divisionPromises = divisionIds.map((id) => Division.getById(id));
     const divisions = await Promise.all(divisionPromises);
-    
+
     // const branchIds = divisions.map((division) => data.branch);
     // const branchPromises = branchIds.map((id) => Branch.getById(id));
     // const branches = await Promise.all(branchPromises);
@@ -169,9 +174,7 @@ const getAllUserServ = async (data) => {
       const division = divisions.find(
         (division) => division.id === user.division_id
       );
-      const branch = branches.find(
-        (branch) => branch.id === user.branch_id
-      );
+      const branch = branches.find((branch) => branch.id === user.branch_id);
       return {
         ...user,
         division: division.d_name,
@@ -180,8 +183,13 @@ const getAllUserServ = async (data) => {
     });
     return users;
   } catch (error) {
-    console.error("Error in getAllUserServ:", error);
-    throw error;
+    if (error.message === "Data kosong") {
+      console.log("Tidak ada data yang ditemukan.");
+      return []; // Mengembalikan array kosong jika tidak ada data ditemukan
+    } else {
+      console.error("Error in getAllUserServ:", error);
+      throw error;
+    }
   }
 };
 
@@ -205,11 +213,11 @@ const getUserByDivision = async (division) => {
 
 const getUserByIdServ = async (id) => {
   const user = await getUserByIdRepo(id);
-  
+
   if (!user) {
     throw new Error("User not found");
   }
-  
+
   const division = await Division.getById(user.division_id);
   const branch = await Branch.getById(division.branch_id);
   user.division = division.d_name;
@@ -244,13 +252,15 @@ const importUser = async (file) => {
     if (users.length < 1) throw Error("No Data to Store");
 
     for (let user of users) {
-      let [u_name, u_email, u_gender, title, division] = user;
+      let [u_name, u_email, password, title, division_id, branch_id] = user;
       const exist = await emailUsed(u_email);
       if (exist) {
         userExist++;
         continue;
       }
-      dataToStore.push({ u_name, u_email, u_gender, title, division });
+      const salt = await bcrypt.genSalt();
+      data.password = await bcrypt.hash(password, salt);
+      dataToStore.push({ u_name, u_email, password: hashedPassword, title, division_id, branch_id });
     }
     await createManyUserRepo(dataToStore);
     return { imported: dataToStore, existed: userExist };

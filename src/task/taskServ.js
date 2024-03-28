@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const User = require("../user/userRepo");
+const Branch = require("../Branch/branchRepo");
 
 const {
   updateTaskRepo,
@@ -11,10 +12,10 @@ const {
   getTaskByIdRepo,
   createManyTask,
 } = require("./taskRepo");
-const { getUserByIdRepo } = require('../user/userRepo');
-const { check } = require('prisma');
+const { getUserByIdRepo } = require("../user/userRepo");
+const { check } = require("prisma");
 
-const {updatePicRepo} = require("../user/userRepo");
+const { updatePicRepo } = require("../user/userRepo");
 const { response } = require("../Notification/notificationRoute");
 
 // service untuk mengedit task
@@ -61,10 +62,10 @@ const AcceptTaskServe = async (id, data) => {
 
     // Lakukan validasi atau logika bisnis jika diperlukan
     const pic = data.pic;
-    const pic_rating = data.pic_rating
+    const pic_rating = data.pic_rating;
     const updatedTask = {
       status: data.status,
-      approved_at: data.approved_at
+      approved_at: data.approved_at,
     };
     await updateTaskRepo(id, updatedTask);
 
@@ -78,7 +79,7 @@ const AcceptTaskServe = async (id, data) => {
       existingTask.status === "Idle" &&
       updatedTask.status === "Close"
     ) {
-      const pic_rating = pic_rating - 2
+      const pic_rating = pic_rating - 2;
       // console.log(pic_rating)
       await updatePicRepo(pic, pic_rating);
     }
@@ -112,20 +113,20 @@ const createTaskServ = async (data, files) => {
 
   const user = await prisma.m_user.findUnique({
     where: {
-      u_id: spvId
+      u_id: spvId,
     },
     select: {
       division_id: true,
-    }
+    },
   });
   const division = await prisma.division.findUnique({
     where: {
-      id: user.division_id
+      id: user.division_id,
     },
     select: {
       id: true,
       branch_id: true,
-    }
+    },
   });
 
   // Jika user ditemukan, tambahkan division dan branch ke dalam data yang akan dikirim
@@ -138,63 +139,134 @@ const createTaskServ = async (data, files) => {
   return await createTaskRepo(dataRest);
 };
 
-const getAllTaskServ = async (search, status,data, startDate, dueDate) => {
+const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
+  const nama_branch = await Branch.getById(data.branch);
+  console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
+  if (nama_branch.b_name === "PT. RES" && data.title === "director") {
+    data.branch = undefined;
+    data.division = undefined;
+  }
+  console.log("dada" + data.division);
+  console.log("baba" + data.branch);
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
-  const toDate = dueDate? new Date(dueDate).toISOString() : null;
+  const toDate = dueDate ? new Date(dueDate).toISOString() : null;
   const response = await getAllTaskRepo(search, status, data, fromDate, toDate);
 
-    const picIds = [...new Set(response.map(task => task.pic_id))];
-    const spvIds = [...new Set(response.map(task => task.spv_id))];
+  if (response.length === 0) {
+    return [];
+  }
 
-    const picPromises = picIds.map(id => User.getUserByIdRepo(id));
-    const picData = await Promise.all(picPromises);
-    const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
-    const spvData = await Promise.all(spvPromises);
-    
-    const tasksWithUserData = response.map(task => {
-      const user = picData.find(userData => {return userData.u_id === task.pic_id})
-      const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
-      if (user) {
-        return {
-          ...task,
-          pic_title: user.title,
-          pic: user.u_name,
-          spv: spv.u_name
-        };
-      } else {
-        return task;
-      }
-    });
+  const picIds = [...new Set(response.map((task) => task.pic_id))];
+  console.log("🚀 ~ getAllTaskServ ~ picIds:", picIds)
+  const spvIds = [...new Set(response.map((task) => task.spv_id))];
+
+  const picDataPromise = picIds.length > 0 ? Promise.all(picIds.map((id) => {
+    if (id) {
+      return User.getUserByIdRepo(id);
+    } else {
+      return Promise.resolve(null); // Memberikan nilai null jika id kosong
+    }
+  })) : null;
+  
+  const spvDataPromise = spvIds.length > 0 ? Promise.all(spvIds.map((id) => User.getUserByIdRepo(id))) : null;
+  
+  const picData = picDataPromise ? await picDataPromise : [];
+  const spvData = spvDataPromise ? await spvDataPromise : [];
+  // console.log("🚀 ~ getAllTaskServ ~ picDataPromise:", picData)
+
+const tasksWithUserData = response.map((task) => {
+  const user = picData.length > 0 ? picData.find((userData) => userData && userData.u_id === task.pic_id) : null;
+  const spv = spvData.length > 0 ? spvData.find((userData) => userData && userData.u_id === task.spv_id) : null;
+  if (user) {
+    return {
+      ...task,
+      pic_title: user.title,
+      pic: user ? user.u_name : null,
+      spv: spv ? spv.u_name : null, // Handle jika spv tidak ditemukan
+    };
+  } else {
+    return task;
+  }
+});
+
 
   return tasksWithUserData;
 };
 
+
+const getAllTask = async (search, status, data, startDate, dueDate) => {
+  // const fromDate = startDate ? new Date(startDate).toISOString() : null;
+  // const toDate = dueDate? new Date(dueDate).toISOString() : null;
+  // const response = await getAllTaskRepo(search, status, data, fromDate, toDate);
+
+  // const picIds = [...new Set(response.map(task => task.pic_id))];
+  // const spvIds = [...new Set(response.map(task => task.spv_id))];
+
+  // const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+  // const picData = await Promise.all(picPromises);
+  // const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+  // const spvData = await Promise.all(spvPromises);
+
+  // const tasksWithUserData = response.map(task => {
+  //   const user = picData.find(userData => {return userData.u_id === task.pic_id})
+  //   const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+  //   if (user) {
+  //     return {
+  //       ...task,
+  //       pic_title: user.title,
+  //       pic: user.u_name,
+  //       spv: spv.u_name
+  //     };
+  //   } else {
+  //     return task;
+  //   }
+  // });
+
+  return await getAllTaskRepo(search, status, data, startDate, dueDate);
+};
+
 //  Service untuk mengambil semua task yang belum di acc
-const getAllWaitedTaskServ = async (search, status, data, startDate, dueDate) => {
+const getAllWaitedTaskServ = async (
+  search,
+  status,
+  data,
+  startDate,
+  dueDate
+) => {
   try {
     const fromDate = startDate ? new Date(startDate).toISOString() : null;
     const toDate = dueDate ? new Date(dueDate).toISOString() : null;
 
-    const response = await getAllWaitedTaskRepo(search, status, data, fromDate, toDate);
+    const response = await getAllWaitedTaskRepo(
+      search,
+      status,
+      data,
+      fromDate,
+      toDate
+    );
 
     // Dapatkan id pic dari respons
-    const picIds = [...new Set(response.map(task => task.pic_id))];
-    const spvIds = [...new Set(response.map(task => task.spv_id))];
+    const picIds = [...new Set(response.map((task) => task.pic_id))];
+    const spvIds = [...new Set(response.map((task) => task.spv_id))];
 
-    const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+    const picPromises = picIds.map((id) => User.getUserByIdRepo(id));
     const picData = await Promise.all(picPromises);
-    const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+    const spvPromises = spvIds.map((id) => User.getUserByIdRepo(id));
     const spvData = await Promise.all(spvPromises);
 
-    const tasksWithUserData = response.map(task => {
-      const user = picData.find(userData => {return userData.u_id === task.pic_id})
-      const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+    const tasksWithUserData = response.map((task) => {
+      const user = picData.find((userData) => {
+        return userData.u_id === task.pic_id;
+      });
+      const spv = spvData.find((userData) => {
+        return userData.u_id === task.spv_id;
+      });
       if (user) {
         return {
           ...task,
           pic_title: user.title,
           pic: user.u_name,
-          spv: spv.u_name
+          spv: spv.u_name,
         };
       } else {
         return task;
@@ -208,30 +280,45 @@ const getAllWaitedTaskServ = async (search, status, data, startDate, dueDate) =>
   }
 };
 
-
 // Service untuk mengambil semua histori task yang telah di hapus
-const getAllDeletedTaskServ = async (search, status, data, startDate, dueDate) => {
+const getAllDeletedTaskServ = async (
+  search,
+  status,
+  data,
+  startDate,
+  dueDate
+) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
-  const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  const response = await getAllDeletedTaskRepo(search, status, data, fromDate, toDate);
+  const toDate = dueDate ? new Date(dueDate).toISOString() : null;
+  const response = await getAllDeletedTaskRepo(
+    search,
+    status,
+    data,
+    fromDate,
+    toDate
+  );
 
-  const picIds = [...new Set(response.map(task => task.pic_id))];
-  const spvIds = [...new Set(response.map(task => task.spv_id))];
+  const picIds = [...new Set(response.map((task) => task.pic_id))];
+  const spvIds = [...new Set(response.map((task) => task.spv_id))];
 
-  const picPromises = picIds.map(id => User.getUserByIdRepo(id));
+  const picPromises = picIds.map((id) => User.getUserByIdRepo(id));
   const picData = await Promise.all(picPromises);
-  const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
+  const spvPromises = spvIds.map((id) => User.getUserByIdRepo(id));
   const spvData = await Promise.all(spvPromises);
 
-  const tasksWithUserData = response.map(task => {
-    const user = picData.find(userData => {return userData.u_id === task.pic_id})
-    const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
+  const tasksWithUserData = response.map((task) => {
+    const user = picData.find((userData) => {
+      return userData.u_id === task.pic_id;
+    });
+    const spv = spvData.find((userData) => {
+      return userData.u_id === task.spv_id;
+    });
     if (user) {
       return {
         ...task,
         pic_title: user.title,
         pic: user.u_name,
-        spv: spv.u_name
+        spv: spv.u_name,
       };
     } else {
       return task;
@@ -260,8 +347,6 @@ const getTaskByIdServ = async (id) => {
   return task;
 };
 
-
-
 module.exports = {
   updateTaskServ,
   AcceptTaskServe,
@@ -270,4 +355,5 @@ module.exports = {
   getAllWaitedTaskServ,
   getAllDeletedTaskServ,
   getTaskByIdServ,
+  getAllTask,
 };

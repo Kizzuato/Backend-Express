@@ -33,26 +33,32 @@ const storeToExcel = async (file, user, addInformation) => {
       }
       if (spv.spv != null) {
         const spvList = spv.spv.split(',')
-        let spvListId = '', spvListName = ''
+        let spvListId = '', spvListName = '', spvListDivision ='', spvListBranch = ''
         for (let spvName of spvList) {
           const supervisor = await prisma.m_user.findFirst({ where: { u_name: { contains: spvName } } })
           if (!supervisor) continue
           spvListId += `${supervisor.u_id},`
           spvListName += `${supervisor.u_name},`
+          spvListDivision += `${supervisor.division_id},`
+          spvListBranch += `${supervisor.branch_id},`
         }
         if(spvListId.length < 2){
-          spvListId = null, spvListName = null
+          spvListId = null, spvListName = null, spvListBranch = null, spvListDivision = null
         } else{
           spvListId = spvListId.substring(0, spvListId.length - 1)
           spvListName = spvListName.substring(0, spvListName.length - 1)
+          spvListBranch = spvListBranch.substring(0, spvListBranch.length - 1)
+          spvListDivision = spvListDivision.substring(0, spvListDivision.length -1)
         } 
         spv.spv_id = spvListId
         spv.spv = spvListName
+        spv.branch  = spvListBranch
+        spv.division = spvListDivision
       }
 
       dataToStore.push({
         task_type, task_title, priority, iteration, status, start_date, due_date, description,
-        ...pic, ...spv, created_by: user.u_name
+        branch_id: parseInt(spv.branch), division_id: parseInt(spv.division), pic_id: parseInt(pic.pic_id), spv_id: parseInt(spv.spv_id), created_by: user.u_name
       })
     }
     await createManyTask(dataToStore)
