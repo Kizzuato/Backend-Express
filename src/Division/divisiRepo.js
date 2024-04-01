@@ -37,15 +37,15 @@ const create = async (data) => {
 
 const del = async (id) => {
   try {
-    return await prismaDivision.delete({ where: { id } });
+    return await prismaDivision.delete({ where: { id: parseInt(id) } });
   } catch (err) {
     throwError(err);
   }
 };
 
-const isExist = async (divisionName) => {
+const isExist = async (id) => {
   try {
-    const exist = await prismaDivision.findFirst({ where: { divisionName } });
+    const exist = await prismaDivision.findFirst({ where: { id: parseInt(id) } });
     return exist;
   } catch (err) {
     throwError(err);

@@ -21,35 +21,7 @@ const { response } = require("../Notification/notificationRoute");
 // service untuk mengedit task
 const updateTaskServ = async (id, data) => {
   const dataRest = {
-    pic_id: data.pic_id,
-    spv_id: data.spv_id,
-    branch_id: data.branch_id,
-    division_id: data.division_id,
-    task_type: data.task_type,
-    task_title: data.task_title,
-    priority: data.priority,
-    iteration: data.iteration,
-    start_date: data.start_date,
-    due_date: data.due_date,
-    description: data.description,
-    pic_title: data.pic_title,
-    pic: data.pic,
-    spv: data.spv,
-    branch: data.branch,
-    division: data.division,
-    pic_rating: data.pic_rating,
-    approved_at: data.approved_at,
-    approved_by: data.approved_by,
-    started_at: data.started_at,
-    started_by: data.started_by,
-    finished_at: data.finished_at,
-    finished_by: data.finished_by,
-    status: data.status,
-    progress: data.progress,
-    file_hasil: data.file_hasil,
-    created_at: data.created_at,
-    edited_at: data.edited_at,
-    deleted_at: data.deleted_at,
+    data
   };
 
   return await updateTaskRepo(id, dataRest);
@@ -117,8 +89,10 @@ const createTaskServ = async (data, files) => {
     },
     select: {
       division_id: true,
+      position_id: true,
     },
   });
+
   const division = await prisma.division.findUnique({
     where: {
       id: user.division_id,
@@ -133,6 +107,7 @@ const createTaskServ = async (data, files) => {
   if (user) {
     dataRest.division_id = division.id;
     dataRest.branch_id = division.branch_id;
+    dataRest.position_id = user.position_id;
   }
 
   // console.log("🚀 ~ router.put ~ data:", dataRest)
@@ -141,13 +116,13 @@ const createTaskServ = async (data, files) => {
 
 const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
   const nama_branch = await Branch.getById(data.branch);
-  console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
+  // console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
   if (nama_branch.b_name === "PT. RES" && data.title === "director") {
     data.branch = undefined;
     data.division = undefined;
   }
-  console.log("dada" + data.division);
-  console.log("baba" + data.branch);
+  // console.log("dada" + data.division);
+  // console.log("baba" + data.branch);
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate ? new Date(dueDate).toISOString() : null;
   const response = await getAllTaskRepo(search, status, data, fromDate, toDate);
@@ -157,7 +132,7 @@ const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
   }
 
   const picIds = [...new Set(response.map((task) => task.pic_id))];
-  console.log("🚀 ~ getAllTaskServ ~ picIds:", picIds)
+  // console.log("🚀 ~ getAllTaskServ ~ picIds:", picIds)
   const spvIds = [...new Set(response.map((task) => task.spv_id))];
 
   const picDataPromise = picIds.length > 0 ? Promise.all(picIds.map((id) => {

@@ -5,6 +5,6 @@ const divisiControl = require('./divisiController')
 divisiRoute.get('/', divisiControl.getAll)
 divisiRoute.get('/get-by-id/:id', divisiControl.getById)
 divisiRoute.post('/create', divisiControl.createNew)
-divisiRoute.delete('/:divisionName', divisiControl.deleteData)
+divisiRoute.delete('/delete/:id', divisiControl.deleteData)
 
 module.exports = divisiRoute

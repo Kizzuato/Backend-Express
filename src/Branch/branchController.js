@@ -31,7 +31,8 @@ const getAll = async (req, res) => {
 
 const deleteData = async (req, res) => {
     try{
-        const branch = await branchRepo.isExist(req.params.b_name)
+        const { id } = req.params;
+        const branch = await branchRepo.isExist(id)
         if(!branch) throw Error('Branch didnt exist')
         const deletedBranch = await branchRepo.del(branch.id)
         return success(res, `Branch ${deletedBranch.b_name} Deleted Successfully`, deletedBranch)

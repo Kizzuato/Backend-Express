@@ -36,15 +36,15 @@ const create = async (data) => {
 
 const del = async (id) => {
   try {
-    return await prismaBranch.delete({ where: { id } });
+    return await prismaBranch.delete({ where: { id: parseInt(id) } });
   } catch (err) {
     throwError(err);
   }
 };
 
-const isExist = async (b_name) => {
+const isExist = async (id) => {
   try {
-    const exist = await prismaBranch.findFirst({ where: { b_name } });
+    const exist = await prismaBranch.findFirst({ where: { id: parseInt(id) } });
     return exist;
   } catch (err) {
     throwError(err);

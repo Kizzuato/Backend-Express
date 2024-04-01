@@ -13,12 +13,10 @@ datasource db {
 model m_user {
   u_id                 Int             @id @default(autoincrement())
   u_name               String
-  division             Division?        @relation(fields: [division_id], references: [id])
-  branch               Branch?          @relation(fields: [branch_id], references: [id])
-  position             Position?          @relation(fields: [position_id], references: [id])
-  division_id          Int?
-  branch_id            Int?
-  position_id          Int?
+  division             Division        @relation(fields: [division_id], references: [id])
+  branch               Branch          @relation(fields: [branch_id], references: [id])
+  division_id          Int
+  branch_id            Int
   tasks_as_pic         task[]          @relation("pic")
   tasks_as_spv         task[]          @relation("spv")
   uploadHistory        uploadHistory[]
@@ -33,22 +31,12 @@ model m_user {
   updated_at           DateTime?       @updatedAt
 }
 
-model Position {  
-  id         Int     @id @default(autoincrement())
-  p_name     String?
-  branch     Branch   @relation(fields: [branch_id], references: [id])
-  branch_id  Int
-  tasks      task[]
-  users      m_user[]
-}
-
 model Branch {
   id          Int       @id @default(autoincrement())
   b_name      String?
   divisions   Division[] 
   tasks       task[]
   users       m_user[]
-  position    Position[]
 }
 
 model Division {
@@ -66,7 +54,6 @@ model task {
   spv          m_user?        @relation("spv", fields: [spv_id], references: [u_id])
   branch       Branch?        @relation(fields: [branch_id], references: [id])
   division     Division?      @relation(fields: [division_id], references: [id])
-  position     Position?      @relation(fields: [position_id], references: [id])
   task_type    String?
   task_title   String?
   priority     String?
@@ -95,7 +82,6 @@ model task {
   spv_id    Int?
   branch_id    Int?
   division_id  Int?
-  position_id  Int?
 }
 
 

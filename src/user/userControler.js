@@ -16,14 +16,14 @@ const { success, error } = require("../utils/response.utils");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, title, password, repassword, branch_id, division_id } = req.body;
+  const { name, email, title, password, repassword, branch_id, division_id, position_id } = req.body;
 
   if (password !== repassword) {
     return res.status(400).json({ message: "Password tidak sama" });
   }
 
   try {
-    const data = { name, email, password, title, branch_id, division_id };
+    const data = { name, email, password, title, branch_id, division_id, position_id };
     const response = await createUserServ(data);
 
     if (response.error) {

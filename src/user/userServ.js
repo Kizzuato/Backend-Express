@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const xlsx = require("xlsx");
 const Branch = require("../Branch/branchRepo");
-
 const Division = require("../Division/divisiRepo");
+const Position = require("../Position/positionRepo");
 const {
   createUserRepo,
   Login,
@@ -28,12 +28,7 @@ const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt();
   data.password = await bcrypt.hash(data.password, salt);
   const dataRes = {
-    u_name: data.name,
-    u_email: data.email,
-    u_password: data.password,
-    title: data.title,
-    division_id: data.division_id,
-    branch_id: data.branch_id,
+    data
   };
 
   // console.log("🚀 ~ createUserServ ~ dataRes.division_id:", dataRes.division_id)
@@ -166,6 +161,11 @@ const getAllUserServ = async (data) => {
     const divisionPromises = divisionIds.map((id) => Division.getById(id));
     const divisions = await Promise.all(divisionPromises);
 
+    const positionIds = [...new Set(response.map((user) => user.position_id))];
+    const positionPromises = positionIds.map((id) => Position.getById(id));
+    const positions = await Promise.all(positionPromises);
+    console.log("🚀 ~ getAllUserServ ~ positions:", positions)
+
     // const branchIds = divisions.map((division) => data.branch);
     // const branchPromises = branchIds.map((id) => Branch.getById(id));
     // const branches = await Promise.all(branchPromises);
@@ -174,13 +174,18 @@ const getAllUserServ = async (data) => {
       const division = divisions.find(
         (division) => division.id === user.division_id
       );
+      const position = positions.find(
+        (position) => position.id === user.position_id
+      );
       const branch = branches.find((branch) => branch.id === user.branch_id);
       return {
         ...user,
-        division: division.d_name,
-        branch: branch.b_name,
+        division: division ? division.d_name : null,
+        branch: branch ? branch.b_name : null,
+        position: position ? position.p_name : null,
       };
     });
+    
     return users;
   } catch (error) {
     if (error.message === "Data kosong") {
