@@ -2,6 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const prismaBranch = new PrismaClient().branch;
 
+const getByBranchName = async (b_name) => {
+  try {
+    return await prismaBranch.findFirst({ where: { b_name: { contains: b_name } } })
+  } catch (err) {
+    throwError(err);
+  }
+};
+
 const getById = async (id) => {
   try {
     return await prismaBranch.findUnique({
@@ -42,13 +50,13 @@ const del = async (id) => {
   }
 };
 
-const isExist = async (id) => {
+const isExist = async (b_name) => {
   try {
-    const exist = await prismaBranch.findFirst({ where: { id: parseInt(id) } });
+    const exist = await prismaBranch.findFirst({ where: { b_name } });
     return exist;
   } catch (err) {
     throwError(err);
   }
 };
 
-module.exports = { getAll, create, del, isExist, getById };
+module.exports = { getAll, create, del, isExist, getById, getByBranchName };

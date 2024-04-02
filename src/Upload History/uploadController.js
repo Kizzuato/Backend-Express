@@ -18,7 +18,7 @@ const storeUser = async(req, res) => {
     try{
         if (!req.file) throw Error('Please include the proper Excel File')
         const importedUser = await importUser(req.file)
-        return success(res, `User Imported with ${importedUser.existed} User already exist`,  importedUser.imported)
+        return success(res, `User Imported`,  importedUser.imported)
     }catch(err){
         return error(res, err.message)
     }

@@ -14,9 +14,6 @@ const branch = [
         b_name: "ONIC 2"
     },
     {
-        b_name: "ONIC 3"
-    },
-    {
         b_name: "Sehatku"
     },
     {

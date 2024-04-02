@@ -70,20 +70,17 @@ app.listen(port, () => {
 });
 
 
-// ssh deployment
-// const privateKey = fs.readFileSync(path.join(__dirname, '..', 'certs', 'prmn.key'));
-// const certificate = fs.readFileSync(path.join(__dirname, '..', 'certs', 'prmn.crt'));
+// SSL configuration
+// const privateKey = fs.readFileSync('./certs/prmn.key', 'utf8');
+// const certificate = fs.readFileSync('./certs/prmn.crt', 'utf8');
 
-// https
-//   .createServer(
-//     {
-//       key: privateKey,
-//       cert: certificate,
-//     },
-//     app
-//   )
-//   .listen(port, function () {
-//     console.log(
-//       `Server Runing on port ${port}!`
-//     );
-//   });
+// const credentials = { key: privateKey, cert: certificate };
+
+// const httpsServer = https.createServer(credentials, app);
+
+// httpsServer.listen(port, () => {
+//   console.log(`HTTPS Server running on port ${port}`);
+// });
+// app.use((req, res) => {
+//   res.status(404).json({ message: "Endpoint not found" });
+// });

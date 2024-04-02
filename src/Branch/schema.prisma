@@ -15,6 +15,7 @@ model m_user {
   u_name               String
   division             Division        @relation(fields: [division_id], references: [id])
   branch               Branch          @relation(fields: [branch_id], references: [id])
+  gender               String?
   division_id          Int
   branch_id            Int
   tasks_as_pic         task[]          @relation("pic")

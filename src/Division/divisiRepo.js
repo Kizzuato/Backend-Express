@@ -2,6 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const prismaDivision = new PrismaClient().division;
 
+const getByDivisionName = async (d_name) => {
+  try {
+    return await prismaDivision.findFirst({ where: { d_name: { contains: d_name } } })
+  } catch (err) {
+    throwError(err);
+  }
+};
+
 const getById = async (id) => {
   try {
     return await prismaDivision.findUnique({
@@ -52,4 +60,4 @@ const isExist = async (id) => {
   }
 };
 
-module.exports = { getAll, create, del, isExist, getById };
+module.exports = { getAll, create, del, isExist, getById, getByDivisionName };

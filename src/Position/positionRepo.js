@@ -2,6 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const prismaPosition = new PrismaClient().position;
 
+const getByPositionName = async (p_name) => {
+  try {
+    return await prismaPosition.findFirst({ where: { p_name: { contains: p_name } } })
+  } catch (err) {
+    throwError(err);
+  }
+};
+
 const getById = async (id) => {
   try {
 
@@ -60,4 +68,4 @@ const createManyUserRepo = async (arrays) => {
   }
 };
 
-module.exports = { getAll, create, del, isExist, getById, createManyUserRepo };
+module.exports = { getAll, create, del, isExist, getById, createManyUserRepo, getByPositionName };
