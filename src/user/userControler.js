@@ -12,30 +12,32 @@ const {
 } = require("./userServ");
 const { route } = require("./userControler");
 const { success, error } = require("../utils/response.utils");
+const { emailUsed } = require('./userRepo');
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
-  const { name, email, title, password, repassword, branch_id, division_id } = req.body;
-
-  if (password !== repassword) {
-    return res.status(400).json({ message: "Password tidak sama" });
-  }
-
   try {
-    const data = { name, email, password, title, branch_id, division_id };
-    const response = await createUserServ(data);
-
-    if (response.error) {
-      return res.status(500).json({ message: response.message });
-    }
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+    const response = await createUserServ(req.body);
+    return success(res, 'Registered successfully, please login', response)
+  } catch (err) {
+    return error(res, err.message)
   }
 });
+
+// router.get('/verif-email/', async (req, res) => {
+//   try{
+//     const generateOTP = () => {      
+//       var min_value = Math.pow(10, 5);
+//       var max_value = Math.pow(10, 6) - 1;
+//       return Math.floor(Math.random() * (max_value - min_value + 1)) + min_value;
+//   }
+//   const otp = generateOTP()
+
+//   }catch(err){
+//     return error(res, err.message)
+//   }
+// })
 
 router.post("/login", async (req, res) => {
   const { email, password, branch } = req.body;
@@ -162,5 +164,15 @@ router.patch("/reset-password/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
+
+router.get('/check-email/:email', async (req, res) => {
+  try{
+    const isExist = await emailUsed(req.params.email)
+    if(isExist) throw Error('Email already exist')
+    return success(res, 'Email didnt exist')
+  }catch(err){
+    return error(res, err.message)
+  }
+})
 
 module.exports = router;

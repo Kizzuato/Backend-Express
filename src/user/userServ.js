@@ -7,10 +7,12 @@ const Division = require("../Division/divisiRepo");
 const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted, resetPassword } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
+const { throwError } = require("../utils/error.utils");
 
 dotenv.config();
 
 const secretKey = process.env.SECRET_KEY_JWT;
+
 
 const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt();
@@ -25,12 +27,6 @@ const createUserServ = async (data) => {
     branch_id: data.branch_id,
   };
 
-  // console.log("🚀 ~ createUserServ ~ dataRes.division_id:", dataRes.division_id)
-  // const division = await Division.getById(dataRes.division_id)
-
-  // if (user) {
-  // }
-
   try {
     const response = await createUserRepo(dataRes);
     const dataReq = {
@@ -44,7 +40,7 @@ const createUserServ = async (data) => {
     };
     return dataReq;
   } catch (error) {
-    console.log(error);
+    throwError(error)
   }
 };
 

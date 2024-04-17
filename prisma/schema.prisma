@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model m_user {
   u_id                 Int             @id @default(autoincrement())
   u_name               String
