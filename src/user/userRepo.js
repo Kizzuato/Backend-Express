@@ -43,8 +43,15 @@ const getAllUserRepo = async (data) => {
     where: {
       branch_id: parseInt(data.branch) || undefined,
       division_id: parseInt(data.division) || undefined,
-      deleted: false,
+      // deleted: false,
     },
+  });
+};
+
+const activateUserRepo = async (u_id) => {
+  return await prisma.m_user.update({
+    where: { u_id },
+    data: { deleted: false },
   });
 };
 
@@ -115,6 +122,7 @@ module.exports = {
   updateUserRepo,
   getAllUserRepo,
   deleteUserRepo,
+  activateUserRepo,
   getUserByDivisionRepo,
   getUserByIdRepo,
 };

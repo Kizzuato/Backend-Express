@@ -8,6 +8,7 @@ const {
   getUserByIdServ,
   getUserByDivision,
   updateUserServ,
+  activateUserServ,
   changePassword
 } = require("./userServ");
 const { route } = require("./userControler");
@@ -95,9 +96,22 @@ router.post('/refreshToken', (req, res) => {
   });
 });
 
+router.delete("/activate-user/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    console.log("Aktip")
+    const response = await activateUserServ(+id);
+    return res.status(200).json("Activated");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
 router.delete("/delete-user/:id", async (req, res) => {
   const { id } = req.params;
   try {
+    console.log("ngapus")
     const response = await deleteUserServ(+id);
     return res.status(200).json("Deleted");
   } catch (error) {

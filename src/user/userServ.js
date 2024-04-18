@@ -15,6 +15,7 @@ const {
   emailUsed,
   createManyUserRepo,
   getUserByDivisionRepo,
+  activateUserRepo,
   userDeleted,
 } = require("./userRepo");
 const { Response } = require("../../config/response");
@@ -233,6 +234,10 @@ const deleteUserServ = async (id) => {
   return await deleteUserRepo(+id);
 };
 
+const activateUserServ = async (id) => {
+  return await activateUserRepo(+id);
+};
+
 const getUserByDivision = async (division) => {
   return await getUserByDivisionRepo(division);
 };
@@ -331,4 +336,5 @@ module.exports = {
   deleteUserServ,
   getUserByDivision,
   getUserByIdServ,
+  activateUserServ
 };
