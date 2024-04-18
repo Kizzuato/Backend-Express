@@ -69,8 +69,6 @@ router.post("/register", async (req, res) => {
 router.post("/login/:encryptedData?", async (req, res) => {
   let { email, password, branch } = req.body
   if (req.params.encryptedData != undefined) {
-    console.log(req.params.encryptedData)
-    console.log(decrypt(req.params.encryptedData))
     const decryptedData = JSON.parse(decrypt(req.params.encryptedData))
     email = decryptedData.email,
       password = decryptedData.password,
