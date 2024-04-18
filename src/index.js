@@ -44,6 +44,7 @@ app.get('/render', (req, res) => {
   return res.render(path.resolve('src/email/templates/confirmationEmail'), {
     email: "EMAIL HERE",
     password: "PASSWORD HERE",
+    branch: "BRANCH HERE",
     loginLink: ''
   })
 })

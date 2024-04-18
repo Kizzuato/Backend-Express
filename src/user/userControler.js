@@ -44,6 +44,7 @@ router.post("/register", async (req, res) => {
     await email.sendEmailTemplate({
       email: response.email,
       password: realPassword,
+      branch: response.branch, 
       loginLink: `${process.env.FRONTEND_URL}/auth/${encryptedData}`
     })
     return success(res, 'Registered successfully, please login', response)
