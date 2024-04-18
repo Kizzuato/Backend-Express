@@ -33,8 +33,10 @@ const createUserServ = async (data) => {
       name: response.u_name,
       email:  response.u_email,
       password: response.password,
-      division_id: response.division_id,
-      branch_id: response.branch_id,
+      division_id: response.division.id,
+      division: response.division.d_name,
+      branch_id: response.branch.id,
+      branch: response.branch.b_name,
       title: response.title,
       uuid: response.u_id,
     };

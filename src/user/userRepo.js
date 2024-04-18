@@ -18,6 +18,7 @@ const updatePicRepo = async (pic, pic_rating) => {
 const createUserRepo = async (userData) => {
   return await prisma.m_user.create({
     data: userData,
+    include: { branch: true, division: true }
   });
 };
 

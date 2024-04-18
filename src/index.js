@@ -12,6 +12,7 @@ const notificationRoute = require('./Notification/notificationRoute');
 const uploadRoute = require('./Upload History/uploadRoute');
 const branchRoute = require("./Branch/branchRoute");
 const divisiRoute = require("./Division/divisiRoute");
+const Emails = require("./email/email");
 
 const corsOptions = {
   origin: "*",

@@ -13,12 +13,27 @@ const {
 const { route } = require("./userControler");
 const { success, error } = require("../utils/response.utils");
 const { emailUsed } = require('./userRepo');
+const Emails = require('../email/email');
+const { encrypt, decrypt } = require('../utils/encryption');
 
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
   try {
+    const realPassword = req.body.password
     const response = await createUserServ(req.body);
+    const dataToStore = {
+      email: response.email,
+      password: realPassword,
+      branch: response.branch
+    }
+    const encryptedData = encrypt(JSON.stringify(dataToStore))
+    const email = new Emails('Bubur Onic Admin', response.email, 'Email Verified', '')
+    await email.sendEmailTemplate({
+      email: response.email,
+      password: realPassword,
+      loginLink: `${process.env.FRONTEND_URL}/auth/${encryptedData}`
+    })
     return success(res, 'Registered successfully, please login', response)
   } catch (err) {
     return error(res, err.message)
@@ -39,8 +54,14 @@ router.post("/register", async (req, res) => {
 //   }
 // })
 
-router.post("/login", async (req, res) => {
-  const { email, password, branch } = req.body;
+router.post("/login/:encryptedData?", async (req, res) => {
+  let { email, password, branch } = req.body
+  if (req.params.encryptedData != undefined) {
+    const decryptedData = JSON.parse(decrypt(req.params.encryptedData))
+    email = decryptedData.email,
+    password = decryptedData.password,
+    branch = decryptedData.branch
+  }
   const token = null;
   // console.log("🚀 ~ router.post ~ token:", token)
   try {
@@ -55,7 +76,7 @@ router.post("/login", async (req, res) => {
 router.get("/division", async (req, res) => {
   try {
     const { division } = req.query;
-    const data = {division };
+    const data = { division };
     // console.log("Data : ", data);
     const response = await getUserByDivision(division);
     return res.status(200).json(response);
@@ -68,7 +89,7 @@ router.get("/division", async (req, res) => {
 router.get("/all", async (req, res) => {
   try {
     const { division, branch } = req.headers;
-    const data = {division, branch };
+    const data = { division, branch };
     console.log("🚀 ~ router.get ~ data:", data)
     const response = await getAllUserServ(data);
     // console.log("🚀 ~ router.get ~ response:", response)
@@ -78,23 +99,23 @@ router.get("/all", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 
-router.post('/refreshToken', (req, res) => {
-  const oldToken = req.body.oldToken;
+  router.post('/refreshToken', (req, res) => {
+    const oldToken = req.body.oldToken;
 
-  // Periksa validitas token yang lama
-  jwt.verify(oldToken, 'secret_key', (err, decoded) => {
-    if (err) {
-      // Jika token tidak valid, kembalikan respons dengan status 401 Unauthorized
-      return res.status(401).json({ message: 'Invalid token' });
-    }
+    // Periksa validitas token yang lama
+    jwt.verify(oldToken, 'secret_key', (err, decoded) => {
+      if (err) {
+        // Jika token tidak valid, kembalikan respons dengan status 401 Unauthorized
+        return res.status(401).json({ message: 'Invalid token' });
+      }
 
-    // Jika token valid, buat token yang baru
-    const newToken = jwt.sign({ /* data tambahan */ }, 'secret_key', { expiresIn: '1h' });
+      // Jika token valid, buat token yang baru
+      const newToken = jwt.sign({ /* data tambahan */ }, 'secret_key', { expiresIn: '1h' });
 
-    // Kembalikan token baru sebagai respons
-    res.status(200).json({ newToken });
+      // Kembalikan token baru sebagai respons
+      res.status(200).json({ newToken });
+    });
   });
-});
 
 });
 
@@ -156,7 +177,7 @@ router.get("/get-by-id/:id", async (req, res) => {
 router.patch("/reset-password/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const {password} = req.body
+    const { password } = req.body
     const response = await resetPasswordServ(id, password);
     return res.status(200).json(response);
   } catch (error) {
@@ -166,11 +187,11 @@ router.patch("/reset-password/:id", async (req, res) => {
 });
 
 router.get('/check-email/:email', async (req, res) => {
-  try{
+  try {
     const isExist = await emailUsed(req.params.email)
-    if(isExist) throw Error('Email already exist')
+    if (isExist) throw Error('Email already exist')
     return success(res, 'Email didnt exist')
-  }catch(err){
+  } catch (err) {
     return error(res, err.message)
   }
 })
