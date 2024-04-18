@@ -87,7 +87,9 @@ const updateUserRepo = async (id, data) => {
 
 const emailUsed = async (u_email) => {
   try {
+    console.log(u_email)
     const exist = await prisma.m_user.findFirst({ where: { u_email } });
+    console.log(exist)
     return exist ? true : false;
   } catch (err) {
     console.log(err);

@@ -53,10 +53,10 @@ class Emails {
         const html = await this.emailTemplate.render('confirmationEmail', variables);
         return html;
     }
-    async sendEmailTemplate(variables) {
+    sendEmailTemplate(variables) {
         try {
-            const html = await this.renderEmail(variables)
-            const info = await this.email.sendMail({
+            const html = this.renderEmail(variables)
+            const info = this.email.sendMail({
                 ...this.mailOptions,
                 html: html
             })

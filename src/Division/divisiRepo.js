@@ -18,8 +18,8 @@ const getAll = async (data) => {
   try {
     return await prismaDivision.findMany({
       where: {
-        id: parseInt(data.division) || undefined,
-        branch_id: parseInt(data.branch) || undefined
+        id: data?.division ? parseInt(data.division) :  undefined,
+        branch_id: data?.branch ? parseInt(data.branch) : undefined
        },
     });
   } catch (err) {

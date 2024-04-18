@@ -14,9 +14,21 @@ const { route } = require("./userControler");
 const { success, error } = require("../utils/response.utils");
 const { emailUsed } = require('./userRepo');
 const Emails = require('../email/email');
+const branchRepo = require('../Branch/branchRepo')
+const divisiRepo = require('../Division/divisiRepo')
 const { encrypt, decrypt } = require('../utils/encryption');
 
 const router = express.Router();
+
+router.get('/helper-register', async (req, res) =>  {
+  try{
+    const brances = await branchRepo.getAll()
+    const division = await divisiRepo.getAll()
+    return  success(res, 'Helper running', { brances, division })
+  }catch(err){
+    return error(res, err.message)
+  }
+})
 
 router.post("/register", async (req, res) => {
   try {
@@ -29,7 +41,7 @@ router.post("/register", async (req, res) => {
     }
     const encryptedData = encrypt(JSON.stringify(dataToStore))
     const email = new Emails('Bubur Onic Admin', response.email, 'Email Verified', '')
-    await email.sendEmailTemplate({
+    email.sendEmailTemplate({
       email: response.email,
       password: realPassword,
       loginLink: `${process.env.FRONTEND_URL}/auth/${encryptedData}`
@@ -186,9 +198,9 @@ router.patch("/reset-password/:id", async (req, res) => {
   }
 });
 
-router.get('/check-email/:email', async (req, res) => {
+router.get('/check-email/', async (req, res) => {
   try {
-    const isExist = await emailUsed(req.params.email)
+    const isExist = await emailUsed(req.headers['x-email'])
     if (isExist) throw Error('Email already exist')
     return success(res, 'Email didnt exist')
   } catch (err) {

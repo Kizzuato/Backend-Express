@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const xlsx = require("xlsx");
 const Branch = require("../Branch/branchRepo");
 const Division = require("../Division/divisiRepo");
-const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted, resetPassword } = require("./userRepo");
+const { createUserRepo, Login, getAllUserRepo, deleteUserRepo, getUserByIdRepo, updateUserRepo, emailUsed, createManyUserRepo, userDeleted, resetPassword, getUserByDivisionRepo } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
 const { throwError } = require("../utils/error.utils");
@@ -28,6 +28,8 @@ const createUserServ = async (data) => {
   };
 
   try {
+    const exist = await emailUsed(dataRes.u_email)
+    if(exist) throw Error('Email alredy in used')
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
