@@ -20,12 +20,12 @@ const { encrypt, decrypt } = require('../utils/encryption');
 
 const router = express.Router();
 
-router.get('/helper-register', async (req, res) =>  {
-  try{
+router.get('/helper-register', async (req, res) => {
+  try {
     const brances = await branchRepo.getAll()
     const division = await divisiRepo.getAll()
-    return  success(res, 'Helper running', { brances, division })
-  }catch(err){
+    return success(res, 'Helper running', { brances, division })
+  } catch (err) {
     return error(res, err.message)
   }
 })
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
     }
     const encryptedData = encrypt(JSON.stringify(dataToStore))
     const email = new Emails('Bubur Onic Admin', response.email, 'Email Verified', '')
-    email.sendEmailTemplate({
+    await email.sendEmailTemplate({
       email: response.email,
       password: realPassword,
       loginLink: `${process.env.FRONTEND_URL}/auth/${encryptedData}`
@@ -69,11 +69,14 @@ router.post("/register", async (req, res) => {
 router.post("/login/:encryptedData?", async (req, res) => {
   let { email, password, branch } = req.body
   if (req.params.encryptedData != undefined) {
+    console.log(req.params.encryptedData)
+    console.log(decrypt(req.params.encryptedData))
     const decryptedData = JSON.parse(decrypt(req.params.encryptedData))
     email = decryptedData.email,
-    password = decryptedData.password,
-    branch = decryptedData.branch
+      password = decryptedData.password,
+      branch = decryptedData.branch
   }
+  console.log(email, password, branch)
   const token = null;
   // console.log("🚀 ~ router.post ~ token:", token)
   try {
