@@ -4,8 +4,9 @@ const prisma = new PrismaClient();
 
 const getShownTitle = (title) => {
   const taskHierarchy = ['director', 'manager', 'supervisor', 'operator']
+  const lowerTitle = title.toLowerCase();
   try {
-    const titleIndexs = taskHierarchy.indexOf(title.toLowerCase());
+    const titleIndexs = taskHierarchy.indexOf(lowerTitle);
     if (titleIndexs < 0) throw Error('No Title Match')
     return taskHierarchy.splice(titleIndexs)
   } catch (err) {

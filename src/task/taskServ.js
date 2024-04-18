@@ -21,7 +21,35 @@ const { response } = require("../Notification/notificationRoute");
 // service untuk mengedit task
 const updateTaskServ = async (id, data) => {
   const dataRest = {
-    data
+    pic_id: data.pic_id,
+    spv_id: data.spv_id,
+    branch_id: data.branch_id,
+    division_id: data.division_id,
+    task_type: data.task_type,
+    task_title: data.task_title,
+    priority: data.priority,
+    iteration: data.iteration,
+    start_date: data.start_date,
+    due_date: data.due_date,
+    description: data.description,
+    pic_title: data.pic_title,
+    pic: data.pic,
+    spv: data.spv,
+    branch: data.branch,
+    division: data.division,
+    pic_rating: data.pic_rating,
+    approved_at: data.approved_at,
+    approved_by: data.approved_by,
+    started_at: data.started_at,
+    started_by: data.started_by,
+    finished_at: data.finished_at,
+    finished_by: data.finished_by,
+    status: data.status,
+    progress: data.progress,
+    file_hasil: data.file_hasil,
+    created_at: data.created_at,
+    edited_at: data.edited_at,
+    deleted_at: data.deleted_at,
   };
 
   return await updateTaskRepo(id, dataRest);
@@ -116,10 +144,10 @@ const createTaskServ = async (data, files) => {
 
 const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
   const nama_branch = await Branch.getById(data.branch);
+  const lowerTitle = data.title;
   // console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
-  if (nama_branch.b_name === "PT. RES" && data.title === "director") {
+  if (nama_branch.b_name === "PT. RES" && lowerTitle === "director" || "direktur") {
     data.branch = undefined;
-    data.division = undefined;
   }
   // console.log("dada" + data.division);
   // console.log("baba" + data.branch);

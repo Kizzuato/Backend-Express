@@ -28,7 +28,13 @@ const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt();
   data.password = await bcrypt.hash(data.password, salt);
   const dataRes = {
-    data
+    u_name: data.name,
+    u_email: data.email,
+    u_password: data.password,
+    title: data.title,
+    division_id: data.division_id,
+    branch_id: data.branch_id,
+    position_id: data.position_id,
   };
 
   // console.log("🚀 ~ createUserServ ~ dataRes.division_id:", dataRes.division_id)
@@ -48,7 +54,7 @@ const createUserServ = async (data) => {
       title: response.title,
       uuid: response.u_id,
     };
-    return dataReq;
+    return "User " + dataReq.name + " Created";
   } catch (error) {
     console.log(error);
   }
@@ -148,11 +154,20 @@ const LoginUser = async (email, password, branch, position, token) => {
 const getAllUserServ = async (data) => {
   try {
     const branch_name = await Branch.getById(data.branch);
+    console.log("🚀 ~ getAllUserServ ~ branch_name:", branch_name)
 
-    if (branch_name.b_name === "PT. RES") {
+    if (branch_name.b_name === "PT. RES" && data.title === "admin") {
+      data.branch = undefined;
+      data.division = undefined;
+    }
+    else if (data.title === "admin") {
+      data.division = undefined;
+    }
+    else if (branch_name.b_name === "PT. RES") {
       data.branch = undefined;
     }
-
+    console.log("🚀 ~ getAllUserServ ~ data.branch:", data)
+    
     const response = await getAllUserRepo(data);
 
     if (response.length === 0) {
@@ -276,7 +291,11 @@ const importUser = async (file) => {
       if (!branch) {
         throw new Error("Branch not found");
       }
-      // console.log("🚀 ~ importUser ~ branch:", branch.id)
+      
+      let lowercaseTitle = title.toLowerCase();
+      if (!title) {
+        throw new Error("Data Role Untuk User", u_name, "Tidak Valid")
+      }
         
       let division = await Division.getByDivisionName(divisionName);
       if (!division) {
@@ -285,14 +304,14 @@ const importUser = async (file) => {
 
       let position = await Position.getByPositionName(positionName);
       if (!position) {
-        const data = { p_name: positionName, branch_id: branch_id };
+        const data = { p_name: positionName, branch_id: branch.id };
         position = await Position.create(data);
       }
 
       password = "12345";
       const salt = await bcrypt.genSalt();
       hashedPassword = await bcrypt.hash(password, salt);
-      dataToStore.push({ u_name, u_email, gender, u_password: hashedPassword, title, position_id: position.id, division_id: division.id, branch_id: branch.id });
+      dataToStore.push({ u_name, u_email, gender, u_password: hashedPassword, title: lowercaseTitle, position_id: position.id, division_id: division.id, branch_id: branch.id });
     }
     await createManyUserRepo(dataToStore);
     return { imported: dataToStore, existed: userExist };

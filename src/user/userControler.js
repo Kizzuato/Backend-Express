@@ -53,8 +53,8 @@ router.post("/login", async (req, res) => {
 router.get("/division", async (req, res) => {
   try {
     const { division } = req.query;
-    const data = {division };
-    // console.log("Data : ", data);
+    const data = {division};
+    console.log("Data : ", data);
     const response = await getUserByDivision(division);
     return res.status(200).json(response);
   } catch (error) {
@@ -65,8 +65,8 @@ router.get("/division", async (req, res) => {
 
 router.get("/all", async (req, res) => {
   try {
-    const { division, branch } = req.headers;
-    const data = {division, branch };
+    const { division, branch, title } = req.headers;
+    const data = {division, branch, title };
     console.log("🚀 ~ router.get ~ data:", data)
     const response = await getAllUserServ(data);
     // console.log("🚀 ~ router.get ~ response:", response)
@@ -75,6 +75,7 @@ router.get("/all", async (req, res) => {
     console.log(error);
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
+});
 
 router.post('/refreshToken', (req, res) => {
   const oldToken = req.body.oldToken;
@@ -92,8 +93,6 @@ router.post('/refreshToken', (req, res) => {
     // Kembalikan token baru sebagai respons
     res.status(200).json({ newToken });
   });
-});
-
 });
 
 router.delete("/delete-user/:id", async (req, res) => {

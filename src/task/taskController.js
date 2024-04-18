@@ -241,10 +241,11 @@ router.get("/all", async (req, res) => {
     const { pic, spv, division, branch, title } = req.headers;
     const data = {pic, spv, division, branch, title};
     // console.log("division", division);
-    // console.log("🚀 ~ router.get ~ data:"  , data)
+    console.log("🚀 ~ router.get ~ data:"  , data)
     // console.log("Branch", branch);
-    // console.log("status", status);
+    // // console.log("status", status);
     // console.log("search", search);
+    // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
     // console.log("startDate", startDate);

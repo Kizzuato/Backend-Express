@@ -15,7 +15,7 @@ model m_user {
   u_name               String
   division             Division?        @relation(fields: [division_id], references: [id])
   branch               Branch?          @relation(fields: [branch_id], references: [id])
-  position             Position?          @relation(fields: [position_id], references: [id])
+  position             Position?        @relation(fields: [position_id], references: [id])
   gender               String?
   division_id          Int?
   branch_id            Int?
@@ -32,6 +32,11 @@ model m_user {
   deleted              Boolean         @default(false)
   created_at           DateTime?       @default(now())
   updated_at           DateTime?       @updatedAt
+}
+
+model Superior {
+  id         Int     @id @default(autoincrement())
+  u_name               String?
 }
 
 model Position {  

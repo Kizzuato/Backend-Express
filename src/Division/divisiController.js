@@ -16,27 +16,33 @@ const getById = async (req, res) => {
 const getAll = async (req, res) => {
     try {
         const branch_id = req.query.branch_id;
-        // console.log("🚀 ~ getAll ~ branch_id:", branch_id)
         let { division, branch, title } = req.headers;
+        const lowerTitle = title.toLowerCase(); // Ubah title menjadi lowercase untuk perbandingan
+
         let data = { division, branch, title };
-        // console.log("🚀 ~ getAll ~ DATATATATTA:", data)
-        const branch_name = await Branch.getById(data.branch);
-        // console.log("🚀 ~ getAll ~ branch_name:", branch_name)
-        if (branch_name.b_name === "PT. RES" && data.title === "director") {
+
+        const branchData = await Branch.getById(data.branch);
+        const branch_name = branchData.b_name;
+
+        if (branch_name === "PT. RES" && (lowerTitle === "director" || lowerTitle === "direktur")) {
+            // Jika branch_name adalah "PT. RES" dan title adalah "director" atau "direktur"
             data.branch = undefined;
             data.division = undefined;
-        } else if (data.title === "director") {
+        } else if (lowerTitle === "director" || lowerTitle === "direktur") {
+            // Jika title adalah "director" atau "direktur" tapi bukan di cabang "PT. RES"
             data.division = undefined;
-        } else if (data.title === "admin") {
+        } else if (lowerTitle === "admin") {
+            // Jika title adalah "admin"
             data.branch = branch_id;
         }
-        // console.log("🚀 ~ getAll ~ data:", data);
+
         const response = await divisiRepo.getAll(data);
         return success(res, 'Success', response);
     } catch(err) {
         return error(res, err.message);
     }
 }
+
 
 
 const deleteData = async (req, res) => {

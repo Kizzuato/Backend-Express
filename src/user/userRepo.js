@@ -42,6 +42,7 @@ const getAllUserRepo = async (data) => {
   return await prisma.m_user.findMany({
     where: {
       branch_id: parseInt(data.branch) || undefined,
+      division_id: parseInt(data.division) || undefined,
       deleted: false,
     },
   });

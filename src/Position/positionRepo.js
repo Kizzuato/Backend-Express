@@ -28,7 +28,7 @@ const getById = async (id) => {
 
 const getAll = async (data) => {
     try {
-    return await prismaPosition.findMany({where: {branch_id: parseInt(data.branch)}});
+    return await prismaPosition.findMany({where: {branch_id: parseInt(data.branch) || undefined}});
   } catch (err) {
     throwError(err);
   }
