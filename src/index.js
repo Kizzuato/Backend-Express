@@ -39,6 +39,14 @@ app.use(express.urlencoded({ limit: "1gb", extended: true }));
 app.get('/image/:name', (req, res) => {
   res.sendFile(path.join(__dirname, '../uploads', req.params.name));
 });
+app.set('view engine', 'ejs')
+app.get('/render', (req, res) => {
+  return res.render(path.resolve('src/email/templates/confirmationEmail'), {
+    email: "EMAIL HERE",
+    password: "PASSWORD HERE",
+    loginLink: ''
+  })
+})
 
 app.use('/user', userController);
 app.use('/task', TaskController);
