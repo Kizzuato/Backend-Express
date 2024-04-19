@@ -18,6 +18,7 @@ const updatePicRepo = async (pic, pic_rating) => {
 const createUserRepo = async (userData) => {
   return await prisma.m_user.create({
     data: userData,
+    include: { branch: true, division: true }
   });
 };
 
@@ -112,6 +113,17 @@ const userDeleted = async (deleted) => {
   }
 };
 
+const resetPassword = async (id, password) => {
+  return response = await prisma.m_user.update({
+    where: {
+      u_id : id
+    },
+    data: {
+      u_password: password
+    }
+  })
+}
+
 module.exports = {
   updatePicRepo,
   createUserRepo,
@@ -125,4 +137,5 @@ module.exports = {
   activateUserRepo,
   getUserByDivisionRepo,
   getUserByIdRepo,
+  resetPassword
 };

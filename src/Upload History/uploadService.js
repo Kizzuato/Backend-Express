@@ -19,6 +19,8 @@ const storeToExcel = async (file, user, addInformation) => {
     for (let task of tasks) {
       let [task_type, task_title, priority, iteration, start_date, due_date, description, picName, spvName, status] = task
       let pic = { pic: picName, pic_id: null, pic_title: null }
+      // console.log("🚀 ~ storeToExcel ~ due_date:", due_date)
+      console.log("🚀 ~ storeToExcel ~ start_date:", task)
       let spv = { spv: spvName, spv_id: null }
       start_date = formatDateToISO(start_date)
       due_date = formatDateToISO(due_date)
@@ -28,7 +30,7 @@ const storeToExcel = async (file, user, addInformation) => {
         if (!personInContact) {
           pic.pic = null
         }else{
-          pic = { pic_id: `${personInContact.u_id}`, pic_title: personInContact.title, pic: personInContact.u_name }
+          pic = { pic_id: personInContact.u_id }
         }
       }
       if (spv.spv != null) {
@@ -55,7 +57,9 @@ const storeToExcel = async (file, user, addInformation) => {
         spv.branch  = spvListBranch
         spv.division = spvListDivision
       }
-
+      
+      console.log("AKSKOASA:" + start_date)
+      console.log("KONKLSANKAJSN:" + due_date)
       dataToStore.push({
         task_type, task_title, priority, iteration, status, start_date, due_date, description,
         branch_id: parseInt(spv.branch), division_id: parseInt(spv.division), pic_id: parseInt(pic.pic_id), spv_id: parseInt(spv.spv_id), created_by: user.u_name

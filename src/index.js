@@ -15,12 +15,14 @@ const uploadRoute = require('./Upload History/uploadRoute');
 const branchRoute = require("./Branch/branchRoute");
 const positionRoute = require("./Position/positionRoute");
 const divisiRoute = require("./Division/divisiRoute");
+const Emails = require("./email/email");
 
 const corsOptions = {
   origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTION",
   credentials: true,
 };
+
 
 const app = express();
 
@@ -40,6 +42,14 @@ app.use(express.urlencoded({ limit: "1gb", extended: true }));
 app.get('/image/:name', (req, res) => {
   res.sendFile(path.join(__dirname, '../uploads', req.params.name));
 });
+app.set('view engine', 'ejs')
+app.get('/render', (req, res) => {
+  return res.render(path.resolve('src/email/templates/confirmationEmail'), {
+    email: "EMAIL HERE",
+    password: "PASSWORD HERE",
+    loginLink: ''
+  })
+})
 
 app.use('/user', userController);
 app.use('/task', TaskController);

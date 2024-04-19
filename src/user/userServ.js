@@ -20,14 +20,17 @@ const {
 } = require("./userRepo");
 const { Response } = require("../../config/response");
 const { response } = require("../Notification/notificationRoute");
+const { throwError } = require("../utils/error.utils");
 
 dotenv.config();
 
 const secretKey = process.env.SECRET_KEY_JWT;
 
+
 const createUserServ = async (data) => {
   const salt = await bcrypt.genSalt();
   data.password = await bcrypt.hash(data.password, salt);
+
   const dataRes = {
     u_name: data.name,
     u_email: data.email,
@@ -38,26 +41,24 @@ const createUserServ = async (data) => {
     position_id: data.position_id,
   };
 
-  // console.log("🚀 ~ createUserServ ~ dataRes.division_id:", dataRes.division_id)
-  // const division = await Division.getById(dataRes.division_id)
-
-  // if (user) {
-  // }
-
   try {
+    const exist = await emailUsed(dataRes.u_email)
+    if(exist) throw Error('Email alredy in used')
     const response = await createUserRepo(dataRes);
     const dataReq = {
       name: response.u_name,
       email: response.u_email,
       password: response.password,
-      division_id: response.division_id,
-      branch_id: response.branch_id,
+      division_id: response.division.id,
+      division: response.division.d_name,
+      branch_id: response.branch.id,
+      branch: response.branch.b_name,
       title: response.title,
       uuid: response.u_id,
     };
-    return "User " + dataReq.name + " Created";
+    return dataReq;
   } catch (error) {
-    console.log(error);
+    throwError(error)
   }
 };
 
@@ -326,6 +327,22 @@ const importUser = async (file) => {
   }
 };
 
+const resetPasswordServ = async(id, password) => {
+  const user = getUserByIdRepo(id)
+  if(!user){
+    return 'user tidak ditemukan'
+  }
+  const salt = await bcrypt.genSalt()
+  const passwordNew = await bcrypt.hash(password, salt);
+  try {
+    const response = await resetPassword(id, passwordNew)
+    return response
+  } catch (error) {
+    return error
+  }
+
+}
+
 module.exports = {
   createUserServ,
   LoginUser,
@@ -336,5 +353,6 @@ module.exports = {
   deleteUserServ,
   getUserByDivision,
   getUserByIdServ,
+  resetPasswordServ,
   activateUserServ
 };

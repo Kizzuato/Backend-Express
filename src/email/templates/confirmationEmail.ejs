@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification Confirmation</title>
+</head>
+<body>
+    <table style="max-width: 600px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+        <!-- Logo -->
+        <tr>
+            <td align="center" style="padding-bottom: 20px;">
+                <img src="" alt="Company Logo" style="max-width: 200px;">
+            </td>
+        </tr>
+        <!-- Content -->
+        <tr>
+            <td>
+                <h2 style="text-align: center;">Email Verification Confirmation</h2>
+                <p>Your email has been verified and you can now log in using the following credentials:</p>
+                <ul>
+                    <li><strong>Email:</strong> <%= email %></li>
+                    <li><strong>Password:</strong> <%= password %></li>
+                </ul>
+                <p>Alternatively, you can use the following link to log in:</p>
+                <a href="<%= loginLink %>">Log in</a>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
