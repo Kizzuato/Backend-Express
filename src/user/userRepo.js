@@ -44,7 +44,7 @@ const getAllUserRepo = async (data) => {
     where: {
       branch_id: parseInt(data.branch) || undefined,
       division_id: parseInt(data.division) || undefined,
-      // deleted: false,
+      deleted: false,
     },
   });
 };
@@ -63,10 +63,11 @@ const deleteUserRepo = async (u_id) => {
   });
 };
 
-const getUserByDivisionRepo = async (division) => {
+const getUserByDivisionRepo = async (data) => {
   return await prisma.m_user.findMany({
     where: {
-      division_id: parseInt(division) || undefined,
+      division_id: parseInt(data.division) || undefined,
+      branch_id: parseInt(data.branch) || undefined,
     },
   });
 };

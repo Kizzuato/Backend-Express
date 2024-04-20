@@ -2,9 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const prismaDivision = new PrismaClient().division;
 
-const getByDivisionName = async (d_name) => {
+const getByDivisionName = async (data) => {
   try {
-    return await prismaDivision.findFirst({ where: { d_name: { contains: d_name } } })
+    return await prismaDivision.findFirst({
+      where: { 
+        branch_id: data.b_id,
+        d_name: { contains: data.divisionName } 
+        },
+    });
   } catch (err) {
     throwError(err);
   }
@@ -27,8 +32,8 @@ const getAll = async (data) => {
     return await prismaDivision.findMany({
       where: {
         // id: data?.division ? parseInt(data.division) :  undefined,
-        branch_id: data?.branch ? parseInt(data.branch) : undefined
-       },
+        branch_id: data?.branch ? parseInt(data.branch) : undefined,
+      },
     });
   } catch (err) {
     throwError(err);
@@ -53,7 +58,9 @@ const del = async (id) => {
 
 const isExist = async (id) => {
   try {
-    const exist = await prismaDivision.findFirst({ where: { id: parseInt(id) } });
+    const exist = await prismaDivision.findFirst({
+      where: { id: parseInt(id) },
+    });
     return exist;
   } catch (err) {
     throwError(err);

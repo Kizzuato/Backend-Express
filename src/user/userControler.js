@@ -92,10 +92,11 @@ router.post("/login/:encryptedData?", async (req, res) => {
 
 router.get("/division", async (req, res) => {
   try {
-    const { division } = req.query;
-    const data = { division };
-    // console.log("Data : ", data);
-    const response = await getUserByDivision(division);
+    const { division, branch } = req.query;
+    const data = { division, branch };
+    console.log("Data : ", data);
+    const response = await getUserByDivision(data);
+    console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);

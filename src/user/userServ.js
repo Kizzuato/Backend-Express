@@ -151,20 +151,20 @@ const LoginUser = async (email, password, branch, position, token) => {
 
 const getAllUserServ = async (data) => {
   try {
-    const branch_name = await Branch.getById(data.branch);
-    console.log("🚀 ~ getAllUserServ ~ branch_name:", branch_name)
+    // const branch_name = await Branch.getById(data.branch);
+    // console.log("🚀 ~ getAllUserServ ~ branch_name:", branch_name)
 
-    if (branch_name.b_name === "PT. RES" && data.title === "admin") {
-      data.branch = undefined;
-      data.division = undefined;
-    }
-    else if (data.title === "admin") {
-      data.division = undefined;
-    }
-    else if (branch_name.b_name === "PT. RES") {
-      data.branch = undefined;
-    }
-    console.log("🚀 ~ getAllUserServ ~ data.branch:", data)
+    // if (branch_name.b_name === "PT. RES" && data.title === "admin") {
+    //   data.branch = undefined;
+    //   data.division = undefined;
+    // }
+    // else if (data.title === "admin") {
+    //   data.division = undefined;
+    // }
+    // else if (branch_name.b_name === "PT. RES") {
+    //   data.branch = undefined;
+    // }
+    // console.log("🚀 ~ getAllUserServ ~ data.branch:", data)
     
     const response = await getAllUserRepo(data);
 
@@ -235,8 +235,8 @@ const activateUserServ = async (id) => {
   return await activateUserRepo(+id);
 };
 
-const getUserByDivision = async (division) => {
-  return await getUserByDivisionRepo(division);
+const getUserByDivision = async (data) => {
+  return await getUserByDivisionRepo(data);
 };
 
 const getUserByIdServ = async (id) => {
@@ -276,51 +276,78 @@ const importUser = async (file) => {
     const excel = xlsx.readFile(file.path);
     const worksheet = excel.Sheets[excel.SheetNames[0]];
     let users = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
-    users.shift();
-    if (users.length < 1) throw Error("No Data to Store");
+    users.shift(); // Menghapus baris header
+
+    if (users.length < 1) {
+      throw new Error("No Data to Store");
+    }
 
     for (let user of users) {
       let [u_name, u_email, gender, positionName, divisionName, title, branchName] = user;
-      // console.log("🚀 ~ importUser ~ branchName:", users)
+
+      // Check apakah email sudah digunakan
       const exist = await emailUsed(u_email);
       if (exist) {
         userExist++;
-        continue;
+        continue; // Skip pengguna jika email sudah ada
       }
 
-      // Check if position exists in the database
+      // Check jika branch tersedia
       let branch = await Branch.getByBranchName(branchName);
       if (!branch) {
         throw new Error("Branch not found");
       }
-      
-      let lowercaseTitle = title.toLowerCase();
+
+      // Validasi title tidak boleh kosong
       if (!title) {
-        throw new Error("Data Role Untuk User", u_name, "Tidak Valid")
+        console.log("WKWK ", user)
+        throw new Error(`Data Role Untuk User ${u_name} Tidak Valid`);
       }
-        
-      let division = await Division.getByDivisionName(divisionName);
+
+      // Check jika division tersedia
+      const b_id = branch.id;
+      const data = {divisionName, b_id}
+      let division = await Division.getByDivisionName(data);
       if (!division) {
         throw new Error("Division not found");
       }
 
-      let position = await Position.getByPositionName(positionName);
+      // Check jika position tersedia, jika tidak buat baru
+      const p_data = {positionName, b_id}
+      let position = await Position.getByPositionName(p_data);
       if (!position) {
         const data = { p_name: positionName, branch_id: branch.id };
         position = await Position.create(data);
       }
 
-      password = "12345";
+      // Generate password
+      const password = "12345";
       const salt = await bcrypt.genSalt();
-      hashedPassword = await bcrypt.hash(password, salt);
-      dataToStore.push({ u_name, u_email, gender, u_password: hashedPassword, title: lowercaseTitle, position_id: position.id, division_id: division.id, branch_id: branch.id });
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      // Tambahkan data pengguna ke dataToStore
+      dataToStore.push({
+        u_name,
+        u_email,
+        gender,
+        u_password: hashedPassword,
+        title: title.toLowerCase(),
+        position_id: position.id,
+        division_id: division.id,
+        branch_id: branch.id,
+      });
     }
+
+    // Simpan data pengguna ke dalam database
     await createManyUserRepo(dataToStore);
+
+    // Mengembalikan informasi setelah import
     return { imported: dataToStore, existed: userExist };
   } catch (err) {
     console.log(err);
     throw err;
   }
+
 };
 
 const resetPasswordServ = async(id, password) => {

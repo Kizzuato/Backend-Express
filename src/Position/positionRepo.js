@@ -2,9 +2,14 @@ const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const prismaPosition = new PrismaClient().position;
 
-const getByPositionName = async (p_name) => {
+const getByPositionName = async (p_data) => {
   try {
-    return await prismaPosition.findFirst({ where: { p_name: { contains: p_name } } })
+    return await prismaPosition.findFirst({
+      where: { 
+        branch_id: p_data.b_id,
+        p_name: { contains: p_data.positionName } 
+      },
+    });
   } catch (err) {
     throwError(err);
   }
@@ -12,7 +17,6 @@ const getByPositionName = async (p_name) => {
 
 const getById = async (id) => {
   try {
-
     if (id === null) {
       return [];
     }
@@ -27,8 +31,10 @@ const getById = async (id) => {
 };
 
 const getAll = async (data) => {
-    try {
-    return await prismaPosition.findMany({where: {branch_id: parseInt(data.branch) || undefined}});
+  try {
+    return await prismaPosition.findMany({
+      where: { branch_id: parseInt(data.branch) || undefined },
+    });
   } catch (err) {
     throwError(err);
   }
@@ -68,4 +74,12 @@ const createManyUserRepo = async (arrays) => {
   }
 };
 
-module.exports = { getAll, create, del, isExist, getById, createManyUserRepo, getByPositionName };
+module.exports = {
+  getAll,
+  create,
+  del,
+  isExist,
+  getById,
+  createManyUserRepo,
+  getByPositionName,
+};
