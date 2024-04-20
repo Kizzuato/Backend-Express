@@ -111,10 +111,6 @@ const LoginUser = async (email, password, branch, position, token) => {
         return Response(401, user, "Account Deleted");
       }
 
-      if (branchRes.b_name !== branch) {
-        return Response(401, null, "Wrong Branch");
-      }
-
       const validPassword = await bcrypt.compare(password, user.u_password);
 
       if (!validPassword) {

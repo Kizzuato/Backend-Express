@@ -143,12 +143,12 @@ const createTaskServ = async (data, files) => {
 };
 
 const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
-  const nama_branch = await Branch.getById(data.branch);
-  const lowerTitle = data.title;
-  // console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
-  if (nama_branch.b_name === "PT. RES" && lowerTitle === "director" || "direktur") {
-    data.branch = undefined;
-  }
+  // const nama_branch = await Branch.getById(data.branch);
+  // const lowerTitle = data.title;
+  // // console.log("🚀 ~ getAllTaskServ ~ nama_branch:", nama_branch);
+  // if (nama_branch.b_name === "PT. RES" && lowerTitle === "director" || "direktur") {
+  //   data.branch = undefined;
+  // }
   // console.log("dada" + data.division);
   // console.log("baba" + data.branch);
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
@@ -160,7 +160,7 @@ const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
   }
 
   const picIds = [...new Set(response.map((task) => task.pic_id))];
-  // console.log("🚀 ~ getAllTaskServ ~ picIds:", picIds)
+  // // console.log("🚀 ~ getAllTaskServ ~ picIds:", picIds)
   const spvIds = [...new Set(response.map((task) => task.spv_id))];
 
   const picDataPromise = picIds.length > 0 ? Promise.all(picIds.map((id) => {

@@ -72,18 +72,17 @@ router.post("/register", async (req, res) => {
 // })
 
 router.post("/login/:encryptedData?", async (req, res) => {
-  let { email, password, branch } = req.body
+  let { email, password } = req.body
   if (req.params.encryptedData != undefined) {
     const decryptedData = JSON.parse(decrypt(req.params.encryptedData))
     email = decryptedData.email,
-      password = decryptedData.password,
-      branch = decryptedData.branch
+    password = decryptedData.password
   }
-  console.log(email, password, branch)
+  console.log(email, password)
   const token = null;
   // console.log("🚀 ~ router.post ~ token:", token)
   try {
-    const response = await LoginUser(email, password, branch, token);
+    const response = await LoginUser(email, password, token);
     return res.status(response.status).json(response);
   } catch (error) {
     console.log(error);

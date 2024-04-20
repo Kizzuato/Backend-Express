@@ -16,13 +16,13 @@ const getAll = async (req, res) => {
     try{
         let branch_id = req.headers.branch;
         // console.log("🚀 ~ getAll ~ branch_id:", branch_id)
-        const branch_name = await branchRepo.getById(branch_id)
+        // const branch_name = await branchRepo.getById(branch_id)
         // console.log("🚀 ~ getAll ~ branch_name:", branch_name)
-    if (branch_name.b_name === "PT. RES") {
-        branch_id = undefined;
-    } 
-    console.log("🚀 ~ getAll ~ branch_id:", branch_id)
-        const branch = await branchRepo.getAll(branch_id)
+    // if (branch_name.b_name === "PT. RES") {
+    //     branch_id = undefined;
+    // } 
+    // console.log("🚀 ~ getAll ~ branch_id:", branch_id)
+        const branch = await branchRepo.getAll()
         return success(res, 'Success', branch)
     }catch(err){
         return error(res, err.message)

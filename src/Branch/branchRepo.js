@@ -22,13 +22,9 @@ const getById = async (id) => {
   }
 };
 
-const getAll = async (branch_id) => {
+const getAll = async () => {
     try {
-    return await prismaBranch.findMany({
-      where: {
-        id: parseInt(branch_id) || undefined,
-      },
-    });
+    return await prismaBranch.findMany();
   } catch (err) {
     throwError(err);
   }

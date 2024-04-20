@@ -17,24 +17,24 @@ const getAll = async (req, res) => {
     try {
         const branch_id = req.query.branch_id;
         let { division, branch, title } = req.headers;
-        const lowerTitle = title.toLowerCase(); // Ubah title menjadi lowercase untuk perbandingan
+        // const lowerTitle = title.toLowerCase(); // Ubah title menjadi lowercase untuk perbandingan
 
         let data = { division, branch, title };
 
         const branchData = await Branch.getById(data.branch);
         const branch_name = branchData.b_name;
 
-        if (branch_name === "PT. RES" && (lowerTitle === "director" || lowerTitle === "direktur")) {
-            // Jika branch_name adalah "PT. RES" dan title adalah "director" atau "direktur"
-            data.branch = undefined;
-            data.division = undefined;
-        } else if (lowerTitle === "director" || lowerTitle === "direktur") {
-            // Jika title adalah "director" atau "direktur" tapi bukan di cabang "PT. RES"
-            data.division = undefined;
-        } else if (lowerTitle === "admin") {
-            // Jika title adalah "admin"
-            data.branch = branch_id;
-        }
+        // if (branch_name === "PT. RES" && (lowerTitle === "director" || lowerTitle === "direktur")) {
+        //     // Jika branch_name adalah "PT. RES" dan title adalah "director" atau "direktur"
+        //     data.branch = undefined;
+        //     data.division = undefined;
+        // } else if (lowerTitle === "director" || lowerTitle === "direktur") {
+        //     // Jika title adalah "director" atau "direktur" tapi bukan di cabang "PT. RES"
+        //     data.division = undefined;
+        // } else if (lowerTitle === "admin") {
+        //     // Jika title adalah "admin"
+        //     data.branch = branch_id;
+        // }
 
         const response = await divisiRepo.getAll(data);
         return success(res, 'Success', response);
