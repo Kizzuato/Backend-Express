@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
+const { parse } = require("dotenv");
 const prismaRole = new PrismaClient().role;
 
 const getByRoleName = async (b_name) => {
@@ -59,7 +60,10 @@ const getAll = async () => {
 
 const create = async (data) => {
   try {
-    return await prismaRole.createMany({ data });
+    return await prismaRole.createMany({ data: {
+      u_id: parseInt(data.u_id),
+      role: data.role,
+    } });
   } catch (err) {
     throwError(err);
   }
@@ -73,9 +77,9 @@ const del = async (id) => {
   }
 };
 
-const isExist = async (b_name) => {
+const isExist = async (u_id) => {
   try {
-    const exist = await prismaRole.findFirst({ where: { b_name } });
+    const exist = await prismaRole.findFirst({ where: { u_id: parseInt(u_id) } });
     return exist;
   } catch (err) {
     throwError(err);

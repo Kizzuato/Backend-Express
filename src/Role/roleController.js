@@ -14,9 +14,15 @@ const getById = async (req, res) => {
 
 const edit = async (req, res) => {
     try{
-        const { id } = req.params;
+        const u_id = req.params.id;
         const role = req.body.role;
-        const edit = await roleRepo.edit(id, role)
+        const data = {u_id, role}
+        const exist = await roleRepo.isExist(u_id)
+        if (!exist) {
+            const create = await roleRepo.create(data)
+            console.log("GA ADA")
+        }
+        const edit = await roleRepo.edit(u_id, role)
         return success(res, 'Success', edit)
     }catch(err){
         return error(res, err.message)
@@ -55,10 +61,8 @@ const deleteData = async (req, res) => {
 
 const createNew = async (req, res) => {
     try{
-        const exist = await roleRepo.isExist(req.body.b_name)
-        if(exist) throw Error('Role already exist')
-        const createdRole = await roleRepo.create(req.body)
-        return success(res, `Role ${createdRole.b_name} Created`, createdRole)
+        const createdRole = await roleRepo.create(data)
+        // return success(res, `Role ${createdRole.b_name} Created`, createdRole)
     }catch(err){
         return error(res, err.message)
     }
