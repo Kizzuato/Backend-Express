@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// data id user ngambil dari sistem onic
+model Role {
+  u_id                Int           @id
+  u_name              String?
+  role                String?
+}
 
 model m_user {
   u_id                 Int             @id @default(autoincrement())
