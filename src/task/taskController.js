@@ -240,16 +240,6 @@ router.get("/all", async (req, res) => {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch, title } = req.headers;
     const data = {pic, spv, division, branch, title};
-    // console.log("division", division);
-    // console.log("🚀 ~ router.get ~ data:"  , data)
-    // console.log("Branch", branch);
-    // // console.log("status", status);
-    // console.log("search", search);
-    // console.log("pic", pic);
-    // console.log("spv", spv);
-    // console.log("search", search);
-    // console.log("startDate", startDate);
-    // console.log("dueDate", dueDate);
     const response = await getAllTaskServ(
       search,
       status,
@@ -294,11 +284,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/waited", auth, async (req, res) => {
+router.get("/waited", async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
-    const { pic, spv, division, branch } = req.headers;
-    const data = {pic, spv, division, branch};
+    const { pic, spv, pic_id, spv_id, division, branch } = req.headers;
+    const data = {pic, spv, division, pic_id, spv_id, branch};
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
@@ -318,7 +308,7 @@ router.get("/waited", auth, async (req, res) => {
   }
 });
 
-router.get("/deleted", auth, async (req, res) => {
+router.get("/deleted", async (req, res) => {
   try {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch } = req.headers;
@@ -364,5 +354,17 @@ router.get("/get-by-email/:id", async (req, res) => {
     return res.status(500).json({ message: "Terjadi kesalahan pada server" });
   }
 });
+
+router.get("/late-notification/id", async (req, res) => {
+  try {
+    const id = req.params;
+    const response = await get;
+    return res.status(200).json(response)
+  }
+  catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "terjadi kesalahan pada server"});
+  }
+})
 
 module.exports = router;

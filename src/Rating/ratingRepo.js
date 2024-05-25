@@ -1,11 +1,11 @@
 const { PrismaClient } = require("@prisma/client");
 const { throwError } = require("../utils/error.utils");
 const { parse } = require("dotenv");
-const prismaRole = new PrismaClient().role;
+const prismaRating = new PrismaClient().rating;
 
-const getByRoleName = async (b_name) => {
+const getByRatingName = async (b_name) => {
   try {
-    return await prismaRole.findFirst({ where: { b_name: { contains: b_name } } })
+    return await prismaRating.findFirst({ where: { b_name: { contains: b_name } } })
   } catch (err) {
     throwError(err);
   }
@@ -13,17 +13,17 @@ const getByRoleName = async (b_name) => {
 
 const getById = async (u_id) => {
   try {
-    const role = await prismaRole.findUnique({
+    const rating = await prismaRating.findUnique({
       where: {
         u_id: parseInt(u_id),
       },
     });
 
-    if (!role) {
-      return []; // Mengembalikan null jika data tidak ditemukan
+    if (!rating) {
+      return 0; // Mengembalikan null jika data tidak ditemukan
     }
 
-    return role;
+    return rating;
   } catch (err) {
     console.error("Error in getById:", err);
     throw err; // Melemparkan kesalahan kembali untuk ditangani di luar fungsi
@@ -31,13 +31,11 @@ const getById = async (u_id) => {
 };
 
 const edit = async (id, data) => {
-  return await prismaRole.update({
+  return await prismaRating.update({
     where: { 
       u_id: parseInt(id)
      },
-     data: {
-      role: data
-     }
+     data: data
   });
 };
 
@@ -52,7 +50,7 @@ const updateTaskRepo = async (id, data) => {
 
 const getAll = async () => {
     try {
-    return await prismaRole.findMany();
+    return await prismaRating.findMany();
   } catch (err) {
     throwError(err);
   }
@@ -60,7 +58,7 @@ const getAll = async () => {
 
 const create = async (data) => {
   try {
-    return await prismaRole.createMany({ data });
+    return await prismaRating.createMany({ data });
   } catch (err) {
     throwError(err);
   }
@@ -68,7 +66,7 @@ const create = async (data) => {
 
 const del = async (id) => {
   try {
-    return await prismaRole.delete({ where: { id: parseInt(id) } });
+    return await prismaRating.delete({ where: { id: parseInt(id) } });
   } catch (err) {
     throwError(err);
   }
@@ -76,11 +74,11 @@ const del = async (id) => {
 
 const isExist = async (u_id) => {
   try {
-    const exist = await prismaRole.findFirst({ where: { u_id: parseInt(u_id) } });
+    const exist = await prismaRating.findFirst({ where: { u_id: parseInt(u_id) } });
     return exist;
   } catch (err) {
     throwError(err);
   }
 };
 
-module.exports = { getAll, create, del, isExist, getById, getByRoleName, edit };
+module.exports = { getAll, create, del, isExist, getById, getByRatingName, edit };

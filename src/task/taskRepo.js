@@ -41,12 +41,11 @@ const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
     NOT: {
       status: "wait-app",
     },
-    spv_id: parseInt(data.spv) || undefined,
-    pic_id: parseInt(data.pic) || undefined,
+    pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
+    spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
     status: status || undefined,
     deleted_at: null,
-    division_id: parseInt(data.division) || undefined,
-    branch_id: parseInt(data.branch) || undefined,
+    // division: parseInt(data.division) || undefined,
     OR: [
       { task_title: { contains: search || '' } },
     ]
@@ -72,8 +71,6 @@ const getAllWaitedTaskRepo = async ( search, status, data, fromDate, toDate) => 
       deleted_at: null,
       spv_id: parseInt(data.spv) || undefined,
       pic_id: parseInt(data.pic) || undefined,
-      division_id: parseInt(data.division) || undefined,
-      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
@@ -99,8 +96,6 @@ const getAllDeletedTaskRepo = async (search, status, data, fromDate, toDate) => 
       },
       pic_id: parseInt(data.pic) || undefined,
       spv_id: parseInt(data.spv) || undefined,
-      division_id: parseInt(data.division) || undefined,
-      branch_id: parseInt(data.branch) || undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]

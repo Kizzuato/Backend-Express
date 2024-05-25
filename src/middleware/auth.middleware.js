@@ -17,4 +17,13 @@ const auth =  async (req, res, next) => {
     }
 }
 
+const checker = async (req, res, next) => {
+    try { 
+        const { u_id } = req.user
+    }
+    catch (err) {
+
+    }
+}
+
 module.exports = { auth }

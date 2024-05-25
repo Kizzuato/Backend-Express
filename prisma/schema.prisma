@@ -11,9 +11,14 @@ datasource db {
 }
 
 // data id user ngambil dari sistem onic
+model Rating {
+  u_id                Int           @id
+  total_rating        Int?
+  total_task          Int?
+}
+
 model Role {
   u_id                Int           @id
-  u_name              String?
   role                String?
 }
 
@@ -27,8 +32,8 @@ model m_user {
   division_id          Int?
   branch_id            Int?
   position_id          Int?
-  tasks_as_pic         task[]          @relation("pic")
-  tasks_as_spv         task[]          @relation("spv")
+  // tasks_as_pic         task[]          @relation("pic")
+  // tasks_as_spv         task[]          @relation("spv")
   uploadHistory        uploadHistory[]
   u_email              String          @unique
   u_password           String?
@@ -51,7 +56,7 @@ model Position {
   p_name     String?
   branch     Branch   @relation(fields: [branch_id], references: [id])
   branch_id  Int
-  tasks      task[]
+  // tasks      task[]
   users      m_user[]
 }
 
@@ -59,7 +64,7 @@ model Branch {
   id          Int       @id @default(autoincrement())
   b_name      String?
   divisions   Division[] 
-  tasks       task[]
+  // tasks       task[]
   users       m_user[]
   position    Position[]
 }
@@ -69,17 +74,18 @@ model Division {
   branch      Branch   @relation(fields: [branch_id], references: [id])
   branch_id   Int      
   d_name      String?
-  tasks       task[]
+  // tasks       task[]
   users       m_user[]
 }
 
 model task {
   id           Int            @id @default(autoincrement())
-  pic          m_user?        @relation("pic", fields: [pic_id], references: [u_id])
-  spv          m_user?        @relation("spv", fields: [spv_id], references: [u_id])
-  branch       Branch?        @relation(fields: [branch_id], references: [id])
-  division     Division?      @relation(fields: [division_id], references: [id])
-  position     Position?      @relation(fields: [position_id], references: [id])
+  pic          String?        
+  spv          String?        
+  pic_role     String?
+  // branch       Branch?        @relation(fields: [branch_id], references: [id])
+  // division     Division?      @relation(fields: [division_id], references: [id])
+  // position     Position?      @relation(fields: [position_id], references: [id])
   task_type    String?
   task_title   String?
   priority     String?
@@ -106,9 +112,9 @@ model task {
   pic_rating  Int?
   pic_id    Int?
   spv_id    Int?
-  branch_id    Int?
-  division_id  Int?
-  position_id  Int?
+  branch    Int?
+  division  Int?
+  position  Int?
 }
 
 

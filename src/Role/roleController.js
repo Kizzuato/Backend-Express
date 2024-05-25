@@ -14,8 +14,9 @@ const getById = async (req, res) => {
 
 const edit = async (req, res) => {
     try{
-        const u_id = req.params.id;
+        const id = req.params.id;
         const role = req.body.role;
+        const u_id = parseInt(id); 
         const data = {u_id, role}
         const exist = await roleRepo.isExist(u_id)
         if (!exist) {
@@ -61,8 +62,13 @@ const deleteData = async (req, res) => {
 
 const createNew = async (req, res) => {
     try{
+        const data = req.body;
+        // const u_id = req.body.u_id;
+        // const role = req.body.role;
+        // const data = {u_id, role};
+        // console.log("🚀 ~ createNew ~ data:", data)
         const createdRole = await roleRepo.create(data)
-        // return success(res, `Role ${createdRole.b_name} Created`, createdRole)
+        return success(res, `Role Created`, createdRole)
     }catch(err){
         return error(res, err.message)
     }
