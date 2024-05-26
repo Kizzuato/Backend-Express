@@ -30,12 +30,18 @@ const getById = async (u_id) => {
   }
 };
 
-const edit = async (id, data) => {
-  return await prismaRating.update({
-    where: { 
-      u_id: parseInt(id)
-     },
-     data: data
+const edit = async (id, pic_rating) => {
+  console.log("🚀 ~ edit ~ pic_rating:", pic_rating)
+  return await prismaRating.updateMany({
+    where: { u_id: parseInt(id) },
+    data: {
+      total_task: {
+        increment: 1,
+      },
+      total_rating: {
+        increment: pic_rating,
+      },
+    },
   });
 };
 
@@ -56,9 +62,9 @@ const getAll = async () => {
   }
 };
 
-const create = async (data) => {
+const create = async (u_id) => {
   try {
-    return await prismaRating.createMany({ data });
+    return await prismaRating.createMany({ data: {u_id: u_id, total_rating: 0, total_task: 0 }});
   } catch (err) {
     throwError(err);
   }

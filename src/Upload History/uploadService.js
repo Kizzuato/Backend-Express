@@ -91,7 +91,7 @@ const getAllHistory = async (search, from, to) => {
         ],
         ...(search && { fileName: { contains: search } }),
       },
-      select: { fileName: true, created_at: true, user: { select: { u_name: true, title: true } } }
+      select: { fileName: true, created_at: true }
     })
     let no = 1, historyData = []
     for (let history of histories) {
@@ -99,8 +99,8 @@ const getAllHistory = async (search, from, to) => {
         no,
         fileName: history.fileName,
         uploadedDate: history.created_at.toISOString().split('T')[0],
-        uploadedBy: history.user.u_name,
-        jabatan: history.user.title
+        uploadedBy: history.u_name,
+        jabatan: history.title
       })
       no++
     }

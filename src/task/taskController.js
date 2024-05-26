@@ -28,6 +28,7 @@ const {
   getAllDeletedTaskServ,
   getTaskByIdServ,
   storeToExcel,
+  getLateTaskServe
 } = require("./taskServ");
 const { auth } = require("../middleware/auth.middleware");
 
@@ -76,11 +77,11 @@ router.put(
 
 router.put("/acc/:id", async (req, res) => {
   const { id } = req.params;
-  const { pic, status, pic_rating, approved_at } = req.body;
+  const { pic_id, status, pic_rating, approved_at } = req.body;
 
   try {
     const data = {
-      pic,
+      pic_id,
       pic_rating,
       status,
       approved_at,
@@ -355,13 +356,14 @@ router.get("/get-by-email/:id", async (req, res) => {
   }
 });
 
-router.get("/late-notification/id", async (req, res) => {
+router.get("/late-notification/:id", async (req, res) => {
   try {
     const id = req.params;
-    const response = await get;
-    return res.status(200).json(response)
-  }
-  catch (error) {
+    // console.log(id, " dicek")
+    const response = await getLateTaskServe(id);
+    // console.log("🚀 ~ router.get ~ response:", response)
+    return res.status(200).json(response);
+  } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "terjadi kesalahan pada server"});
   }

@@ -26,7 +26,7 @@ const updateTaskRepo = async (id, data) => {
 
 // Repo untuk membuat task baru
 const createTaskRepo = async (data) => {
-  return await prisma.task.create({
+  return await prisma.task.createMany({
     data,
   });
 };
@@ -122,6 +122,33 @@ const getTaskByIdRepo = async (id) => {
   });
 };
 
+const getLateTaskRepo = async (id) => {
+  const now = new Date(); 
+
+  return await prisma.task.findMany({
+    where: { 
+      pic_id: parseInt(id) || undefined,
+      due_date: {
+        lt: now,
+      },
+      status: {
+        not: "Close",
+      },
+    }
+  });
+};
+
+const updateOverdueRepo = async (id) => {
+  return await prisma.task.update({
+    where: {
+      id: id,
+    },
+    data: {
+      overdue: true,
+    },
+  });
+};
+
 // Repo untuk mencari task berdasarkan Id
 const getTaskByEmailRepo = async (email) => {
   return await prisma.m_user.findunique({
@@ -140,4 +167,6 @@ module.exports = {
   getAllDeletedTaskRepo,
   getTaskByIdRepo,
   getTaskByEmailRepo,
+  getLateTaskRepo,
+  updateOverdueRepo
 };

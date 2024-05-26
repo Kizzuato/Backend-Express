@@ -96,7 +96,7 @@ router.get("/division", async (req, res) => {
     const data = { division, branch };
     console.log("Data : ", data);
     const response = await getUserByDivision(data);
-    console.log("🚀 ~ router.get ~ response:", response)
+    // console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);
   } catch (error) {
     console.log(error);
@@ -108,7 +108,7 @@ router.get("/all", async (req, res) => {
   try {
     const { division, branch, title } = req.headers;
     const data = {division, branch, title };
-    console.log("🚀 ~ router.get ~ data:", data)
+    // console.log("🚀 ~ router.get ~ data:", data)
     const response = await getAllUserServ(data);
     // console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);

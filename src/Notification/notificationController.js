@@ -2,7 +2,7 @@ const { success, error } = require('../utils/response.utils')
 const service = require('./notificationService')
 
 const get = async (req, res) => {
-    const { u_id } = req.user
+    const { u_id } = req.params
     try {
         const data = await service.getAll(u_id)
         return success(res, 'Get Success', data)
@@ -12,7 +12,7 @@ const get = async (req, res) => {
 }
 
 const postReadMessage = async (req, res) => {
-    const { u_id } = req.user
+    const { u_id } = req.params
     try {
         const updateUser = await service.readMessage(u_id)
         return success(res, 'Message Readed', updateUser)

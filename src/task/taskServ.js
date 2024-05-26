@@ -11,11 +11,12 @@ const {
   getAllDeletedTaskRepo,
   getTaskByIdRepo,
   createManyTask,
+  getLateTaskRepo
 } = require("./taskRepo");
 const { getUserByIdRepo } = require("../user/userRepo");
 const { check } = require("prisma");
 
-const { updatePicRepo } = require("../user/userRepo");
+const Rating = require("../Rating/ratingRepo");
 const { response } = require("../Notification/notificationRoute");
 
 // service untuk mengedit task
@@ -59,29 +60,32 @@ const AcceptTaskServe = async (id, data) => {
   try {
     // Ambil data task sebelum diupdate
     const existingTask = await getTaskByIdRepo(+id);
+    const existingRate = await Rating.isExist(data.pic_id);
 
+    if(!existingRate) {
+      const u_id = data.pic_id;
+      const create = await Rating.create(u_id);
+      console.log("GA ADA") 
+    }
+    
     // Lakukan validasi atau logika bisnis jika diperlukan
-    const pic = data.pic;
-    const pic_rating = data.pic_rating;
+    // const pic = data.pic;
+    // const pic_rating = data.pic_rating;
     const updatedTask = {
       status: data.status,
       approved_at: data.approved_at,
     };
     await updateTaskRepo(id, updatedTask);
-
+    
     // Perbarui total_task dan total_rating pada tabel pic jika task diterima (misalnya, status "accepted")
-    if (
-      existingTask.status === "In-progress" &&
-      updatedTask.status === "Close"
-    ) {
-      await updatePicRepo(pic, pic_rating);
-    } else if (
-      existingTask.status === "Idle" &&
-      updatedTask.status === "Close"
-    ) {
-      const pic_rating = pic_rating - 2;
-      // console.log(pic_rating)
-      await updatePicRepo(pic, pic_rating);
+    if (!existingTask.overdue) {
+      console.log("🚀 ~ AcceptTaskServe ~ data:", data)
+      await Rating.edit(data.pic_id, data.pic_rating);
+    } else if (existingTask.overdue) {
+      console.log("🚀 ~ AcceptTaskServe ~ data nya ovd:", data)
+      const pic_rating = data.pic_rating - 2;
+      console.log("🚀 ~ AcceptTaskServe ~ pic_rating:", pic_rating)
+      await Rating.edit(data.pic_id, pic_rating);
     }
 
     return updatedTask;
@@ -130,33 +134,6 @@ const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
 
 
 const getAllTask = async (search, status, data, startDate, dueDate) => {
-  // const fromDate = startDate ? new Date(startDate).toISOString() : null;
-  // const toDate = dueDate? new Date(dueDate).toISOString() : null;
-  // const response = await getAllTaskRepo(search, status, data, fromDate, toDate);
-
-  // const picIds = [...new Set(response.map(task => task.pic_id))];
-  // const spvIds = [...new Set(response.map(task => task.spv_id))];
-
-  // const picPromises = picIds.map(id => User.getUserByIdRepo(id));
-  // const picData = await Promise.all(picPromises);
-  // const spvPromises = spvIds.map(id => User.getUserByIdRepo(id));
-  // const spvData = await Promise.all(spvPromises);
-
-  // const tasksWithUserData = response.map(task => {
-  //   const user = picData.find(userData => {return userData.u_id === task.pic_id})
-  //   const spv = spvData.find(userData => {return userData.u_id === task.spv_id})
-  //   if (user) {
-  //     return {
-  //       ...task,
-  //       pic_title: user.title,
-  //       pic: user.u_name,
-  //       spv: spv.u_name
-  //     };
-  //   } else {
-  //     return task;
-  //   }
-  // });
-
   return await getAllTaskRepo(search, status, data, startDate, dueDate);
 };
 
@@ -179,34 +156,6 @@ const getAllWaitedTaskServ = async (
       fromDate,
       toDate
     );
-
-    // // Dapatkan id pic dari respons
-    // const picIds = [...new Set(response.map((task) => task.pic_id))];
-    // const spvIds = [...new Set(response.map((task) => task.spv_id))];
-
-    // const picPromises = picIds.map((id) => User.getUserByIdRepo(id));
-    // const picData = await Promise.all(picPromises);
-    // const spvPromises = spvIds.map((id) => User.getUserByIdRepo(id));
-    // const spvData = await Promise.all(spvPromises);
-
-    // const tasksWithUserData = response.map((task) => {
-    //   const user = picData.find((userData) => {
-    //     return userData.u_id === task.pic_id;
-    //   });
-    //   const spv = spvData.find((userData) => {
-    //     return userData.u_id === task.spv_id;
-    //   });
-    //   if (user) {
-    //     return {
-    //       ...task,
-    //       pic_title: user.title,
-    //       pic: user.u_name,
-    //       spv: spv.u_name,
-    //     };
-    //   } else {
-    //     return task;
-    //   }
-    // });
 
     return response;
   } catch (error) {
@@ -233,40 +182,32 @@ const getAllDeletedTaskServ = async (
     toDate
   );
 
-  // const picIds = [...new Set(response.map((task) => task.pic_id))];
-  // const spvIds = [...new Set(response.map((task) => task.spv_id))];
-
-  // const picPromises = picIds.map((id) => User.getUserByIdRepo(id));
-  // const picData = await Promise.all(picPromises);
-  // const spvPromises = spvIds.map((id) => User.getUserByIdRepo(id));
-  // const spvData = await Promise.all(spvPromises);
-
-  // const tasksWithUserData = response.map((task) => {
-  //   const user = picData.find((userData) => {
-  //     return userData.u_id === task.pic_id;
-  //   });
-  //   const spv = spvData.find((userData) => {
-  //     return userData.u_id === task.spv_id;
-  //   });
-  //   if (user) {
-  //     return {
-  //       ...task,
-  //       pic_title: user.title,
-  //       pic: user.u_name,
-  //       spv: spv.u_name,
-  //     };
-  //   } else {
-  //     return task;
-  //   }
-  // });
-
   return await response;
 };
 
 const getTaskByIdServ = async (id) => {
   const task = await getTaskByIdRepo(+id);
-
   return task;
+};
+
+const getLateTaskServe = async (id) => {
+  const response = await getLateTaskRepo(id);
+  // console.log("🚀 ~ getLateTaskServe ~ response:", response)
+
+  const updatedTasks = await Promise.all(
+    response.map(async (task) => {
+      return await prisma.task.update({
+        where: {
+          id: task.id,
+        },
+        data: {
+          overdue: true,
+        },
+      });
+    })
+  );
+
+  return await response;
 };
 
 module.exports = {
@@ -278,4 +219,5 @@ module.exports = {
   getAllDeletedTaskServ,
   getTaskByIdServ,
   getAllTask,
+  getLateTaskServe
 };

@@ -7,9 +7,10 @@ const getById = async (req, res) => {
         const { id } = req.params;
         // console.log("🚀 ~ getById ~ u_id:", id)
         const exist = await ratingRepo.isExist(id)
-        const data = {id}
+        const u_id = parseInt(id); 
+        const data = {u_id}
         if (!exist) {
-            const create = await ratingRepo.create(data)
+            const create = await ratingRepo.create(u_id)
             console.log("GA ADA")
         }
         const rating = await ratingRepo.getById(id)
@@ -29,7 +30,7 @@ const edit = async (req, res) => {
         const exist = await ratingRepo.isExist(u_id)
         if (!exist) {
             const create = await ratingRepo.create(data)
-            console.log("GA ADA")
+            // console.log("GA ADA")
         }
         const edit = await ratingRepo.edit(u_id, data)
         return success(res, 'Success', edit)

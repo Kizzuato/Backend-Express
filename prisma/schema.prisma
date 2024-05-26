@@ -34,7 +34,7 @@ model m_user {
   position_id          Int?
   // tasks_as_pic         task[]          @relation("pic")
   // tasks_as_spv         task[]          @relation("spv")
-  uploadHistory        uploadHistory[]
+  // uploadHistory        uploadHistory[]
   u_email              String          @unique
   u_password           String?
   title                String?
@@ -83,6 +83,8 @@ model task {
   pic          String?        
   spv          String?        
   pic_role     String?
+  overdue      Boolean?       @default(false)
+
   // branch       Branch?        @relation(fields: [branch_id], references: [id])
   // division     Division?      @relation(fields: [division_id], references: [id])
   // position     Position?      @relation(fields: [position_id], references: [id])
@@ -132,7 +134,8 @@ model uploadHistory {
   id         Int      @id @default(autoincrement())
   fileName   String
   filePath   String
-  user       m_user   @relation(fields: [userId], references: [u_id])
+  u_name     String
+  title      String
   userId     Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
