@@ -21,7 +21,7 @@ const edit = async (req, res) => {
         const exist = await roleRepo.isExist(u_id)
         if (!exist) {
             const create = await roleRepo.create(data)
-            console.log("GA ADA")
+            // console.log("GA ADA")
         }
         const edit = await roleRepo.edit(u_id, role)
         return success(res, 'Success', edit)
@@ -62,7 +62,8 @@ const deleteData = async (req, res) => {
 
 const createNew = async (req, res) => {
     try{
-        const data = req.body;
+        const data = req.body.data;
+        console.log("🚀 ~ createNew ~ data:", data)
         // const u_id = req.body.u_id;
         // const role = req.body.role;
         // const data = {u_id, role};

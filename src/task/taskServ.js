@@ -11,7 +11,8 @@ const {
   getAllDeletedTaskRepo,
   getTaskByIdRepo,
   createManyTask,
-  getLateTaskRepo
+  getLateTaskRepo,
+  getAllLateTaskRepo
 } = require("./taskRepo");
 const { getUserByIdRepo } = require("../user/userRepo");
 const { check } = require("prisma");
@@ -201,9 +202,8 @@ const getTaskByIdServ = async (id) => {
   return task;
 };
 
-const getLateTaskServe = async (id) => {
-  const response = await getLateTaskRepo(id);
-  // console.log("🚀 ~ getLateTaskServe ~ response:", response)
+const checkLateTaskServe = async () => {
+  const response = await getAllLateTaskRepo();
 
   const updatedTasks = await Promise.all(
     response.map(async (task) => {
@@ -220,6 +220,15 @@ const getLateTaskServe = async (id) => {
 
   return await response;
 };
+ 
+const getLateTaskServe = async (id, role) => {
+  const response = await getLateTaskRepo(id);
+  // console.log("🚀 ~ getLateTaskServe ~ lateTasks:", lateTasks)
+  // console.log("🚀 ~ getLateTaskServe ~ response:", response)
+
+
+  return await response;
+};
 
 module.exports = {
   updateTaskServ,
@@ -231,5 +240,6 @@ module.exports = {
   getTaskByIdServ,
   getAllTask,
   getLateTaskServe,
-  createManyTaskServ
+  createManyTaskServ,
+  checkLateTaskServe
 };

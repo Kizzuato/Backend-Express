@@ -11,7 +11,7 @@ const getById = async (req, res) => {
         const data = {u_id}
         if (!exist) {
             const create = await ratingRepo.create(u_id)
-            console.log("GA ADA")
+            // console.log("GA ADA")
         }
         const rating = await ratingRepo.getById(id)
         return success(res, 'Success', rating)

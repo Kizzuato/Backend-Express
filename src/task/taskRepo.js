@@ -69,8 +69,8 @@ const getAllWaitedTaskRepo = async ( search, status, data, fromDate, toDate) => 
     const whereClause = {
       status: "wait-app",
       deleted_at: null,
-      spv_id: parseInt(data.spv) || undefined,
-      pic_id: parseInt(data.pic) || undefined,
+      pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
+      spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
@@ -94,8 +94,8 @@ const getAllDeletedTaskRepo = async (search, status, data, fromDate, toDate) => 
       deleted_at: {
         not: null,
       },
-      pic_id: parseInt(data.pic) || undefined,
-      spv_id: parseInt(data.spv) || undefined,
+      pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
+      spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
       OR: [
         { task_title: { contains: search || '' } },
       ]
@@ -122,12 +122,11 @@ const getTaskByIdRepo = async (id) => {
   });
 };
 
-const getLateTaskRepo = async (id) => {
+const getAllLateTaskRepo = async () => {
   const now = new Date(); 
 
   return await prisma.task.findMany({
     where: { 
-      pic_id: parseInt(id) || undefined,
       due_date: {
         lt: now,
       },
@@ -136,6 +135,24 @@ const getLateTaskRepo = async (id) => {
       },
     }
   });
+};
+
+const getLateTaskRepo = async (id) => {
+  const now = new Date(); 
+  let pic_id = parseInt(id)
+
+  const lateTasks = await prisma.task.findMany({
+    where: { 
+      pic_id: pic_id || undefined,
+      overdue: true,
+      status: {
+        not: "Close",
+      },
+    }
+  });
+  // console.log("🚀 ~ getLateTaskRepo ~ lateTasks:", lateTasks)
+
+  return lateTasks.length > 0 ? lateTasks : [];
 };
 
 const updateOverdueRepo = async (id) => {
@@ -168,5 +185,6 @@ module.exports = {
   getTaskByIdRepo,
   getTaskByEmailRepo,
   getLateTaskRepo,
-  updateOverdueRepo
+  updateOverdueRepo,
+  getAllLateTaskRepo
 };

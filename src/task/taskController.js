@@ -29,7 +29,8 @@ const {
   getTaskByIdServ,
   storeToExcel,
   createManyTaskServ,
-  getLateTaskServe
+  getLateTaskServe,
+  checkLateTaskServe
 } = require("./taskServ");
 const { auth } = require("../middleware/auth.middleware");
 
@@ -305,6 +306,7 @@ router.get("/waited", async (req, res) => {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, pic_id, spv_id, division, branch } = req.headers;
     const data = {pic, spv, division, pic_id, spv_id, branch};
+    console.log("🚀 ~ router.get ~ data:", data)
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
@@ -371,11 +373,22 @@ router.get("/get-by-email/:id", async (req, res) => {
   }
 });
 
+router.get("/checker", async (req, res) => {
+  try {
+    const response = await checkLateTaskServe();
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "terjadi kesalahan pada server"});
+  }
+})
+
 router.get("/late-notification/:id", async (req, res) => {
   try {
-    const id = req.params;
+    const id = req.params.id;
+    const role = res.headers;
     // console.log(id, " dicek")
-    const response = await getLateTaskServe(id);
+    const response = await getLateTaskServe(id, role);
     // console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);
   } catch (error) {
