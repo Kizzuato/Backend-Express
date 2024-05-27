@@ -120,6 +120,17 @@ const createTaskServ = async (data, files) => {
   return await createTaskRepo(dataRest);
 };
 
+const createManyTaskServ = async (data, files) => {
+  // const picId = parseInt(data.pic_id);
+  // const spvId = parseInt(data.spv_id);
+
+  const dataRest = {
+    data
+  };
+
+  return await createManyTask(data);
+};
+
 const getAllTaskServ = async (search, status, data, startDate, dueDate) => {
   const fromDate = startDate ? new Date(startDate).toISOString() : null;
   const toDate = dueDate ? new Date(dueDate).toISOString() : null;
@@ -219,5 +230,6 @@ module.exports = {
   getAllDeletedTaskServ,
   getTaskByIdServ,
   getAllTask,
-  getLateTaskServe
+  getLateTaskServe,
+  createManyTaskServ
 };

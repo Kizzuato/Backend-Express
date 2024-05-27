@@ -28,6 +28,7 @@ const {
   getAllDeletedTaskServ,
   getTaskByIdServ,
   storeToExcel,
+  createManyTaskServ,
   getLateTaskServe
 } = require("./taskServ");
 const { auth } = require("../middleware/auth.middleware");
@@ -227,6 +228,20 @@ router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
     };
 
     const response = await createTaskServ(data);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
+router.post("/many-new", async (req, res) => {
+  try {
+
+    const data = req.body;
+    // console.log("🚀 ~ router.post ~ data:", data)
+    const response = await createManyTaskServ(data);
 
     return res.status(200).json(response);
   } catch (error) {
