@@ -111,7 +111,7 @@ model task {
   deleted_at   DateTime?
   notifications Notification[] 
 
-  pic_rating  Int?
+  pic_rating  Int?             @default(0)
   pic_id    Int?
   spv_id    Int?
   branch    Int?
@@ -132,12 +132,12 @@ model Notification {
 
 model uploadHistory {
   id         Int      @id @default(autoincrement())
-  fileName   String
-  filePath   String
-  u_name     String
-  title      String
-  userId     Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  fileName   String?
+  filePath   String?
+  u_name     String?
+  title      String?
+  userId     Int?
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
 }
 

@@ -37,7 +37,7 @@ const router = express()
 router.get('/', uploadControl.getAll)
 
 //Import Excel
-router.post('/store-excel', auth, uploadExcel.single('file'), uploadControl.store)
-router.post('/store-user', auth, uploadExcel.single('file'), uploadControl.storeUser)
+router.post('/store-excel', uploadExcel.single('file'), uploadControl.store)
+router.post('/store-user', uploadExcel.single('file'), uploadControl.storeUser)
 
 module.exports = router
