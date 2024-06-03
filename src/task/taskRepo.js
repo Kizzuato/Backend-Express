@@ -146,7 +146,7 @@ const getLateTaskRepo = async (id) => {
       pic_id: pic_id || undefined,
       overdue: true,
       status: {
-        not: "Close",
+        not: "Close" && "Wait-app",
       },
     }
   });

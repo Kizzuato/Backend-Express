@@ -131,18 +131,20 @@ const storeToExcel = async (file, user, addInformation, employes) => {
 
 const getAllHistory = async (search, from, to) => {
   try {
-    let currentDate = new Date()
-    let finishDate = new Date(currentDate)
-    if (from) currentDate = new Date(from)
-    if (to) {
-      finishDate = new Date(to)
-    } else finishDate.setDate(currentDate.getDate() + 7);
-    const [startDate, endDate] = [currentDate.toISOString().split('T')[0], finishDate.toISOString().split('T')[0]]
+    // let currentDate = new Date()
+    // let finishDate = new Date(currentDate)
+    // if (from) currentDate = new Date(from)
+    // if (to) {
+    //   finishDate = new Date(to)
+    // } else finishDate.setDate(currentDate.getDate() + 7);
+    // const [startDate, endDate] = [currentDate.toISOString().split('T')[0], finishDate.toISOString().split('T')[0]]
+    const startDate = from? new Date(from).toISOString() : null;
+    const endDate = to? new Date(to).toISOString() : null;
     let histories = await prisma.uploadHistory.findMany({
       where: {
         AND: [
-          { created_at: { gte: `${startDate}T00:00:00.000Z` } },
-          { created_at: { lte: `${endDate}T23:59:59.999Z` } }
+          { created_at: { gte: startDate || undefined } },
+          { created_at: { lte: endDate || undefined } }
         ],
         ...(search && { fileName: { contains: search } }),
       },

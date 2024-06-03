@@ -306,7 +306,7 @@ router.get("/waited", async (req, res) => {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, pic_id, spv_id, division, branch } = req.headers;
     const data = {pic, spv, division, pic_id, spv_id, branch};
-    console.log("🚀 ~ router.get ~ data:", data)
+    // console.log("🚀 ~ router.get ~ data:", data)
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);
