@@ -103,12 +103,12 @@ const storeToExcel = async (file, user, addInformation, employes) => {
     if (tasks.length < 1) throw Error('No Data to Store')
 
     for (let task of tasks) {
-      let [pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv] = task
+      let [pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, branch, division, position] = task
       
       const formattedStartDate = excelDateToJSDate(start_date);
       const formattedDueDate = excelDateToJSDate(due_date);
 
-      if (!task_type || !task_title || !priority || !iteration || !status || !start_date || !due_date || !description || !pic_id || !spv_id || !pic_title || !user || !spv || !pic) {
+      if (!task_type || !task_title || !priority || !iteration || !status || !start_date || !due_date || !description || !pic_id || !spv_id || !pic_title || !user || !spv || !pic || !branch || !division || !position) {
         // console.log(`Skipping task due to missing required fields: ${task}`);
         continue;
       }
@@ -116,7 +116,7 @@ const storeToExcel = async (file, user, addInformation, employes) => {
       // console.log("AKSKOASA:" + formattedStartDate)
       // console.log("KONKLSANKAJSN:" + formattedDueDate)
       dataToStore.push({
-        task_type, task_title, priority, iteration, status, start_date: formattedStartDate, due_date:formattedDueDate, description, pic_id, spv_id, pic_role:pic_title, created_by: user.username, spv, pic
+        task_type, task_title, priority, iteration, status, start_date: formattedStartDate, due_date:formattedDueDate, description, pic_id, spv_id, pic_role:pic_title, created_by: user.username, spv, pic, branch, division, position
       })
     }
 
