@@ -108,7 +108,7 @@ const storeToExcel = async (file, user, addInformation, employes) => {
       const formattedStartDate = excelDateToJSDate(start_date);
       const formattedDueDate = excelDateToJSDate(due_date);
 
-      if (!task_type || !task_title || !priority || !iteration || !status || !start_date || !due_date || !description || !pic_id || !spv_id || !pic_title || !user || !spv || !pic || !branch || !division || !position) {
+      if (!task_type || !task_title || !priority || !iteration || !status || !start_date || !due_date || !description || !pic_id || !spv_id || !pic_title || !user || !spv || !pic) {
         // console.log(`Skipping task due to missing required fields: ${task}`);
         continue;
       }
@@ -116,7 +116,7 @@ const storeToExcel = async (file, user, addInformation, employes) => {
       // console.log("AKSKOASA:" + formattedStartDate)
       // console.log("KONKLSANKAJSN:" + formattedDueDate)
       dataToStore.push({
-        task_type, task_title, priority, iteration, status, start_date: formattedStartDate, due_date:formattedDueDate, description, pic_id, spv_id, pic_role:pic_title, created_by: user.username, spv, pic, branch, division, position
+        task_type, task_title, priority, iteration, status, start_date: formattedStartDate, due_date:formattedDueDate, description, pic_id, spv_id, pic_role:pic_title, created_by: user.username, spv, pic
       })
     }
 
