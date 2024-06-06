@@ -37,14 +37,24 @@ const createManyTask = async (data) => {
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
+  let overdue;
+
+  if (status === "Overdue") {
+    overdue = true;
+    status = undefined;
+  } else if (status !== undefined) {
+    overdue = false;
+  }
+
+  console.log(overdue)
   const whereClause = {
     NOT: {
       status: "wait-app",
     },
     pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
     spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
+    overdue: overdue,
     status: status || undefined,
-    overdue: status? status === "Overdue" ? true : false : undefined,
     deleted_at: null,
     // division: parseInt(data.division) || undefined,
     OR: [
