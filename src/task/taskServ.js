@@ -12,7 +12,8 @@ const {
   getTaskByIdRepo,
   createManyTask,
   getLateTaskRepo,
-  getAllLateTaskRepo
+  getAllLateTaskRepo,
+  updateTaskOverdueStatus
 } = require("./taskRepo");
 const { getUserByIdRepo } = require("../user/userRepo");
 const { check } = require("prisma");
@@ -205,18 +206,7 @@ const getTaskByIdServ = async (id) => {
 const checkLateTaskServe = async () => {
   const response = await getAllLateTaskRepo();
 
-  const updatedTasks = await Promise.all(
-    response.map(async (task) => {
-      return await prisma.task.update({
-        where: {
-          id: task.id,
-        },
-        data: {
-          overdue: true,
-        },
-      });
-    })
-  );
+  const updatedTasks = await updateTaskOverdueStatus();
 
   return await response;
 };

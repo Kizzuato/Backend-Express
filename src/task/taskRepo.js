@@ -44,6 +44,7 @@ const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
     pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
     spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
     status: status || undefined,
+    overdue: status? status === "Overdue" ? true : false : undefined,
     deleted_at: null,
     // division: parseInt(data.division) || undefined,
     OR: [
@@ -166,6 +167,21 @@ const updateOverdueRepo = async (id) => {
   });
 };
 
+const updateTaskOverdueStatus = async () => {
+  const now = new Date(); 
+
+  return await prisma.task.updateMany({
+    where: {
+      due_date: {
+        lt: now,
+      },
+    },
+    data: {
+      overdue: true,
+    },
+  });
+};
+
 // Repo untuk mencari task berdasarkan Id
 const getTaskByEmailRepo = async (email) => {
   return await prisma.m_user.findunique({
@@ -186,5 +202,7 @@ module.exports = {
   getTaskByEmailRepo,
   getLateTaskRepo,
   updateOverdueRepo,
-  getAllLateTaskRepo
+  getAllLateTaskRepo,
+  updateTaskOverdueStatus
+  
 };
