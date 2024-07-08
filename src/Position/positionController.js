@@ -16,7 +16,7 @@ const getById = async (req, res) => {
 const getAll = async (req, res) => {
   try {
     const branch_id = req.query.branch_id;
-    console.log("🚀 ~ getAll ~ branch_id:", branch_id);
+    // console.log("🚀 ~ getAll ~ branch_id:", branch_id);
 
     // Menggunakan destructuring untuk mengambil nilai header
     const { division, branch, title } = req.headers;
@@ -40,7 +40,7 @@ const getAll = async (req, res) => {
       data.branch = branch_id;
     }
 
-    console.log("🚀 ~ getAll ~ data:", data);
+    // console.log("🚀 ~ getAll ~ data:", data);
 
     // Panggil fungsi positionRepo.getAll dengan data yang sudah dimodifikasi
     const response = await positionRepo.getAll(data);

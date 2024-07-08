@@ -31,7 +31,7 @@ const getById = async (u_id) => {
 };
 
 const edit = async (id, pic_rating) => {
-  console.log("🚀 ~ edit ~ pic_rating:", pic_rating)
+  // console.log("🚀 ~ edit ~ pic_rating:", pic_rating)
   return await prismaRating.updateMany({
     where: { u_id: parseInt(id) },
     data: {

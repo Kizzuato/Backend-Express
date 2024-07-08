@@ -46,7 +46,7 @@ const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
     overdue = false;
   }
 
-  console.log(overdue)
+  // console.log(overdue)
   const whereClause = {
     NOT: {
       status: "wait-app",

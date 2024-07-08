@@ -93,7 +93,7 @@ const excelDateToJSDate = (serial) => {
   // }
 
 const storeToExcel = async (file, user, addInformation, employes) => {
-  console.log("🚀 ~ storeToExcel ~ user:", user.u_id)
+  // console.log("🚀 ~ storeToExcel ~ user:", user.u_id)
   let dataToStore = []
   try {
     const excel = xlsx.readFile(file.path)

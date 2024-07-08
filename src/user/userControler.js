@@ -35,7 +35,7 @@ router.post("/register", async (req, res) => {
   try {
     const realPassword = req.body.password
     const response = await createUserServ(req.body);
-    console.log("🚀 ~ router.post ~ response:", response)
+    // console.log("🚀 ~ router.post ~ response:", response)
     const dataToStore = {
       email: response.email,
       password: realPassword,
@@ -78,7 +78,7 @@ router.post("/login/:encryptedData?", async (req, res) => {
     email = decryptedData.email,
     password = decryptedData.password
   }
-  console.log(email, password)
+  // console.log(email, password)
   const token = null;
   // console.log("🚀 ~ router.post ~ token:", token)
   try {
@@ -94,7 +94,7 @@ router.get("/division", async (req, res) => {
   try {
     const { division, branch } = req.query;
     const data = { division, branch };
-    console.log("Data : ", data);
+    // console.log("Data : ", data);
     const response = await getUserByDivision(data);
     // console.log("🚀 ~ router.get ~ response:", response)
     return res.status(200).json(response);
@@ -139,7 +139,7 @@ router.get("/all", async (req, res) => {
 router.delete("/activate-user/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    console.log("Aktip")
+    // console.log("Aktip")
     const response = await activateUserServ(+id);
     return res.status(200).json("Activated");
   } catch (error) {
@@ -151,7 +151,7 @@ router.delete("/activate-user/:id", async (req, res) => {
 router.delete("/delete-user/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    console.log("ngapus")
+    // console.log("ngapus")
     const response = await deleteUserServ(+id);
     return res.status(200).json("Deleted");
   } catch (error) {

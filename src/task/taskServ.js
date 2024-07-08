@@ -35,7 +35,7 @@ const updateTaskServ = async (id, data) => {
     start_date: data.start_date,
     due_date: data.due_date,
     description: data.description,
-    pic_title: data.pic_title,
+    pic_role: data.pic_role,
     pic: data.pic,
     spv: data.spv,
     branch: data.branch,
@@ -67,7 +67,7 @@ const AcceptTaskServe = async (id, data) => {
     if(!existingRate) {
       const u_id = data.pic_id;
       const create = await Rating.create(u_id);
-      console.log("GA ADA") 
+      // console.log("GA ADA") 
     }
     
     // Lakukan validasi atau logika bisnis jika diperlukan
@@ -81,12 +81,12 @@ const AcceptTaskServe = async (id, data) => {
     
     // Perbarui total_task dan total_rating pada tabel pic jika task diterima (misalnya, status "accepted")
     if (!existingTask.overdue) {
-      console.log("🚀 ~ AcceptTaskServe ~ data:", data)
+      // console.log("🚀 ~ AcceptTaskServe ~ data:", data)
       await Rating.edit(data.pic_id, data.pic_rating);
     } else if (existingTask.overdue) {
-      console.log("🚀 ~ AcceptTaskServe ~ data nya ovd:", data)
+      // console.log("🚀 ~ AcceptTaskServe ~ data nya ovd:", data)
       const pic_rating = data.pic_rating - 2;
-      console.log("🚀 ~ AcceptTaskServe ~ pic_rating:", pic_rating)
+      // console.log("🚀 ~ AcceptTaskServe ~ pic_rating:", pic_rating)
       await Rating.edit(data.pic_id, pic_rating);
     }
 
@@ -115,7 +115,7 @@ const createTaskServ = async (data, files) => {
     created_by: data.created_by,
     fileName: data.files,
     pic: data.pic,
-    pic_role: data.pic_title,
+    pic_role: data.pic_role,
     spv: data.spv
   };
 
