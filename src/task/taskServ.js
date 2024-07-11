@@ -213,9 +213,6 @@ const checkLateTaskServe = async () => {
  
 const getLateTaskServe = async (id, role) => {
   const response = await getLateTaskRepo(id);
-  // console.log("🚀 ~ getLateTaskServe ~ lateTasks:", lateTasks)
-  // console.log("🚀 ~ getLateTaskServe ~ response:", response)
-
 
   return await response;
 };
