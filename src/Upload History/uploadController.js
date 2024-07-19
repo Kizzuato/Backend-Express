@@ -8,6 +8,7 @@ const store = async (req, res) => {
         if (!req.file) throw Error('Please include the proper Excel File')
         const employes = req.body.employes;
         const user = JSON.parse(req.body.user);
+        console.log("🚀 ~ store ~ user:", user)
         // console.log("🚀 ~ store ~ user:", user)
         // console.log("🚀 ~ store ~ req.body:", req.body)
         // console.log("🚀 ~ store ~ employes:", employes)

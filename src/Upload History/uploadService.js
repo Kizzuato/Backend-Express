@@ -1,6 +1,7 @@
 const { PrismaClient } = require("@prisma/client")
 const prisma = new PrismaClient()
 const xlsx = require('xlsx')
+const moment = require('moment');
 const { createManyTask } = require("../task/taskRepo")
 
 const formatDateToISO = (date) => {
@@ -25,72 +26,23 @@ const excelDateToJSDate = (serial) => {
   return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate(), hours, minutes, seconds);
 }
 
+const parseDate = (dateInput) => {
+  if (!dateInput) return null;
 
-// const storeToExcel = async (file, user, addInformation, employes) => {
-//   let dataToStore = []
-//   try {
-//     const excel = xlsx.readFile(file.path)
-//     const worksheet = excel.Sheets[excel.SheetNames[0]]
-//     let tasks = xlsx.utils.sheet_to_json(worksheet, { header: 1 })
-//     tasks.shift()
-//     if (tasks.length < 1) throw Error('No Data to Store')
+  // Cek jika input adalah angka (serial number Excel)
+  if (typeof dateInput === 'number') {
+    // Tambahkan tanggal dasar Excel (01/01/1900) dan konversi ke JavaScript Date
+    const excelBaseDate = new Date(1899, 11, 30);
+    const date = new Date(excelBaseDate.getTime() + dateInput * 86400000);
+    return date;
+  }
 
-//     for (let task of tasks) {
-//       let [task_type, task_title, priority, iteration, start_date, due_date, description, picName, spvName, status] = task
-//       let pic = { pic: picName, pic_id: null, pic_title: null }
-//       // console.log("🚀 ~ storeToExcel ~ due_date:", due_date)
-//       console.log("🚀 ~ storeToExcel ~ start_date:", task)
-//       let spv = { spv: spvName, spv_id: null }
-//       start_date = formatDateToISO(start_date)
-//       due_date = formatDateToISO(due_date)
-      
-//       if (pic.pic != null) {
-//         const personInContact = await prisma.m_user.findFirst({ where: { u_name: { contains: pic.pic } } })
-//         if (!personInContact) {
-//           pic.pic = null
-//         }else{
-//           pic = { pic_id: personInContact.u_id }
-//         }
-//       }
-//       if (spv.spv != null) {
-//         const spvList = spv.spv.split(',')
-//         let spvListId = '', spvListName = '', spvListDivision ='', spvListBranch = ''
-//         for (let spvName of spvList) {
-//           const supervisor = await prisma.m_user.findFirst({ where: { u_name: { contains: spvName } } })
-//           if (!supervisor) continue
-//           spvListId += `${supervisor.u_id},`
-//           spvListName += `${supervisor.u_name},`
-//           spvListDivision += `${supervisor.division_id},`
-//           spvListBranch += `${supervisor.branch_id},`
-//         }
-//         if(spvListId.length < 2){
-//           spvListId = null, spvListName = null, spvListBranch = null, spvListDivision = null
-//         } else{
-//           spvListId = spvListId.substring(0, spvListId.length - 1)
-//           spvListName = spvListName.substring(0, spvListName.length - 1)
-//           spvListBranch = spvListBranch.substring(0, spvListBranch.length - 1)
-//           spvListDivision = spvListDivision.substring(0, spvListDivision.length -1)
-//         } 
-//         spv.spv_id = spvListId
-//         spv.spv = spvListName
-//         spv.branch  = spvListBranch
-//         spv.division = spvListDivision
-//       }
-      
-//       console.log("AKSKOASA:" + start_date)
-//       console.log("KONKLSANKAJSN:" + due_date)
-//       dataToStore.push({
-//         task_type, task_title, priority, iteration, status, start_date, due_date, description,
-//         branch_id: parseInt(spv.branch), division_id: parseInt(spv.division), pic_id: parseInt(pic.pic_id), spv_id: parseInt(spv.spv_id), created_by: user.u_name
-//       })
-//     }
-//     await createManyTask(dataToStore)
-//     await createHistory(user, file)
-//     return dataToStore
-//   } catch (err) {
-//     console.log(err)
-//     throw err
-  // }
+  // Menggunakan moment.js untuk memparsing tanggal
+  const date = moment(dateInput, 'DD/MM/YYYY HH:mm:ss');
+
+  // Mengembalikan objek JavaScript Date
+  return date.isValid() ? date.toDate() : null;
+};
 
 const storeToExcel = async (file, user, addInformation, employes) => {
   // console.log("🚀 ~ storeToExcel ~ user:", user.u_id)
@@ -105,8 +57,10 @@ const storeToExcel = async (file, user, addInformation, employes) => {
     for (let task of tasks) {
       let [pic_id, spv_id, task_type, task_title, priority, iteration, status, start_date, due_date, description, pic_title, created_by, pic, spv, branch, division, position] = task
       
-      const formattedStartDate = excelDateToJSDate(start_date);
-      const formattedDueDate = excelDateToJSDate(due_date);
+      
+
+      const formattedStartDate = parseDate(start_date);
+      const formattedDueDate = parseDate(due_date);
 
       if (!task_type || !task_title || !priority || !iteration || !status || !start_date || !due_date || !description || !pic_id || !spv_id || !pic_title || !user || !spv || !pic) {
         // console.log(`Skipping task due to missing required fields: ${task}`);
@@ -115,6 +69,8 @@ const storeToExcel = async (file, user, addInformation, employes) => {
       // console.log(task);
       // console.log("AKSKOASA:" + formattedStartDate)
       // console.log("KONKLSANKAJSN:" + formattedDueDate)
+      console.log("🚀 ~ storeToExcel ~ start_date:", start_date)
+      console.log("🚀 ~ storeToExcel ~ due_date:", due_date)
       dataToStore.push({
         task_type, task_title, priority, iteration, status, start_date: formattedStartDate, due_date:formattedDueDate, description, pic_id, spv_id, pic_role:pic_title, created_by: user.username, spv, pic
       })
@@ -122,6 +78,7 @@ const storeToExcel = async (file, user, addInformation, employes) => {
 
     await createManyTask(dataToStore)
     await createHistory(user, file)
+    // console.log("DON")
     return dataToStore
   } catch (err) {
     console.log(err)
