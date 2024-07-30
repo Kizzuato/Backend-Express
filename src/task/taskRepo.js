@@ -105,6 +105,7 @@ const getAllDeletedTaskRepo = async (search, status, data, fromDate, toDate) => 
       deleted_at: {
         not: null,
       },
+      status: "Deleted",
       pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
       spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
       OR: [
@@ -156,9 +157,10 @@ const getLateTaskRepo = async (id) => {
     where: { 
       pic_id: pic_id || undefined,
       overdue: true,
-      status: {
-        not: "Close" && "Wait-app" && "Deleted",
-      },
+      status: "In-progress" && "Open"
+      // status: {
+      //   not: "Close" && "Wait-app" && "Deleted",
+      // },
     }
   });
   // console.log("🚀 ~ getLateTaskRepo ~ lateTasks:", lateTasks)
