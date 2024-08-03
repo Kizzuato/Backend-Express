@@ -114,8 +114,8 @@ model task {
   pic_rating  Int?             @default(0)
   pic_id    Int?
   spv_id    Int?
-  branch    Int?
-  division  Int?
+  branch    String?
+  division  String?
   position  Int?
 }
 

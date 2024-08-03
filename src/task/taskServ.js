@@ -13,7 +13,8 @@ const {
   createManyTask,
   getLateTaskRepo,
   getAllLateTaskRepo,
-  updateTaskOverdueStatus
+  updateTaskOverdueStatus,
+  updateTaskDivisionRepo
 } = require("./taskRepo");
 const { getUserByIdRepo } = require("../user/userRepo");
 const { check } = require("prisma");
@@ -56,6 +57,15 @@ const updateTaskServ = async (id, data) => {
   };
 
   return await updateTaskRepo(id, dataRest);
+};
+
+const updateTaskDivision = async (id, data) => {
+  const dataRest = {
+    division: data.division,
+    branch: data.branch,
+  };
+
+  return await updateTaskDivisionRepo(id, dataRest);
 };
 
 const AcceptTaskServe = async (id, data) => {
@@ -102,6 +112,8 @@ const createTaskServ = async (data, files) => {
   const spvId = parseInt(data.spv_id);
 
   const dataRest = {
+    division: data.division,
+    branch: data.branch,
     pic_id: picId,
     spv_id: spvId,
     task_type: data.task_type,
@@ -228,5 +240,6 @@ module.exports = {
   getAllTask,
   getLateTaskServe,
   createManyTaskServ,
-  checkLateTaskServe
+  checkLateTaskServe,
+  updateTaskDivision
 };

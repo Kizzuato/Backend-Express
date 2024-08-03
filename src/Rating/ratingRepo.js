@@ -64,7 +64,7 @@ const getAll = async () => {
 
 const create = async (u_id) => {
   try {
-    return await prismaRating.createMany({ data: {u_id: u_id, total_rating: 0, total_task: 0 }});
+    return await prismaRating.create({ data: {u_id: u_id, total_rating: 0, total_task: 0 }});
   } catch (err) {
     throwError(err);
   }

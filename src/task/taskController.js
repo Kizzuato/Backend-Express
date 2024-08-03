@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
     // Dapatkan tanggal dan waktu saat ini
     const now = new Date();
     const date = now.toISOString().slice(0, 10);
-    const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+    const time = now.toTimeString().slice(0, 5).replace(/:/g, "-");
 
     // Tambahkan tanggal dan waktu ke nama file
     const filename = `${date}_${time}_${file.originalname}`;
@@ -30,7 +30,8 @@ const {
   storeToExcel,
   createManyTaskServ,
   getLateTaskServe,
-  checkLateTaskServe
+  checkLateTaskServe,
+  updateTaskDivision
 } = require("./taskServ");
 const { auth } = require("../middleware/auth.middleware");
 
@@ -53,7 +54,7 @@ router.put(
       if (nama_file !== null) {
         const now = new Date();
         const date = now.toISOString().slice(0, 10);
-        const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+        const time = now.toTimeString().slice(0, 5).replace(/:/g, "-");
         filename = `${date}_${time}_${nama_file}`;
       }
 
@@ -174,6 +175,29 @@ router.put("/edit/:id", async (req, res) => {
   }
 });
 
+router.put("/update-division-by/:pic_id", async (req, res) => {
+  const pic_id = req.params.pic_id;
+  const {
+    division,
+    branch
+  } = req.body;
+
+  try {
+    const data = {
+      division,
+      branch,
+    };
+
+    const response = await updateTaskDivision(pic_id, data);
+
+    
+    return res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Terjadi kesalahan pada server" });
+  }
+});
+
 router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
   try {
     let nama_file = null;
@@ -187,11 +211,13 @@ router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
     if (nama_file !== null) {
       const now = new Date();
       const date = now.toISOString().slice(0, 10);
-      const time = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+      const time = now.toTimeString().slice(0, 5).replace(/:/g, "-");
       filename = `${date}_${time}_${nama_file}`;
     }
 
     const {
+      division,
+      branch,
       pic_id,
       spv_id,
       task_type,
@@ -211,6 +237,8 @@ router.post("/new", upload.single("bukti_tayang"), async (req, res) => {
 
     // Process the data and files as needed
     const data = {
+      division,
+      branch,
       pic_id,
       spv_id,
       task_type,
@@ -257,6 +285,8 @@ router.get("/all", async (req, res) => {
     const { status, search, startDate, dueDate } = req.query;
     const { pic, spv, division, branch, title } = req.headers;
     const data = {pic, spv, division, branch, title};
+    // console.log("🚀 ~ router.get ~ division:", division)
+    // console.log("🚀 ~ router.get ~ branch:", branch)
     const response = await getAllTaskServ(
       search,
       status,
@@ -307,6 +337,8 @@ router.get("/waited", async (req, res) => {
     const { pic, spv, pic_id, spv_id, division, branch } = req.headers;
     const data = {pic, spv, division, pic_id, spv_id, branch};
     // console.log("🚀 ~ router.get ~ data:", data)
+    // console.log("🚀 ~ router.get ~ branch:", branch)
+    // console.log("🚀 ~ router.get ~ division:", division)
     // console.log("pic", pic);
     // console.log("spv", spv);
     // console.log("search", search);

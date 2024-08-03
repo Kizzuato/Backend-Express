@@ -24,6 +24,16 @@ const updateTaskRepo = async (id, data) => {
   });
 };
 
+// repo untuk mengedit data
+const updateTaskDivisionRepo = async (id, data) => {
+  return await prisma.task.updateMany({
+    where: {
+      pic_id: parseInt(id),
+    },
+    data,
+  });
+};
+
 // Repo untuk membuat task baru
 const createTaskRepo = async (data) => {
   return await prisma.task.createMany({
@@ -77,9 +87,12 @@ const getAllTaskRepo = async (search, status, data, fromDate, toDate) => {
 
 //  Username buat ngambil nama user yang masuk jika udifined maka akan memunculkan semuanya
 const getAllWaitedTaskRepo = async ( search, status, data, fromDate, toDate) => {
+    // console.log("🚀 ~ getAllWaitedTaskRepo ~ data:", data)
     const whereClause = {
       status: "wait-app",
       deleted_at: null,
+      branch: data.branch? data.branch : undefined,
+      division: data.division? data.division : undefined,
       pic_id: data.pic !== undefined ? parseInt(data.pic) : undefined,
       spv_id: data.spv !== undefined ? parseInt(data.spv) : undefined,
       OR: [
@@ -157,7 +170,9 @@ const getLateTaskRepo = async (id) => {
     where: { 
       pic_id: pic_id || undefined,
       overdue: true,
-      status: "In-progress" && "Open"
+      status: {
+        in: ["In-progress", "Open"],
+      },
       // status: {
       //   not: "Close" && "Wait-app" && "Deleted",
       // },
@@ -215,6 +230,6 @@ module.exports = {
   getLateTaskRepo,
   updateOverdueRepo,
   getAllLateTaskRepo,
-  updateTaskOverdueStatus
-  
+  updateTaskOverdueStatus,
+  updateTaskDivisionRepo
 };
